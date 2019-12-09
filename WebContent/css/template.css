@@ -1,0 +1,163 @@
+<style class="shared-css" type="text/css" >
+.t {
+	-webkit-transform-origin: bottom left;
+	-ms-transform-origin: bottom left;
+	transform-origin: bottom left;
+	-webkit-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	transform: scale(0.25);
+	z-index: 2;
+	position: absolute;
+	white-space: pre;
+	overflow: visible;
+}
+</style>
+
+<style type="text/css" >
+
+#t1_1{left:14%;bottom:1005px;letter-spacing:-0.5px;}
+#t2_1{left:532px;bottom:1004px;letter-spacing:-0.3px;word-spacing:0.3px;}
+#t3_1{left:737px;bottom:1004px;}
+#t4_1{left:14%;bottom:77%;}
+#t5_1{left:532px;bottom:985px;letter-spacing:-1.2px;}
+#t6_1{left:743px;bottom:985px;}
+#t7_1{left:14%;bottom:967px;letter-spacing:0.1px;word-spacing:-0.1px;}
+#t8_1{left:532px;bottom:966px;}
+#t9_1{left:746px;bottom:967px;}
+#ta_1{left:14%;bottom:948px;letter-spacing:-0.5px;word-spacing:0.5px;}
+#tb_1{left:532px;bottom:947px;letter-spacing:-0.4px;word-spacing:0.4px;}
+#tc_1{left:743px;bottom:947px;}
+#td_1{left:14%;bottom:929px;}
+#te_1{left:532px;bottom:927px;letter-spacing:-0.2px;word-spacing:0.2px;}
+#tf_1{left:753px;bottom:929px;}
+#tg_1{left:14%;bottom:909px;}
+#th_1{left:532px;bottom:908px;}
+#ti_1{left:746px;bottom:909px;}
+#tj_1{left:135px;bottom:833px;}
+#tk_1{left:176px;bottom:833px;}
+#tl_1{left:258px;bottom:833px;}
+#tm_1{left:560px;bottom:833px;}
+#tn_1{left:611px;bottom:833px;}
+#to_1{left:693px;bottom:833px;}
+#tp_1{left:800px;bottom:833px;}
+#tq_1{left:258px;bottom:814px;letter-spacing:-0.1px;word-spacing:0.1px;}
+#tr_1{left:258px;bottom:737px;letter-spacing:0.2px;word-spacing:-0.2px;}
+#ts_1{left:258px;bottom:718px;letter-spacing:-0.3px;word-spacing:0.3px;}
+#tt_1{left:800px;bottom:450px;}
+#tu_1{left:811px;bottom:431px;}
+#tv_1{left:811px;bottom:412px;}
+#tw_1{left:785px;bottom:374px;}
+#tx_1{left:738px;bottom:374px;}
+#ty_1{left:14%;bottom:203px;letter-spacing:-0.7px;word-spacing:0.7px;}
+#tz_1{left:183px;bottom:202px;}
+#t10_1{left:708px;bottom:202px;letter-spacing:-1px;}
+#t11_1{left:14%;bottom:278px;letter-spacing:0.1px;}
+#t12_1{left:196px;bottom:278px;}
+#t13_1{left:638px;bottom:278px;letter-spacing:-0.3px;word-spacing:0.3px;}
+#t14_1{left:14%;bottom:261px;letter-spacing:-0.2px;word-spacing:0.2px;}
+#t15_1{left:14%;bottom:240px;letter-spacing:-0.5px;word-spacing:0.5px;}
+#t16_1{left:14%;bottom:221px;letter-spacing:-0.1px;word-spacing:0.1px;}
+#t17_1{left:183px;bottom:220px;}
+#t18_1{left:14%;bottom:354px;letter-spacing:-0.2px;word-spacing:0.2px;}
+#t19_1{left:644px;bottom:353px;}
+#t1a_1{left:14%;bottom:335px;}
+#t1b_1{left:14%;bottom:316px;}
+#t1c_1{left:14%;bottom:297px;}
+#t1d_1{left:126px;bottom:412px;}
+#t1e_1{left:231px;bottom:412px;}
+#t1f_1{left:241px;bottom:412px;}
+#t1g_1{left:269px;bottom:419px;}
+#t1h_1{left:263px;bottom:404px;letter-spacing:-0.3px;word-spacing:0.3px;}
+#t1i_1{left:603px;bottom:451px;letter-spacing:-0.2px;word-spacing:0.2px;}
+#t1j_1{left:603px;bottom:432px;}
+#t1k_1{left:603px;bottom:414px;}
+#t1l_1{left:603px;bottom:395px;}
+#t1m_1{left:603px;bottom:374px;letter-spacing:-0.5px;}
+#t1n_1{left:421px;bottom:1019px;letter-spacing:-0.6px;word-spacing:0.6px;}
+#t1o_1{left:130px;bottom:889px;}
+#t1p_1{left:131px;bottom:874px;}
+#t1q_1{left:171px;bottom:881px;}
+#t1r_1{left:349px;bottom:881px;}
+#t1s_1{left:549px;bottom:881px;}
+#t1t_1{left:625px;bottom:881px;letter-spacing:-0.7px;}
+#t1u_1{left:690px;bottom:881px;}
+#t1v_1{left:771px;bottom:881px;}
+
+.s1_1{
+	FONT-SIZE: 55.4px;
+	FONT-FAMILY: BankGothicBT-Light_a;
+	color: rgb(0,0,0);
+	-webkit-text-stroke: 1.3px #000000;
+	text-stroke: 1.3px #000000;
+}
+
+.s2_1{
+	FONT-SIZE: 66px;
+	FONT-FAMILY: BankGothicBT-Light_a;
+	color: rgb(0,0,0);
+	-webkit-text-stroke: 1.6px #000000;
+	text-stroke: 1.6px #000000;
+}
+
+.s3_1{
+	FONT-SIZE: 66px;
+	FONT-FAMILY: BankGothicBT-Light_a;
+	color: rgb(0,0,0);
+}
+
+.s4_1{
+	FONT-SIZE: 55.4px;
+	FONT-FAMILY: BankGothicBT-Light_a;
+	color: rgb(0,0,0);
+}
+
+.s5_1{
+	FONT-SIZE: 55.4px;
+	FONT-FAMILY: Noteworthy-Bold_c;
+	color: rgb(0,0,0);
+	-webkit-text-stroke: 1.3px #000000;
+	text-stroke: 1.3px #000000;
+}
+
+.s6_1{
+	FONT-SIZE: 43.6px;
+	FONT-FAMILY: BankGothicBT-Light_a;
+	color: rgb(0,0,0);
+}
+
+.s7_1{
+	FONT-SIZE: 55.4px;
+	FONT-FAMILY: Noteworthy-Bold_c;
+	color: rgb(0,0,0);
+}
+
+.s8_1{
+	FONT-SIZE: 50.2px;
+	FONT-FAMILY: BankGothicBT-Light_a;
+	color: rgb(0,0,0);
+}
+
+.s9_1{
+	FONT-SIZE: 99px;
+	FONT-FAMILY: BankGothicBT-Light_a;
+	color: rgb(0,0,0);
+	-webkit-text-stroke: 2.4px #000000;
+	text-stroke: 2.4px #000000;
+}
+
+</style>
+
+<!-- End inline CSS -->
+<style id="fonts1" type="text/css" >
+
+@font-face {
+	font-family: BankGothicBT-Light_a;
+	src: url("fonts/BankGothicBT-Light_a.woff") format("woff");
+}
+
+@font-face {
+	font-family: Noteworthy-Bold_c;
+	src: url("fonts/Noteworthy-Bold_c.woff") format("woff");
+}
+
+</style>

@@ -1,0 +1,78 @@
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans  
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd  
+   	http://www.springframework.org/schema/context 
+   	http://www.springframework.org/schema/context/spring-context-3.0.xsd
+   	http://www.springframework.org/schema/tx
+   	http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+   	
+   	   	
+	<context:annotation-config />
+	<context:component-scan base-package="com.sapphire*"></context:component-scan>
+
+	<bean id="HandlerMapping"
+		class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"></bean>
+	<bean id="freemarkerConfig"
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<property name="templateLoaderPath" value="/WEB-INF/views"></property>
+	</bean>
+
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="4026590"></property>
+	</bean>
+
+	<bean id="freemarkerViewResolver"
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+		<property name="order" value="1"></property>
+		<property name="cache" value="true" />
+		<property name="prefix" value="" />
+		<property name="suffix" value=".ftl" />
+	</bean>
+
+	<bean id="beanNameViewResolver"
+		class="org.springframework.web.servlet.view.BeanNameViewResolver">
+	</bean>
+
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		
+		<property name="url" value="jdbc:mysql://localhost:3306/sapphireBookings"/> 
+		<property name="username" value="admin" /> 
+		<property name="password" value="admin123"/>
+		 
+		<!-- <property name="url" value="jdbc:mysql://hamdule.cmbzdfvjyats.us-east-2.rds.amazonaws.com:3306/sapphireBookings" />
+		<property name="username" value="mhamdule" />
+		<property name="password" value="mhamdule9933"/> -->
+	</bean>
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="packagesToScan" value="com.sapphire.entity" />
+
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.connection.autocommit">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<tx:annotation-driven proxy-target-class="true"
+		transaction-manager="transactionManager" />
+   	
+</beans>
