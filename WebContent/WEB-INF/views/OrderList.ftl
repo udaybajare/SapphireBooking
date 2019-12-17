@@ -72,7 +72,14 @@
       <section class="main-container">
 
         <div class="container">
-        
+        <form class="form-horizontal" action="logout" method="POST">
+                	<div class="col-auto ml-auto hidden-md-down">
+                	<div class="col-lg-7 col-xl-8 mr-20">
+                	
+                	 <button type="submit" class="btn btn-group btn-default btn-animated">Log Out <i class="fa fa-user"></i></button>
+               							</div>
+					</div>
+					</form>
         <h2 class="mt-5">Search Orders</h2>
               <form class="form-inline">
                 <label class="sr-only" for="inlineFormInput">Search By:</label>

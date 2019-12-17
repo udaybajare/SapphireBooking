@@ -4,7 +4,7 @@
 
   <head>
     <meta charset="utf-8">
-    <title>The Project | Page Login Fullscreen</title>
+    <title>Sapphire Bookings</title>
     <meta name="description" content="The Project a Bootstrap-based, Responsive HTML5 Template">
     <meta name="author" content="author">
 
@@ -63,7 +63,7 @@
     <!-- ================ -->
     <div class="page-wrapper">
       <!-- background image -->
-      <div class="fullscreen-bg"></div>
+      <div class="b-white"></div>
 
       <!-- banner start -->
       <!-- ================ -->
@@ -73,11 +73,7 @@
             <div class="col-auto">
               <div class="object-non-visible" data-animation-effect="fadeInDownSmall" data-effect-delay="100">
                 <!-- logo -->
-                <div id="logo" class="logo text-center">
-                  <h3 class="margin-clear"><a href="index.html" class="logo-font link-light">The <span class="text-default">Project</span></a></h3>
-                </div>
-                <!-- name-and-slogan -->
-                <p class="small text-center">Multipurpose HTML5 Template</p>
+                
                 <div class="form-block center-block p-30 light-gray-bg border-clear">
                   <h2 class="title">Login</h2>
                   <form class="form-horizontal" action="submit" method="POST">
@@ -97,22 +93,17 @@
                     </div>
                     <div class="form-group row">
                       <div class="ml-md-auto col-md-9">
-                        <div class="checkbox form-check">
-                          <input class="form-check-input" type="checkbox" required>
-                          <label class="form-check-label">
-                            Remember me.
-                          </label>
-                        </div>
-                        <button type="submit" class="btn btn-group btn-default btn-animated">Log In <i class="fa fa-user"></i></button>
+                        
+                        <button type="submit" class="btn btn-group btn-default btn-animated ">Log In <i class="fa fa-user"></i></button>
                        
                       </div>
                     </div>
                   </form>
-                  <p class="text-center">Don't have an account yet? <a href="page-signup-2.html">Sing up</a> now.</p>
+                 
                 </div>
                 <!-- .subfooter start -->
                 <!-- ================ -->
-                <p class="mt-20 text-center">Copyright © 2018 The Project. All Rights Reserved</p>
+               
                 <!-- .subfooter end -->
               </div>
             </div>

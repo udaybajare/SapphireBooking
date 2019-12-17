@@ -44,6 +44,7 @@
     <!-- Custom css -->
     <link href="css/custom.css" rel="stylesheet">
     
+    
   </head>
 
   <!-- body classes:  -->
@@ -120,6 +121,13 @@
               <!-- ================ -->
               <h1 class="page-title">Order Details</h1>
               <!-- page-title end -->
+               <form class="form-horizontal" action="logout" method="POST">
+                	<div class="col-auto ml-auto hidden-md-down">
+                	<div class="col-lg-7 col-xl-8 mr-20">
+                	 	<button type="submit" class="btn btn-group btn-default btn-animated">Log Out <i class="fa fa-user"></i></button>
+               		</div>
+					</div>
+				</form>
             </div>
           </div>
         </div>
@@ -135,7 +143,8 @@
               <div class="col-md-2">
                 <div class="form-group ">
                   <label >Organization Name</label>
-                  <input type="text" name="orgName" class="form-control " >
+                  <input type="text"  name="orgName" class="form-control">
+                  
                 </div>
               </div>
               <div class="col-md-2">
@@ -155,7 +164,7 @@
 			<div class="col-md-3 ">
 			<div class="ph-20 feature-box text-center object-non-visible" data-animation-effect="fadeInDownSmall" data-effect-delay="100">
 				<br>
-				<button type="submit" data-toggle="collapse" class="btn btn-default" >Confirm Order</button>
+				<button type="submit" data-toggle="collapse" class="btn btn-default" >Add Organization</button>
 			</div>	
 			</div>
 			</div>
@@ -210,7 +219,7 @@
             <div class="subfooter-inner">
               <div class="row">
                 <div class="col-md-12">
-                  <p class="text-center">Copyright © 2018 The Project. All rights reserved.</p>
+                  
                 </div>
               </div>
             </div>

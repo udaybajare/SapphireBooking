@@ -120,6 +120,14 @@
               <!-- ================ -->
               <h1 class="page-title">Order Details</h1>
               <!-- page-title end -->
+               <form class="form-horizontal" action="logout" method="POST">
+                	<div class="col-auto ml-auto hidden-md-down">
+                	<div class="col-lg-7 col-xl-8 mr-20">
+                	
+                	 <button type="submit" class="btn btn-group btn-default btn-animated">Log Out <i class="fa fa-user"></i></button>
+               							</div>
+					</div>
+					</form>
             </div>
           </div>
         </div>

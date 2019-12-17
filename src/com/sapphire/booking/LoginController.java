@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +24,7 @@ public class LoginController {
 
 	@Autowired
 	LoginDetailsDao loginDetailsDao;
-	
+
 	@Autowired
 	SessionDao sessionDao;
 
@@ -37,8 +38,7 @@ public class LoginController {
 	}
 
 	@RequestMapping(value = "/submit", method = RequestMethod.POST)
-	protected ModelAndView login(LoginDetails loginDetails, HttpSession session) 
-	{
+	protected ModelAndView login(LoginDetails loginDetails, HttpSession session) {
 
 		String view = "";
 		boolean validaLogin = validateLogin(loginDetails);
@@ -50,8 +50,7 @@ public class LoginController {
 
 			boolean sessionSaved = false;
 
-			while (!sessionSaved)
-			{
+			while (!sessionSaved) {
 				sessionId = Math.random();
 				sessionSaved = sessionDao.saveSession(new SessionEntry(String.valueOf(sessionId), loginDetails.getUserName()));
 			}
@@ -59,7 +58,7 @@ public class LoginController {
 			session.setAttribute("userName", loginDetails.getUserName());
 			session.setAttribute("sessionId", sessionId);
 
-			view = "Home";
+			view = "home";
 		} else {
 			view = "Login";
 
@@ -82,4 +81,14 @@ public class LoginController {
 
 		return validLogin;
 	}
+
+	@RequestMapping(value = "/logout", method = RequestMethod.POST)
+	protected ModelAndView logout(HttpSession session) {
+		double sessionId = (double) session.getAttribute("sessionId");
+		boolean sessionDelete = true;
+		sessionDelete = sessionDao.deleteSession(String.valueOf(sessionId));
+
+		return new ModelAndView("redirect:login");
+	}
+
 }

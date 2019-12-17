@@ -45,4 +45,25 @@ public class SessionDao {
 		return sessionSaved;
 	}
 
+	@Transactional
+	public boolean deleteSession(String sessionId) {
+		boolean sessiondelete = true;
+		try {
+			Session session = sessionFactory.getCurrentSession();
+
+			String sql = "delete from SessionEntry SE where SE.sessionId=:sessionId";
+
+			Query query = session.createQuery(sql);
+			query.setParameter("sessionId", sessionId);
+
+			query.executeUpdate();
+
+		} catch (Exception ex) {
+			sessiondelete = false;
+			ex.printStackTrace();
+		}
+
+		return  sessiondelete;
+	}
+
 }

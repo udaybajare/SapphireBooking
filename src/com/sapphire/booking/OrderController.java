@@ -8,7 +8,11 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -65,6 +69,8 @@ public class OrderController {
 
 		ModelAndView modelAndView = new ModelAndView(ADD_ORGANIZATION_FORM);
 
+		modelAndView.addObject("message", " ");
+
 		return modelAndView;
 	}
 
@@ -73,7 +79,18 @@ public class OrderController {
 
 		ModelAndView modelAndView = new ModelAndView(ORDER_BOOKING_FORM);
 
-		organizationDao.addOrganization(orgDetails);
+		// boolean searchOrganization = true;
+
+		boolean orgExist = organizationDao.searchOrganization(orgDetails.getOrgName());
+
+		// Check if Org already exixts
+
+		if (orgExist) {
+			modelAndView.addObject("message", "Org already exists....");
+		} else {
+			organizationDao.addOrganization(orgDetails);
+			modelAndView.addObject("message", "Org Successfully Registred");
+		}
 
 		ArrayList<String> registeredOrg = organizationDao.getRegisteredOrganization();
 
@@ -270,11 +287,11 @@ public class OrderController {
 				itemTotal = Math.addExact(rPrise, lPrise);
 
 			} else if (material[i].equalsIgnoreCase("CR")) {
-				int rPrise = bookingUtility.getCRLensePrice(type[i], tint[i], index[i], 
+				int rPrise = bookingUtility.getCRLensePrice(type[i], tint[i], index[i],
 						rSph.length > 0 && !(rSph[i] == null || rSph[i].equals("")) ? rSph[i] : null,
 						rCyl.length > 0 && !(rCyl[i] == null || rCyl[i].equals("")) ? rCyl[i] : null, coating[i],
 						Integer.parseInt(qtyNos[i]));
-				int lPrise = bookingUtility.getCRLensePrice(type[i], tint[i], index[i], 
+				int lPrise = bookingUtility.getCRLensePrice(type[i], tint[i], index[i],
 						lSph.length > 0 && !(lSph[i] == null || lSph[i].equals("")) ? lSph[i] : null,
 						lCyl.length > 0 && !(lCyl[i] == null || lCyl[i].equals("")) ? lCyl[i] : null, coating[i],
 						Integer.parseInt(qtyNos[i]));
