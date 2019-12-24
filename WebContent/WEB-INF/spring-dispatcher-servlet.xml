@@ -1,17 +1,19 @@
 
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="
+	http://www.springframework.org/schema/mvc 
+	http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
 	http://www.springframework.org/schema/beans  
-	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd  
+	http://www.springframework.org/schema/beans/spring-beans-3.2.xsd  
    	http://www.springframework.org/schema/context 
-   	http://www.springframework.org/schema/context/spring-context-3.0.xsd
+   	http://www.springframework.org/schema/context/spring-context-3.2.xsd
    	http://www.springframework.org/schema/tx
    	http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
-   	
-   	   	
+
+
 	<context:annotation-config />
 	<context:component-scan base-package="com.sapphire*"></context:component-scan>
 
@@ -45,11 +47,11 @@
 		
 		<!-- <property name="url" value="jdbc:mysql://localhost:3306/sapphireBookings"/> 
 		<property name="username" value="admin" /> 
-		<property name="password" value="admin123"/> -->
+		<property name="password" value="admin123"/>  -->
 		 
 		<property name="url" value="jdbc:mysql://hamdule.cmbzdfvjyats.us-east-2.rds.amazonaws.com:3306/sapphireBookings" />
 		<property name="username" value="mhamdule" />
-		<property name="password" value="mhamdule9933"/>
+		<property name="password" value="mhamdule9933"/> 
 	</bean>
 
 	<bean id="sessionFactory"
@@ -74,5 +76,16 @@
 
 	<tx:annotation-driven proxy-target-class="true"
 		transaction-manager="transactionManager" />
-   	
+
+	<mvc:interceptors>
+		<mvc:interceptor>
+
+			<mvc:mapping path="/**" />
+			<mvc:exclude-mapping path="/login" />
+			<mvc:exclude-mapping path="/submit" />
+
+			<bean class="com.sapphire.Interceptor.SessionValidatorInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+
 </beans>
