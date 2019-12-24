@@ -60,6 +60,7 @@ public class OrderController {
 		String registeredOrgStr = bookingUtility.getOrganizationList(registeredOrg);
 
 		modelAndView.addObject("organizationOptions", registeredOrgStr);
+		modelAndView.addObject("message", "");
 
 		return modelAndView;
 	}
@@ -86,7 +87,7 @@ public class OrderController {
 		// Check if Org already exixts
 
 		if (orgExist) {
-			modelAndView.addObject("message", "Org already exists....");
+			modelAndView.addObject("message", "Org already exists. you can proceed with your bookings");
 		} else {
 			organizationDao.addOrganization(orgDetails);
 			modelAndView.addObject("message", "Org Successfully Registred");
@@ -312,4 +313,28 @@ public class OrderController {
 
 		return priseList.toString();
 	}
+	
+	@RequestMapping(value = "/generateInvoiceByOrdId", method = RequestMethod.GET)
+	protected void generateInvoice(int orderId)
+			throws Exception {
+		
+		ArrayList<OrderDetails> orderDetailsList = orderDao.getAllOrders(orderId);
+		ArrayList<EntryDetails> entryDetails = new ArrayList<>();
+		for(int i = 0; i < orderDetailsList.size(); i++ ){
+			EntryDetails ed = orderDao. getEntryDetails( orderId,  orderDetailsList.get(i).getId());
+			entryDetails.add(ed);
+		}
+		
+		for(OrderDetails od : orderDetailsList  )
+		{
+			System.out.println(od.toString());
+		}
+		for(EntryDetails de : entryDetails )
+		{
+			System.out.println(de.toString());
+		}
+     return ;
+	}
+
+	
 }

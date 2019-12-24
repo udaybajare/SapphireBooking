@@ -173,4 +173,15 @@ public class OrderDetails implements Serializable {
     public void setOrderDate(String orderDate) {
 	this.orderDate = orderDate;
     }
+
+	@Override
+	public String toString() {
+		return "OrderDetails [id=" + id + ", orderId=" + orderId + ", orderDate=" + orderDate + ", material=" + material
+				+ ", type=" + type + ", indx=" + indx + ", coating=" + coating + ", tint=" + tint + ", qtyNos=" + qtyNos
+				+ ", frameType=" + frameType + ", sourcing=" + sourcing + ", status=" + status + ", organizationName="
+				+ organizationName + ", userName=" + userName + ", contactNo=" + contactNo + "]";
+	}
+    
+    
+    
 }

@@ -64,7 +64,7 @@ public class OrganizationDao {
 		try {
 			Session session = sessionFactory.getCurrentSession();
 
-			String selectHql = "select * FROM OrganizationDetails OG where OG.orgName=:orgName";
+			String selectHql = "FROM OrganizationDetails OG where OG.orgName=:orgName";
 			Query query = session.createQuery(selectHql);
 
 			query.setParameter("orgName", orgName);
