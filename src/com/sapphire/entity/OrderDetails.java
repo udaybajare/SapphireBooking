@@ -1,6 +1,7 @@
 package com.sapphire.entity;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -21,7 +22,7 @@ public class OrderDetails implements Serializable {
     private int id;
 
     private int orderId;
-    private String orderDate;
+    private  Date orderDate;
     private String material;
     private String type;
     private String indx;
@@ -31,13 +32,15 @@ public class OrderDetails implements Serializable {
     private String frameType;
     private String sourcing;
     private String status;
+    private Double totalAmount;
+    private String comment;
     private String organizationName;
     private String userName;
     private String contactNo;
 
     public OrderDetails(String material, String type, String index, String coating, String tint, String qtyNos,
 	    String frameType, String sourcing, String organizatioName, String userName, String contactNo,
-	    String orderDate, String status) {
+	    Date orderDate, String status, String comment, Double totalAmount) {
 	super();
 	this.material = material;
 	this.type = type;
@@ -52,6 +55,8 @@ public class OrderDetails implements Serializable {
 	this.contactNo = contactNo;
 	this.orderDate = orderDate;
 	this.status = status;
+	this.comment = comment;
+	this.totalAmount = totalAmount;
     }
 
     public int getId() {
@@ -165,21 +170,38 @@ public class OrderDetails implements Serializable {
     public void setStatus(String status) {
 	this.status = status;
     }
+    public Double getTotalAmount() {
+		return totalAmount;
+	}
 
-    public String getOrderDate() {
+	public void setTotalAmount(Double totalAmount) {
+		this.totalAmount = totalAmount;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+    public Date getOrderDate() {
 	return orderDate;
     }
 
-    public void setOrderDate(String orderDate) {
+    public void setOrderDate(Date orderDate) {
 	this.orderDate = orderDate;
     }
 
 	@Override
 	public String toString() {
-		return "OrderDetails [id=" + id + ", orderId=" + orderId + ", orderDate=" + orderDate + ", material=" + material
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		
+		return "OrderDetails [id=" + id + ", orderId=" + orderId + ", orderDate=" + dateFormat.format(orderDate) + ", material=" + material
 				+ ", type=" + type + ", indx=" + indx + ", coating=" + coating + ", tint=" + tint + ", qtyNos=" + qtyNos
 				+ ", frameType=" + frameType + ", sourcing=" + sourcing + ", status=" + status + ", organizationName="
-				+ organizationName + ", userName=" + userName + ", contactNo=" + contactNo + "]";
+				+ organizationName + ", userName=" + userName + ", contactNo=" + contactNo + ", comment=" + comment + ", totalAmount=" + totalAmount + " ]";
 	}
     
     

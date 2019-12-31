@@ -45,6 +45,8 @@ public class OrderController {
 	@Autowired
 	ReportCreator reportCreator;
 
+	
+
 	final static String ORDER_BOOKING_FORM = "OrderBooking";
 	final static String ORDER_SUBMITTED = "OrderSubmitted";
 	final static String ADD_ORGANIZATION_FORM = "addOrganization";
@@ -55,7 +57,7 @@ public class OrderController {
 
 		ModelAndView modelAndView = new ModelAndView(ORDER_BOOKING_FORM);
 
-		ArrayList<String> registeredOrg = organizationDao.getRegisteredOrganization();
+		List<Object[]> registeredOrg = organizationDao.getRegisteredOrganization();
 
 		String registeredOrgStr = bookingUtility.getOrganizationList(registeredOrg);
 
@@ -79,6 +81,13 @@ public class OrderController {
 	protected ModelAndView addOrganization(OrganizationDetails orgDetails) throws Exception {
 
 		ModelAndView modelAndView = new ModelAndView(ORDER_BOOKING_FORM);
+		
+		String custNo = orgDetails.getCustNumber();
+		if(custNo == null || custNo.equals(""))
+		{
+			 custNo = String.valueOf(organizationDao.getMaxCustNumber() + 1);
+			 orgDetails.setCustNumber(custNo);
+		}
 
 		// boolean searchOrganization = true;
 
@@ -93,7 +102,7 @@ public class OrderController {
 			modelAndView.addObject("message", "Org Successfully Registred");
 		}
 
-		ArrayList<String> registeredOrg = organizationDao.getRegisteredOrganization();
+		List<Object[]> registeredOrg = organizationDao.getRegisteredOrganization();
 
 		String registeredOrgStr = bookingUtility.getOrganizationList(registeredOrg);
 
@@ -107,6 +116,17 @@ public class OrderController {
 		orderDao.updateStatus(orderId, status);
 		return "redirect:/listOrders";
 	}
+	
+	@RequestMapping(value = "/updateTotal", method = RequestMethod.POST)
+	protected String updateTotal(String orderId, Double totalAmount, String sourcing, String comment) throws Exception {
+		
+		String[] sourcingValues = sourcing.split(",");
+		
+		orderDao.updateTotal(orderId, totalAmount, sourcingValues, comment);
+		
+		return "redirect:/listOrders";
+	}
+
 
 	@RequestMapping(value = "/listOrders", method = RequestMethod.GET)
 	protected ModelAndView listOrders() throws Exception {
@@ -123,7 +143,8 @@ public class OrderController {
 			orderListHTML.append(bookingUtility.getOrderRowHTML(orderId));
 		}
 
-		ArrayList<String> registeredOrg = organizationDao.getRegisteredOrganization();
+		List<Object[]> registeredOrg = organizationDao.getRegisteredOrganization();
+		
 		String registeredOrgStr = bookingUtility.getOrganizationList(registeredOrg);
 
 		if (!(orderListHTML.toString().trim().equals(""))) {
@@ -137,11 +158,19 @@ public class OrderController {
 	}
 
 	@RequestMapping(value = "/listOrdersHTML", method = RequestMethod.POST)
-	protected @ResponseBody String listOrders(String criteria, String criteriaValue) throws Exception {
+	protected @ResponseBody String listOrders(String criteria, String criteriaValue, String fromDate , String toDate) throws Exception {
 
 		ArrayList<Integer> orderIdList = null;
 
-		orderIdList = orderDao.getAllOrdersIds(criteria, criteriaValue);
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		
+		Date dateFromDate = dateFormat.parse(fromDate);
+		Date dateToDate = dateFormat.parse(toDate);
+		
+		
+		SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		orderIdList = orderDao.getOrderDetailsFromCriteriaAndDate(criteria, criteriaValue, sDateFormat.format(dateFromDate) , sDateFormat.format(dateToDate));
+		////
 		StringBuilder orderListHTML = new StringBuilder();
 
 		for (int orderId : orderIdList) {
@@ -201,12 +230,19 @@ public class OrderController {
 
 		Date orderDate = new Date();
 
-		String orderDateStr = dateFormat.format(orderDate);
+		/*Date orderDateStr = dateFormat.format(orderDate);*/
+		
 		String status = "Pending";
+		
+		Double totalAmount = 0.0;
+		
 		if (material != null) {
 			for (int i = 0; i < material.length; i++) {
-				orderDetails.add(new OrderDetails(material[i], type[i], index[i], coating[i], tint[i], qtyNos[i],
-						frameType[i], sourcing[i], orgName, userName, mobileNo, orderDateStr, status));
+				
+				OrderDetails orderDetail = new OrderDetails(material[i], type[i], index[i], coating[i], tint[i], qtyNos[i],
+						frameType[i], sourcing[i], orgName, userName, mobileNo, orderDate, status, "", 0.0);
+				
+				
 
 				// get right and left lence price
 
@@ -254,8 +290,19 @@ public class OrderController {
 						rDia[i], lSph.length > 0 && !(lSph[i] == null || lSph[i].equals("")) ? lSph[i] : null,
 						lCyl.length > 0 && !(lCyl[i] == null || lCyl[i].equals("")) ? lCyl[i] : null, lAxis[i], lAdd[i],
 						lDia[i], String.valueOf(lPrise), String.valueOf(rPrise)));
+				
+							
+				orderDetails.add(orderDetail);
+				totalAmount = totalAmount + rPrise + lPrise;	
+				
+				for(int j=0; j<orderDetails.size(); j++){orderDetails.get(j).setTotalAmount(totalAmount);}
 			}
 
+			//500
+			
+			
+			
+			
 			orderDao.saveInventory(orderDetails, entryDetails);
 		} else {
 			// Add Logic to return error message
@@ -317,24 +364,46 @@ public class OrderController {
 	@RequestMapping(value = "/generateInvoiceByOrdId", method = RequestMethod.GET)
 	protected void generateInvoice(int orderId)
 			throws Exception {
-		
+
 		ArrayList<OrderDetails> orderDetailsList = orderDao.getAllOrders(orderId);
 		ArrayList<EntryDetails> entryDetails = new ArrayList<>();
-		for(int i = 0; i < orderDetailsList.size(); i++ ){
-			EntryDetails ed = orderDao. getEntryDetails( orderId,  orderDetailsList.get(i).getId());
+		for (int i = 0; i < orderDetailsList.size(); i++) {
+			EntryDetails ed = orderDao.getEntryDetails(orderId, orderDetailsList.get(i).getId());
 			entryDetails.add(ed);
 		}
-		
-		for(OrderDetails od : orderDetailsList  )
-		{
+
+		for (OrderDetails od : orderDetailsList) {
 			System.out.println(od.toString());
 		}
-		for(EntryDetails de : entryDetails )
-		{
+		for (EntryDetails de : entryDetails) {
 			System.out.println(de.toString());
 		}
+		return;
+	}
+	
+	/*@RequestMapping(value = "/generateInvoiceByOrgDate", method = RequestMethod.GET)
+	protected void generateInvoiceOrgDate(String orgName, String fromDate ,String toDate)
+			throws Exception {
+		ArrayList<OrderDetails>  orderDetailsList = orderDao.getOrderDetailsFromOrgNameAndDate(orgName, fromDate, toDate);
+		
+		
+		ArrayList<EntryDetails> entryDetails = new ArrayList<>();
+		for (int i = 0; i < orderDetailsList.size(); i++) {
+			EntryDetails ed = orderDao.getEntryDetails(orderDetailsList.get(i).getOrderId(), orderDetailsList.get(i).getId());
+			entryDetails.add(ed);
+		}
+
+		for (OrderDetails od : orderDetailsList) {
+			System.out.println(od.toString());
+		}
+		for (EntryDetails de : entryDetails) {
+			System.out.println(de.toString());
+		}
+		
+		
      return ;
 	}
+	*/
 
 	
 }

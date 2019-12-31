@@ -1,6 +1,7 @@
 package com.sapphire.dao;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -59,6 +60,7 @@ public class OrderDao {
 
 		return maxOrderId;
 	}
+	
 
 	@Transactional
 	public long getMaxSerialNo() {
@@ -91,13 +93,14 @@ public class OrderDao {
 	@Transactional
 	public ArrayList<Integer> getAllOrdersIds() {
 		Session session = sessionFactory.getCurrentSession();
-		String hql = "select DISTINCT orderId from OrderDetails";
+		String hql = "select DISTINCT orderId from OrderDetails WHERE status NOT IN ('delivered')";
 
 		Query query = session.createQuery(hql);
 		List<Integer> OrderDetailsList = query.list();
 
 		return (ArrayList<Integer>) OrderDetailsList;
 	}
+	
 
 	@Transactional
 	public ArrayList<Integer> getAllOrdersIds(String selector, String selectorValue) {
@@ -125,7 +128,37 @@ public class OrderDao {
 
 		return (ArrayList<Integer>) OrderDetailsList;
 	}
+	
+	@Transactional
+	public ArrayList<Integer> getOrderDetailsFromCriteriaAndDate(String criteria, String criteriaVal, String fromDate, String toDate) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "";
 
+		hql = "select DISTINCT orderId from OrderDetails OD where OD.orderDate" + " BETWEEN '" + fromDate + "' AND '" + toDate
+				+ "'";
+
+		if(null!=criteria && !("".equals(criteria)))
+		{
+			hql = hql + " and OD."+criteria+"='" + criteriaVal + "'";
+		}
+		
+		System.out.println("SQL query is : " + hql);
+
+		Query query = session.createQuery(hql);
+		List<Integer> OrderDetailsList = query.list();
+
+		return (ArrayList<Integer>) OrderDetailsList;
+	}
+	
+	@Transactional
+	public String getOrgName(String organizationName, String selector, String selectorValue){
+		Session session = sessionFactory.getCurrentSession();
+		String[] dateRange = selectorValue.split("-");
+		String hql = "select organizationName from OrderDetails OD where  OD." + selector + " BETWEEN '" + dateRange[0]
+					+ "' AND '" + dateRange[1] + "'";
+       return organizationName; 
+	}
+	
 	@Transactional
 	public boolean updateStatus(String orderId, String status) {
 		try {
@@ -145,7 +178,58 @@ public class OrderDao {
 		}
 		return false;
 	}
+	@Transactional
+	public boolean updateTotal(String orderId, Double totalAmount, String[] sourcing, String comment) {
+		
+		ArrayList<Integer> subOrderIds = getSubOrderIds(orderId);
+		
+		for(int i=0; i < sourcing.length;i++)
+		{
 
+			try {
+				Session session = sessionFactory.getCurrentSession();
+
+				String hql = " update OrderDetails OD set OD.totalAmount=:TotalAmount, OD.sourcing=:Sourcing, OD.comment=:Comment where OD.orderId=:OrderId and OD.id=:id";
+
+				Query query = session.createQuery(hql);
+				query.setParameter("TotalAmount", totalAmount);
+				query.setParameter("Sourcing", sourcing[i]);
+				query.setParameter("Comment", comment);
+				query.setInteger("OrderId", Integer.parseInt(orderId));
+				query.setInteger("id", subOrderIds.get(i));
+
+				query.executeUpdate();
+				
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				return false;
+			}
+		}
+		return true;
+	}
+
+	@Transactional
+	public ArrayList<Integer> getSubOrderIds(String orderId)
+	{
+		ArrayList<Integer> subOrderIdList = null;
+		try {
+			Session session = sessionFactory.getCurrentSession();
+
+			String hql = " select OD.id from OrderDetails OD where OD.orderId=:OrderId";
+
+			Query query = session.createQuery(hql);
+
+			query.setInteger("OrderId", Integer.parseInt(orderId));
+
+			subOrderIdList = (ArrayList<Integer>) query.list();
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return subOrderIdList;
+
+	}
+	
 	@Transactional
 	public EntryDetails getEntryDetails(int orderId, int orderDetailsId) {
 		EntryDetails entryDetailsList = new EntryDetails();

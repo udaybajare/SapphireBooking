@@ -3,6 +3,7 @@ package com.sapphire.utils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import javax.annotation.ManagedBean;
 
@@ -27,12 +28,13 @@ public class BookingUtility {
 	@Autowired
 	CRPriceDao crPriceDao;
 
-	public String getOrganizationList(ArrayList<String> registeredOrgs) {
+	public String getOrganizationList(List<Object[]> registeredOrgs) {
 		StringBuilder registeredOrgsStr = new StringBuilder();
 
-		for (String orgName : registeredOrgs) {
+		for (Object[] name : registeredOrgs) {
+			
 			registeredOrgsStr.append(optionsHTMLOpen);
-			registeredOrgsStr.append(" value='" + orgName + "'>" + orgName);
+			registeredOrgsStr.append(" value='" + (String)name[1] + "'>" + (String)name[0]+" - "+(String)name[1]);
 			registeredOrgsStr.append(optionsHTMLClose);
 		}
 		return registeredOrgsStr.toString();
@@ -227,10 +229,12 @@ public class BookingUtility {
 			orderContent = orderContent.replace("lPrice", String.valueOf(lPrice));
 			orderContent = orderContent.replace("rPrice", String.valueOf(rPrice));
 
-			totalAmount = totalAmount + lPrice + rPrice;
+			//totalAmount = totalAmount + lPrice + rPrice;
 
 		}
-
+		
+		totalAmount = orderDetailsList.get(0).getTotalAmount();
+		
 		orderRow = orderRow.replace("orderNo", String.valueOf(orderDetailsList.get(0).getOrderId()));
 		orderRow = orderRow.replace("organizationName", orderDetailsList.get(0).getOrganizationName());
 		orderRow = orderRow.replace("fullName", String.valueOf(orderDetailsList.get(0).getUserName()));
@@ -239,6 +243,7 @@ public class BookingUtility {
 		orderRow = orderRow.replace("orderDetailsContent", orderContent);
 		orderRow = orderRow.replace("myModalStr", "myModal" + String.valueOf(orderId));
 		orderRow = orderRow.replace("totalAmountStr", String.valueOf(totalAmount));
+		
 		return orderRow;
 	}
 
@@ -253,22 +258,24 @@ public class BookingUtility {
 			+ " id=\"myModalLabel\">OrderId is : orderNo</h4><button type=\"button\" class=\"close\" data-dismiss=\"modal\""
 			+ " aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span>"
 			+ "</button></div><div class=\"modal-body\">orderDetailsContent"
-			+ "<p>Current Status : currentStatus</p><p>Total Amount : totalAmountStr</p></div><div class=\"modal-footer\"><h4>Mark As</h4><form id=\"accept\""
+			+ "<p>Current Status : currentStatus</p><form action=\"updateTotal\" method=\"POST\"><p>Total Amount : <input type = \"text\" name =\"totalAmount\" value=\"totalAmountStr\"></p>"
+			+ "<p>Comments : <input type=\"text\" name=\"comment\" value=\"\"></p><input type=\"hidden\" name=\"orderId\" value=\"orderNo\">"
+			+ "<button type=\"button\" class=\"btn btn-sm btn-default updateOrder\" >Update Order</button></form></div><div class=\"modal-footer\"><h4>Mark As</h4><form id=\"accept\""
 			+ " action=\"updateStatus\" method=\"POST\"><input type=\"hidden\" name=\"orderId\" value=\"orderNo\">"
-			+ "<input type=\"hidden\" name=\"status\" value=\"accepted\"><button type=\"button\""
-			+ " class=\"btn btn-sm btn-default\" onClick=\"$('#accept').submit();\">Accepted</button></form>"
+			+ "<input type=\"hidden\" name=\"status\" value=\"accepted\"><button type=\"submit\""
+			+ " class=\"btn btn-sm btn-default\" >Accepted</button></form>"
 			+ "<form id=\"process\" action=\"updateStatus\" method=\"POST\"><input type=\"hidden\" name=\"orderId\""
-			+ " value=\"orderNo\"><input type=\"hidden\" name=\"status\" value=\"processing\"><button type=\"button\""
-			+ " class=\"btn btn-sm btn-default\" onClick=\"$('#process').submit();\">Processing</button></form><form id=\"ready\""
+			+ " value=\"orderNo\"><input type=\"hidden\" name=\"status\" value=\"processing\"><button type=\"submit\""
+			+ " class=\"btn btn-sm btn-default\">Processing</button></form><form id=\"ready\""
 			+ " action=\"updateStatus\" method=\"POST\"><input type=\"hidden\" name=\"orderId\" value=\"orderNo\">"
-			+ "<input type=\"hidden\" name=\"status\" value=\"readyToDeliver\"><button type=\"button\" class=\"btn btn-sm btn-default\""
-			+ " onClick=\"$('#ready').submit();\">Ready to Deliver</button></form><form id=\"deliver\" action=\"updateStatus\""
+			+ "<input type=\"hidden\" name=\"status\" value=\"readyToDeliver\"><button type=\"submit\" class=\"btn btn-sm btn-default\""
+			+ " >Ready to Deliver</button></form><form id=\"deliver\" action=\"updateStatus\""
 			+ " method=\"POST\"><input type=\"hidden\" name=\"orderId\" value=\"orderNo\"><input type=\"hidden\" name=\"status\""
-			+ " value=\"delivered\"><button type=\"button\" class=\"btn btn-sm btn-default\" onClick=\"$('#deliver').submit();\">"
+			+ " value=\"delivered\"><button type=\"submit\" class=\"btn btn-sm btn-default\" >"
 			+ "Delivered</button></form></div></div></div></div></div></div></div>";
 
 	public static final String orderDetailsContentHTML = "<p>Material : material Type : typeStr Quantity : qtyNos Index : index1 "
-			+ "Coating : coatingStr Tint : tintStr Frame Type : frameType Sourcing : sourcingStr </p>"
+			+ "Coating : coatingStr Tint : tintStr Frame Type : frameType Sourcing : <select name= \"sourcing\" value=\"sourcingStr\"><option value=\"Factory Order\">Factory Order</option><option value=\"Ready Stock\">Ready Stock</option></select> </p>"
 			+ "<table class=\"table table-striped\"><thead>  <tr>    <th>LENS SIDE</th>    <th>SPH</th>"
 			+ "    <th>CYL</th>    <th>AXIS</th>    <th>ADD</th>    <th>DIA</th>  </tr></thead><tbody>  "
 			+ "<tr>    <td>R</td>    <td>rSph</td>    <td>rCyl</td>    <td>rAxis</td>    <td>rAdd</td>    "

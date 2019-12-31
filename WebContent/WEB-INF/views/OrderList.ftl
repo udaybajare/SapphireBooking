@@ -89,7 +89,7 @@
 					<option value="organizationName">Organization</option>
 					<option value="userName">Booked By</option>
 					<option value="status">Order Status</option>
-					<option value="orderDate">Order Date/Range</option>
+					
 				</select>
                 <label class="sr-only" for="inlineFormInputGroup">Value</label>
                 <div class="input-group mb-2 mr-sm-2 mb-sm-0">
@@ -105,8 +105,8 @@
 				  <option value="readyToDeliver">Ready To Deliver</option>
 				  <option value="delivered" >Delivered</option>
 				  </select>
-				  <input type="text" id="datepicker" class="form-control fromDate" style="display:none;">
-				  <input type="text" id="datepicker1" class="form-control toDate" style="display:none;">
+				  <input type="text" id="datepicker" class="form-control fromDate" placeholder = "select from date">
+				  <input type="text" id="datepicker1" class="form-control toDate" placeholder = "select to date">
                 </div>
                 <button type="button" class="btn btn-default" onClick="searchOrder()">Submit</button>
                 <button type="button" class="btn btn-default" onClick="generateReport()">Generate Report</button>
@@ -202,10 +202,13 @@ function printItem(itemId)
   }
   
   
+  var fromDateVal =  $('.fromDate').val();
+  var toDateVal = $('.toDate').val();
+  
   var ajaxReq = $.ajax({
 	  url : 'listOrdersHTML',
 	  type : 'POST',
-	  data : {'criteria' : selector, 'criteriaValue' : selectorVal},
+	  data : {'criteria' : selector, 'criteriaValue' : selectorVal, 'fromDate':fromDateVal , 'toDate':toDateVal},
 	  success: function(data) 
 		{
 		console.log(" Received data from BE");
@@ -262,5 +265,44 @@ function printItem(itemId)
   } );
 </script>
 
+<script>
+$('.updateOrder').on('click',function updateTotal()
+{
+
+	var totalAmount = $(this.form.elements)[0].value;
+	var comment = $(this.form.elements)[1].value;
+	var orderId = $(this.form.elements)[2].value;
+	var sourcing = $(this.offsetParent.children)[0].children[0].value;
+	
+	var para = $(this.offsetParent.children);
+	
+	var sourcingVals = '';
+	
+	for(var j = 1; j< $(this.offsetParent.children).length; j++)
+	{
+		if(para[j].tagName==='P')
+		{
+			if(para[j].children[0] !== undefined && para[j].children[0].name==='sourcing')
+			{
+				sourcing = sourcing + "," +para[j].children[0].value;
+			}
+		}
+		
+	}
+	
+
+	var ajaxReq = $.ajax({
+	  url : 'updateTotal',
+	  type : 'POST',
+	  data : {'totalAmount' : totalAmount, 'comment' : comment, 'orderId': orderId , 'sourcing': sourcing},
+	  success: function(data) 
+		{
+			console.log(" Received data from BE");
+			console.log(data);							
+	    }
+	});
+
+});
+</script>
 </body>
 </html>

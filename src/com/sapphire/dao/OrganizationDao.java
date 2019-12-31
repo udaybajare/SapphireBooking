@@ -6,6 +6,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,15 +41,35 @@ public class OrganizationDao {
 	}
 
 	@Transactional
-	public ArrayList<String> getRegisteredOrganization() {
-		ArrayList<String> registeredOrgs = new ArrayList<String>();
+	public int getMaxCustNumber(){
+		Session session = sessionFactory.getCurrentSession();
+		String sql = "select max(custNumber) from OrganizationDetails";
+		Query qry = session.createQuery(sql);
+
+		String maxCustNo = (String)qry.uniqueResult();
+	
+
+		return Integer.valueOf(maxCustNo);	
+	}
+	@Transactional
+	public List<Object[]> getRegisteredOrganization() {
+		
+		List<Object[]> registeredOrgs = null;
 		try {
 			Session session = sessionFactory.getCurrentSession();
 
 			Criteria criteria = session.createCriteria(OrganizationDetails.class);
-			criteria.setProjection(Projections.property("orgName"));
+			ProjectionList projList = Projections.projectionList();
+			projList.add(Projections.property("custNumber"));
+			projList.add(Projections.property("orgName"));
+			criteria.setProjection(projList);
+			/*
+			 * criteria.setProjection(Projections.property("orgName"));
+			 * criteria.setProjection(Projections.property("custNumber" "-"
+			 * "orgName"));
+			 */
 
-			registeredOrgs = (ArrayList<String>) criteria.list();
+			registeredOrgs = criteria.list();
 
 		} catch (Exception ex) {
 			ex.printStackTrace();

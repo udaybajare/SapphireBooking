@@ -119,7 +119,7 @@
 
               <!-- page-title start -->
               <!-- ================ -->
-              <h1 class="page-title">Order Details</h1>
+              <h1 class="page-title">Organization Register</h1>
               <!-- page-title end -->
                <form class="form-horizontal" action="logout" method="POST">
                 	<div class="col-auto ml-auto hidden-md-down">
@@ -140,6 +140,12 @@
         <div class="container">
           <form action="addOrganization" method="POST">
             <div class="form-row">
+            <div class="col-md-2">
+                <div class="form-group ">
+                  <label >Customer Number</label>
+                  <input type="text" name="custNumber" class="form-control " >
+                </div>
+              </div>
               <div class="col-md-2">
                 <div class="form-group ">
                   <label >Organization Name</label>

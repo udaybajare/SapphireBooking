@@ -14,11 +14,21 @@ public class OrganizationDetails {
     private int orgID;
     
     @Id
-    private String orgName;
+    private String custNumber;
+   
+
+	private String orgName;
     
     private String orgAddress;
     private String orgContact;
 
+    public String getCustNumber() {
+		return custNumber;
+	}
+
+	public void setCustNumber(String custNumber) {
+		this.custNumber = custNumber;
+	}
     public String getOrgName() {
 	return orgName;
     }

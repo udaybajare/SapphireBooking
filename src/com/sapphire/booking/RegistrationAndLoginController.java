@@ -1,6 +1,7 @@
 package com.sapphire.booking;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,8 +39,7 @@ public class RegistrationAndLoginController {
 
 	ModelAndView modelAndView = new ModelAndView(REGISTRATION_VIEW_NAME);
 
-	ArrayList<String> registeredOrg = organizationDao.getRegisteredOrganization();
-
+	List<Object[]> registeredOrg = organizationDao.getRegisteredOrganization();
 	String registeredOrgStr = bookingUtility.getOrganizationList(registeredOrg);
 
 	modelAndView.addObject("organizationOptions", registeredOrgStr);
