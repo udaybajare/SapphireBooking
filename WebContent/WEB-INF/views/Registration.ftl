@@ -106,7 +106,7 @@
         <header class="header fixed fixed-desktop clearfix">
           <div class="container">
             <div class="row">
-              <div class="col-md-auto hidden-md-down">
+              <div class="col-md-4">
                 <!-- header-first start -->
                 <!-- ================ -->
                 <div class="header-first clearfix">
@@ -115,6 +115,14 @@
                   <div id="logo" class="logo">
                     <a href="index.html"><img id="logo_img" src="images/logo_light_blue.png" alt="The Project"></a>
                   </div>
+                  <form class="form-horizontal" action="logout" method="POST">
+                	<div class="col-auto ml-auto hidden-md-down">
+                	<div class="col-lg-7 col-xl-8 mr-20">
+                	
+                	 <button type="submit" class="btn btn-group btn-default btn-animated">Log Out <i class="fa fa-user"></i></button>
+               							</div>
+					</div>
+					</form>
 
                   <!-- name-and-slogan -->
                   
@@ -154,7 +162,8 @@
       <section class="main-container">
 		<div class="section light-gray-bg">
 			<div class="container">
-        
+			
+         
           <form action="register" method="POST">
           
             <div class="form-row">

@@ -58,19 +58,24 @@
         <header class="header fixed fixed-desktop clearfix">
           <div class="container">
             <div class="row">
-              <div class="col-md-auto hidden-md-down">
+              <div class="col-md-4 hidden-md-down">
                 <div class="header-first clearfix">
 
                   <div id="logo" class="logo">
                     <a><img id="logo_img" src="images/Logo.png" alt="SAPPHIRE LENCES"></a>
                   </div>
-                </div>
-
+                </div>                
               </div>
-              <div class="col-lg-8 ml-auto">
+              <div class="col-lg-4 ml-auto">
 
                 <div class="header-second clearfix">
-                  
+                  <form class="form-horizontal" action="logout" method="POST">
+                	<div class="col-auto ml-auto hidden-md-down">
+                	
+                	<button type="submit" class="btn btn-group btn-default btn-animated">Log Out <i class="fa fa-user"></i></button>
+               							
+					</div>
+					</form>
                 
                 </div>
 

@@ -56,6 +56,7 @@ public class OrderController {
 		String registeredOrgStr = bookingUtility.getOrganizationList(registeredOrg);
 
 		modelAndView.addObject("organizationOptions", registeredOrgStr);
+		modelAndView.addObject("message", "");
 
 		return modelAndView;
 	}
@@ -65,6 +66,8 @@ public class OrderController {
 
 		ModelAndView modelAndView = new ModelAndView(ADD_ORGANIZATION_FORM);
 
+		modelAndView.addObject("message", " ");
+
 		return modelAndView;
 	}
 
@@ -73,14 +76,19 @@ public class OrderController {
 
 		ModelAndView modelAndView = new ModelAndView(ORDER_BOOKING_FORM);
 		
-		String custNo = orgDetails.getCustNumber();
-		if(custNo == null || custNo.equals(""))
-		{
-			 custNo = String.valueOf(organizationDao.getMaxCustNumber() + 1);
-			 orgDetails.setCustNumber(custNo);
-		}
 
+		// boolean searchOrganization = true;
+
+		boolean orgExist = organizationDao.searchOrganization(orgDetails.getOrgName());
+
+		// Check if Org already exixts
+
+		if (orgExist) {
+			modelAndView.addObject("message", "Org already exists. you can proceed with your bookings");
+		} else {
 		organizationDao.addOrganization(orgDetails);
+			modelAndView.addObject("message", "Org Successfully Registred");
+		}
 
 		ArrayList<ArrayList<String>> registeredOrg = organizationDao.getRegisteredOrganization();
 
@@ -227,6 +235,8 @@ public class OrderController {
 				int rPrise = 0;
 				int lPrise = 0;
 
+				int totalPrice = 0;
+
 				if (material[i].equalsIgnoreCase("Glass")) {
 
 					rPrise = bookingUtility.getGlassLensePrice(
@@ -234,40 +244,44 @@ public class OrderController {
 									: null,
 							rCyl.length > 0 && !(rCyl[i] == null || rCyl[i].equals("")) ? Float.parseFloat(rCyl[i])
 									: null,
-							tint[i], type[i], Integer.parseInt(qtyNos[i]));
+							tint[i], type[i]);
 
 					lPrise = bookingUtility.getGlassLensePrice(
 							lSph.length > 0 && !(lSph[i] == null || lSph[i].equals("")) ? Float.parseFloat(lSph[i])
 									: null,
 							lCyl.length > 0 && !(lCyl[i] == null || lCyl[i].equals("")) ? Float.parseFloat(lCyl[i])
 									: null,
-							tint[i], type[i], Integer.parseInt(qtyNos[i]));
+							tint[i], type[i]);
+					
+					
+					
 					System.out.println(rPrise);
 					System.out.println(lPrise);
 
 				} else if (material[i].equalsIgnoreCase("CR")) {
 					rPrise = bookingUtility.getCRLensePrice(type[i], tint[i], index[i],
 							rSph.length > 0 && !(rSph[i] == null || rSph[i].equals("")) ? rSph[i] : null,
-							rCyl.length > 0 && !(rCyl[i] == null || rCyl[i].equals("")) ? rCyl[i] : null, coating[i],
-							Integer.parseInt(qtyNos[i]));
+							rCyl.length > 0 && !(rCyl[i] == null || rCyl[i].equals("")) ? rCyl[i] : null, coating[i]);
+					
 					lPrise = bookingUtility.getCRLensePrice(type[i], tint[i], index[i],
 							lSph.length > 0 && !(lSph[i] == null || lSph[i].equals("")) ? lSph[i] : null,
-							lCyl.length > 0 && !(lCyl[i] == null || lCyl[i].equals("")) ? lCyl[i] : null, coating[i],
-							Integer.parseInt(qtyNos[i]));
+							lCyl.length > 0 && !(lCyl[i] == null || lCyl[i].equals("")) ? lCyl[i] : null, coating[i]);
 
 					if (Math.ceil(Float.parseFloat(lCyl[i])) > 4) {
-						rPrise = rPrise != 0 ? Math.addExact(rPrise, 50) : rPrise;
-						lPrise = lPrise != 0 ? Math.addExact(lPrise, 50) : lPrise;
+						rPrise = rPrise != 0 ? Math.addExact(rPrise, 25) : rPrise;
+						lPrise = lPrise != 0 ? Math.addExact(lPrise, 25) : lPrise;
 					}
 
 				}
 
+				totalPrice = ((((lPrise+rPrise)+5)/10)*10) * Integer.parseInt(qtyNos[i]);
+				
 				entryDetails.add(new EntryDetails(
 						rSph.length > 0 && !(rSph[i] == null || rSph[i].equals("")) ? rSph[i] : null,
 						rCyl.length > 0 && !(rCyl[i] == null || rCyl[i].equals("")) ? rCyl[i] : null, rAxis[i], rAdd[i],
 						rDia[i], lSph.length > 0 && !(lSph[i] == null || lSph[i].equals("")) ? lSph[i] : null,
 						lCyl.length > 0 && !(lCyl[i] == null || lCyl[i].equals("")) ? lCyl[i] : null, lAxis[i], lAdd[i],
-						lDia[i], String.valueOf(lPrise), String.valueOf(rPrise)));
+						lDia[i], String.valueOf(lPrise*Integer.parseInt(qtyNos[i])), String.valueOf(rPrise*Integer.parseInt(qtyNos[i]))));
 				
 							
 				orderDetails.add(orderDetail);
@@ -292,39 +306,44 @@ public class OrderController {
 
 		for (int i = 0; i < material.length; i++) {
 			int itemTotal = 0;
+			int totalPrice = 0;
+			int rPrise = 0;
+			int lPrise = 0;
+			
 			if (material[i].equalsIgnoreCase("Glass")) {
 
-				int rPrise = bookingUtility.getGlassLensePrice(
+				 rPrise = bookingUtility.getGlassLensePrice(
 						rSph.length > 0 && !(rSph[i] == null || rSph[i].equals("")) ? Float.parseFloat(rSph[i]) : null,
 						rCyl.length > 0 && !(rCyl[i] == null || rCyl[i].equals("")) ? Float.parseFloat(rCyl[i]) : null,
-						tint[i], type[i], Integer.parseInt(qtyNos[i]));
+						tint[i], type[i]);
 
-				int lPrise = bookingUtility.getGlassLensePrice(
+				 lPrise = bookingUtility.getGlassLensePrice(
 						lSph.length > 0 && !(lSph[i] == null || lSph[i].equals("")) ? Float.parseFloat(lSph[i]) : null,
 						lCyl.length > 0 && !(lCyl[i] == null || lCyl[i].equals("")) ? Float.parseFloat(lCyl[i]) : null,
-						tint[i], type[i], Integer.parseInt(qtyNos[i]));
+						tint[i], type[i]);
+				
 				System.out.println(rPrise);
 				System.out.println(lPrise);
 				itemTotal = Math.addExact(rPrise, lPrise);
 
 			} else if (material[i].equalsIgnoreCase("CR")) {
-				int rPrise = bookingUtility.getCRLensePrice(type[i], tint[i], index[i], 
+				 rPrise = bookingUtility.getCRLensePrice(type[i], tint[i], index[i],
 						rSph.length > 0 && !(rSph[i] == null || rSph[i].equals("")) ? rSph[i] : null,
-						rCyl.length > 0 && !(rCyl[i] == null || rCyl[i].equals("")) ? rCyl[i] : null, coating[i],
-						Integer.parseInt(qtyNos[i]));
-				int lPrise = bookingUtility.getCRLensePrice(type[i], tint[i], index[i], 
+						rCyl.length > 0 && !(rCyl[i] == null || rCyl[i].equals("")) ? rCyl[i] : null, coating[i]);
+				 lPrise = bookingUtility.getCRLensePrice(type[i], tint[i], index[i],
 						lSph.length > 0 && !(lSph[i] == null || lSph[i].equals("")) ? lSph[i] : null,
-						lCyl.length > 0 && !(lCyl[i] == null || lCyl[i].equals("")) ? lCyl[i] : null, coating[i],
-						Integer.parseInt(qtyNos[i]));
+						lCyl.length > 0 && !(lCyl[i] == null || lCyl[i].equals("")) ? lCyl[i] : null, coating[i]);
 
 				if (Math.ceil(lCyl.length > 0 ? Float.parseFloat(lCyl[i]) : 0) > 4) {
 					rPrise = rPrise != 0 ? Math.addExact(rPrise, 50) : rPrise;
 					lPrise = lPrise != 0 ? Math.addExact(lPrise, 50) : lPrise;
 				}
 
-				itemTotal = Math.addExact(rPrise, lPrise);
 			}
-			priseList.append(String.valueOf(itemTotal) + ",");
+			
+			totalPrice = ((((lPrise+rPrise)+5)/10)*10) * Integer.parseInt(qtyNos[i]);
+			
+			priseList.append(String.valueOf(totalPrice) + ",");
 		}
 
 		if (priseList.toString().split("0,").length == 0) {
@@ -353,30 +372,6 @@ public class OrderController {
 		}
 		return;
 	}
-	
-	/*@RequestMapping(value = "/generateInvoiceByOrgDate", method = RequestMethod.GET)
-	protected void generateInvoiceOrgDate(String orgName, String fromDate ,String toDate)
-			throws Exception {
-		ArrayList<OrderDetails>  orderDetailsList = orderDao.getOrderDetailsFromOrgNameAndDate(orgName, fromDate, toDate);
-		
-		
-		ArrayList<EntryDetails> entryDetails = new ArrayList<>();
-		for (int i = 0; i < orderDetailsList.size(); i++) {
-			EntryDetails ed = orderDao.getEntryDetails(orderDetailsList.get(i).getOrderId(), orderDetailsList.get(i).getId());
-			entryDetails.add(ed);
-		}
-
-		for (OrderDetails od : orderDetailsList) {
-			System.out.println(od.toString());
-		}
-		for (EntryDetails de : entryDetails) {
-			System.out.println(de.toString());
-		}
-		
-		
-     return ;
-	}
-	*/
 
 	
 }

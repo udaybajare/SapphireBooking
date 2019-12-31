@@ -40,7 +40,7 @@ public class BookingUtility {
 		return registeredOrgsStr.toString();
 	}
 
-	public int getGlassLensePrice(Float sph, Float cyl, String tint, String type, int quantity) {
+	public int getGlassLensePrice(Float sph, Float cyl, String tint, String type) {
 
 		boolean onlyCylOrSph = false;
 
@@ -69,7 +69,30 @@ public class BookingUtility {
 
 		System.out.println("index is " + index);
 
-		String typeToSelect = type.startsWith("K") ? "_KT" : "_SV";
+		String typeToSelect = "";
+		boolean isExeOrder = false;
+		
+		switch(type)
+		{
+		case "Single Vision":
+			typeToSelect = "_SV";
+			break;
+		case "Kt Bifocal":
+			typeToSelect = "_KT";
+			break;
+		case "Progressive":
+			typeToSelect = "_PR";
+			break;
+		case "D Bifocal":
+			typeToSelect = "_DB";
+			break;
+		case "Executive":
+			// If type is Executive calculate the price based on Kryptop Bifocal
+			// price
+			isExeOrder = true;
+			typeToSelect = "_KT";
+			break;
+		}
 
 		String columnToSelect = "";
 
@@ -94,27 +117,39 @@ public class BookingUtility {
 			columnToSelect = "PB" + typeToSelect;
 			break;
 
-		case "Executive":
-			columnToSelect = "EXE" + typeToSelect;
+		case "PR":
+			columnToSelect = "PR" + typeToSelect;
 			break;
 
 		}
 
 		int unitPrice = 0;
 
-		if (index != -1) {
+		if (index != -1)
+		{
 			unitPrice = glassPriceDao.getUnitPrice(index, columnToSelect);
+
+			if (isExeOrder) {
+				if (columnToSelect.equals("W_KT"))
+				{
+					unitPrice = unitPrice + 50;
 		}
+				else 
+				{
+					unitPrice = unitPrice + 200;
+				}
+			}
+		}
+
+		unitPrice = unitPrice/2;
+		
 
 		System.out.println("unitPrice is " + unitPrice);
 
-		int totalItemPrice = Math.multiplyExact(unitPrice, quantity);
-
-		return totalItemPrice;
+		return unitPrice;
 	}
 
-	public int getCRLensePrice(String type, String tint, String index, String sph, String cyl, String coating,
-			int quantity) {
+	public int getCRLensePrice(String type, String tint, String index, String sph, String cyl, String coating) {
 		boolean isSphNtv = sph.startsWith("-");
 
 		Double sphInt = Math.ceil(Float.parseFloat(isSphNtv ? sph.substring(1) : sph));
@@ -185,8 +220,8 @@ public class BookingUtility {
 			}
 		}
 
-		int totalItemPrice = Math.multiplyExact(unitPrise, quantity);
-		return totalItemPrice;
+		unitPrise = unitPrise/2;		
+		return unitPrise;
 	}
 
 	public String getOrderRowHTML(int orderId) {
