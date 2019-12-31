@@ -8,11 +8,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,8 +41,6 @@ public class OrderController {
 	@Autowired
 	ReportCreator reportCreator;
 
-	
-
 	final static String ORDER_BOOKING_FORM = "OrderBooking";
 	final static String ORDER_SUBMITTED = "OrderSubmitted";
 	final static String ADD_ORGANIZATION_FORM = "addOrganization";
@@ -57,12 +51,11 @@ public class OrderController {
 
 		ModelAndView modelAndView = new ModelAndView(ORDER_BOOKING_FORM);
 
-		List<Object[]> registeredOrg = organizationDao.getRegisteredOrganization();
+		ArrayList<ArrayList<String>> registeredOrg = organizationDao.getRegisteredOrganization();
 
 		String registeredOrgStr = bookingUtility.getOrganizationList(registeredOrg);
 
 		modelAndView.addObject("organizationOptions", registeredOrgStr);
-		modelAndView.addObject("message", "");
 
 		return modelAndView;
 	}
@@ -71,8 +64,6 @@ public class OrderController {
 	protected ModelAndView addOrganizationForm() throws Exception {
 
 		ModelAndView modelAndView = new ModelAndView(ADD_ORGANIZATION_FORM);
-
-		modelAndView.addObject("message", " ");
 
 		return modelAndView;
 	}
@@ -89,20 +80,9 @@ public class OrderController {
 			 orgDetails.setCustNumber(custNo);
 		}
 
-		// boolean searchOrganization = true;
+		organizationDao.addOrganization(orgDetails);
 
-		boolean orgExist = organizationDao.searchOrganization(orgDetails.getOrgName());
-
-		// Check if Org already exixts
-
-		if (orgExist) {
-			modelAndView.addObject("message", "Org already exists. you can proceed with your bookings");
-		} else {
-			organizationDao.addOrganization(orgDetails);
-			modelAndView.addObject("message", "Org Successfully Registred");
-		}
-
-		List<Object[]> registeredOrg = organizationDao.getRegisteredOrganization();
+		ArrayList<ArrayList<String>> registeredOrg = organizationDao.getRegisteredOrganization();
 
 		String registeredOrgStr = bookingUtility.getOrganizationList(registeredOrg);
 
@@ -127,7 +107,6 @@ public class OrderController {
 		return "redirect:/listOrders";
 	}
 
-
 	@RequestMapping(value = "/listOrders", method = RequestMethod.GET)
 	protected ModelAndView listOrders() throws Exception {
 
@@ -143,8 +122,7 @@ public class OrderController {
 			orderListHTML.append(bookingUtility.getOrderRowHTML(orderId));
 		}
 
-		List<Object[]> registeredOrg = organizationDao.getRegisteredOrganization();
-		
+		ArrayList<ArrayList<String>> registeredOrg = organizationDao.getRegisteredOrganization();
 		String registeredOrgStr = bookingUtility.getOrganizationList(registeredOrg);
 
 		if (!(orderListHTML.toString().trim().equals(""))) {
@@ -298,11 +276,6 @@ public class OrderController {
 				for(int j=0; j<orderDetails.size(); j++){orderDetails.get(j).setTotalAmount(totalAmount);}
 			}
 
-			//500
-			
-			
-			
-			
 			orderDao.saveInventory(orderDetails, entryDetails);
 		} else {
 			// Add Logic to return error message
@@ -335,11 +308,11 @@ public class OrderController {
 				itemTotal = Math.addExact(rPrise, lPrise);
 
 			} else if (material[i].equalsIgnoreCase("CR")) {
-				int rPrise = bookingUtility.getCRLensePrice(type[i], tint[i], index[i],
+				int rPrise = bookingUtility.getCRLensePrice(type[i], tint[i], index[i], 
 						rSph.length > 0 && !(rSph[i] == null || rSph[i].equals("")) ? rSph[i] : null,
 						rCyl.length > 0 && !(rCyl[i] == null || rCyl[i].equals("")) ? rCyl[i] : null, coating[i],
 						Integer.parseInt(qtyNos[i]));
-				int lPrise = bookingUtility.getCRLensePrice(type[i], tint[i], index[i],
+				int lPrise = bookingUtility.getCRLensePrice(type[i], tint[i], index[i], 
 						lSph.length > 0 && !(lSph[i] == null || lSph[i].equals("")) ? lSph[i] : null,
 						lCyl.length > 0 && !(lCyl[i] == null || lCyl[i].equals("")) ? lCyl[i] : null, coating[i],
 						Integer.parseInt(qtyNos[i]));

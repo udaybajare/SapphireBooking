@@ -165,14 +165,6 @@ public class EntryDetails implements Serializable
 	public void setrPrice(String rPrice) {
 		this.rPrice = rPrice;
 	}
-
-	@Override
-	public String toString() {
-		return "EntryDetails [id1=" + id1 + ", orderDetailsId=" + orderDetailsId + ", orderId=" + orderId + ", rSph="
-				+ rSph + ", rCyl=" + rCyl + ", rAxis=" + rAxis + ", rAdd=" + rAdd + ", rDia=" + rDia + ", lSph=" + lSph
-				+ ", lCyl=" + lCyl + ", lAxis=" + lAxis + ", lAdd=" + lAdd + ", lDia=" + lDia + ", lPrice=" + lPrice
-				+ ", rPrice=" + rPrice + "]";
-	}
     
     
 }

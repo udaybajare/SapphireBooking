@@ -21,7 +21,7 @@
 		<url-pattern>/sass/*</url-pattern>
 		<url-pattern>/images/*</url-pattern>
 		<url-pattern>/js/*</url-pattern>
-	</servlet-mapping>	
+	</servlet-mapping>
 
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>

@@ -194,7 +194,7 @@ public class OrderDetails implements Serializable {
 	this.orderDate = orderDate;
     }
 
-	@Override
+    @Override
 	public String toString() {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		
@@ -203,7 +203,5 @@ public class OrderDetails implements Serializable {
 				+ ", frameType=" + frameType + ", sourcing=" + sourcing + ", status=" + status + ", organizationName="
 				+ organizationName + ", userName=" + userName + ", contactNo=" + contactNo + ", comment=" + comment + ", totalAmount=" + totalAmount + " ]";
 	}
-    
-    
     
 }

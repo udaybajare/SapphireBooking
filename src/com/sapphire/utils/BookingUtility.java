@@ -28,13 +28,13 @@ public class BookingUtility {
 	@Autowired
 	CRPriceDao crPriceDao;
 
-	public String getOrganizationList(List<Object[]> registeredOrgs) {
+	public String getOrganizationList(ArrayList<ArrayList<String>> registeredOrgs) {
 		StringBuilder registeredOrgsStr = new StringBuilder();
 
-		for (Object[] name : registeredOrgs) {
+		for (ArrayList<String> name : registeredOrgs) {
 			
 			registeredOrgsStr.append(optionsHTMLOpen);
-			registeredOrgsStr.append(" value='" + (String)name[1] + "'>" + (String)name[0]+" - "+(String)name[1]);
+			registeredOrgsStr.append(" value='" + (String)name.get(1) + "'>" + (String)name.get(0)+" - "+(String)name.get(1));
 			registeredOrgsStr.append(optionsHTMLClose);
 		}
 		return registeredOrgsStr.toString();

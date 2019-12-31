@@ -52,9 +52,9 @@ public class OrganizationDao {
 		return Integer.valueOf(maxCustNo);	
 	}
 	@Transactional
-	public List<Object[]> getRegisteredOrganization() {
+	public ArrayList<ArrayList<String>> getRegisteredOrganization() {
 		
-		List<Object[]> registeredOrgs = null;
+		ArrayList<ArrayList<String>> registeredOrgs = null;
 		try {
 			Session session = sessionFactory.getCurrentSession();
 
@@ -69,7 +69,7 @@ public class OrganizationDao {
 			 * "orgName"));
 			 */
 
-			registeredOrgs = criteria.list();
+	    registeredOrgs = (ArrayList<ArrayList<String>>) criteria.list();
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
