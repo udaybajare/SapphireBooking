@@ -31,10 +31,12 @@ public class BookingUtility {
 	public String getOrganizationList(ArrayList<ArrayList<String>> registeredOrgs) {
 		StringBuilder registeredOrgsStr = new StringBuilder();
 
-		for (ArrayList<String> name : registeredOrgs) {
+		for (Object name : registeredOrgs) {
+			
+			Object[] nameList = (Object[]) name;
 			
 			registeredOrgsStr.append(optionsHTMLOpen);
-			registeredOrgsStr.append(" value='" + (String)name.get(1) + "'>" + (String)name.get(0)+" - "+(String)name.get(1));
+			registeredOrgsStr.append(" value='" + (String)nameList[1] + "'>" + (String)nameList[0]+" - "+(String)nameList[1]);
 			registeredOrgsStr.append(optionsHTMLClose);
 		}
 		return registeredOrgsStr.toString();
