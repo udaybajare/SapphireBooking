@@ -8999,3 +8999,23 @@ h6.media-heading {
   margin-top: -9px;
   color: #ffffff;
 }
+
+.modal-dialog {
+    max-width: 40%;
+}
+
+input {
+ overflow: visible;
+ border-radius: 5px;
+ border-color: #e1e1e1;
+ border: 1px solid #ced4da;
+}
+
+td {
+padding-right : 5px;
+padding-left : 5px;	
+}
+
+.form-control {
+width: 60%;
+}

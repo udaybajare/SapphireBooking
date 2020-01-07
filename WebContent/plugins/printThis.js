@@ -243,16 +243,16 @@
             }
 
             // remove inline styles
-            if (opt.removeInline) {
+            //if (opt.removeInline) {
                 // Ensure there is a selector, even if it's been mistakenly removed
-                var selector = opt.removeInlineSelector || '*';
+            //    var selector = opt.removeInlineSelector || '*';
                 // $.removeAttr available jQuery 1.7+
-                if ($.isFunction($.removeAttr)) {
-                    $body.find(selector).removeAttr("style");
-                } else {
-                    $body.find(selector).attr("style", "");
-                }
-            }
+            //  if ($.isFunction($.removeAttr)) {
+            //      $body.find(selector).removeAttr("style");
+            //  } else {
+            //      $body.find(selector).attr("style", "");
+            //  }
+            // }
 
             // print "footer"
             appendContent($body, opt.footer);

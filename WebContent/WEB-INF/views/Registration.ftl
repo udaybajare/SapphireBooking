@@ -3,8 +3,8 @@
 
   <head>
     <meta charset="utf-8">
-    <title>The Project | Forms</title>
-    <meta name="description" content="The Project a Bootstrap-based, Responsive HTML5 Template">
+    <title>Sapphire Lences</title>
+    <meta name="description" content="">
     <meta name="author" content="author">
 
     <!-- Mobile Meta -->
@@ -105,24 +105,26 @@
         <!-- ================ -->
         <header class="header fixed fixed-desktop clearfix">
           <div class="container">
-            <div class="row">
-              <div class="col-md-4">
+            
                 <!-- header-first start -->
                 <!-- ================ -->
-                <div class="header-first clearfix">
+                
 
                   <!-- logo -->
+                  <div class="row">
+                    <div class="col-md-4">
                   <div id="logo" class="logo">
-                    <a href="index.html"><img id="logo_img" src="images/logo_light_blue.png" alt="The Project"></a>
+                         <img src="images/img/logo.jpg" alt="" style="width: 200px;height: 55px;margin-top: 20px;margin-left: 0%;">
                   </div>
-                  <form class="form-horizontal" action="logout" method="POST">
-                	<div class="col-auto ml-auto hidden-md-down">
-                	<div class="col-lg-7 col-xl-8 mr-20">
-                	
-                	 <button type="submit" class="btn btn-group btn-default btn-animated">Log Out <i class="fa fa-user"></i></button>
+                      </div>
+                     <div class="col-md-4">
+                      
+                      </div>
+                        <div class="col-md-4">
+
+                       
                							</div>
 					</div>
-					</form>
 
                   <!-- name-and-slogan -->
                   
@@ -130,27 +132,22 @@
                 </div>
                 <!-- header-first end -->
 
-              </div>
-              <div class="col-lg-8 ml-auto">
+             
+              
 
                 <!-- header-second start -->
                 <!-- ================ -->
-                <div class="header-second clearfix">
+               
                   
-                </div>
+                
                 <!-- header-second end -->
 
-              </div>
-              <div class="col-auto hidden-md-down">
-                <!-- header dropdown buttons -->
+            
                 
-                <!-- header dropdown buttons end -->
-              </div>
-            </div>
-          </div>
+         
         </header>
         <!-- header end -->
-      </div>
+     
       <!-- header-container end -->
       <!-- breadcrumb start -->
       <!-- ================ -->
@@ -160,10 +157,15 @@
       <!-- main-container start -->
       <!-- ================ -->
       <section class="main-container">
-		<div class="section light-gray-bg">
+		<div class="">
 			<div class="container">
-			
-         
+			<div class="form-row">
+          <div class="col-md-4">
+         </div>
+          <div class="col-md-4">
+          </div>
+            
+       </div>
           <form action="register" method="POST">
           
             <div class="form-row">
@@ -227,14 +229,14 @@
                 </div>
               </div>
 		
-			<div class="col-md-4">
+			<div class="col-md-6">
                 <div class="form-group has-feedback">
                   <label>Postal Code</label>
                   <input type="text" name="postalCode" class="form-control">
                 </div>
               </div>
               
-              <div class="col-md-4">
+              <div class="col-md-6">
                 <div class="form-group has-feedback">
                   <label>Organization</label>
                   	 <select class="form-control" name="orgName" >
@@ -257,7 +259,7 @@
             <div class="subfooter-inner">
               <div class="row">
                 <div class="col-md-12">
-                  <p class="text-center">Copyright © 2018 The Project. All rights reserved.</p>
+                  <p class="text-center">Powered By Social Angels Digital Solution Pvt Ltd.</p>
                 </div>
               </div>
             </div>

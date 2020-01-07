@@ -33,12 +33,15 @@ public class EntryDetails implements Serializable
     
     private String lPrice;
     private String rPrice;
+    
+    private String lSourcing;
+    private String rSourcing;
 
     public EntryDetails(){	
     }
     
     public EntryDetails(String rSph, String rCyl, String rAxis, String rAdd, String rDia,
-	    String lSph, String lCyl, String lAxis, String lAdd, String lDia, String lPrice, String rPrice) {
+	    String lSph, String lCyl, String lAxis, String lAdd, String lDia, String lPrice, String rPrice, String lSourcing, String rSourcing) {
 	super();
 	this.rSph = rSph;
 	this.rCyl = rCyl;
@@ -52,6 +55,8 @@ public class EntryDetails implements Serializable
 	this.lDia = lDia;
 	this.lPrice = lPrice;
 	this.rPrice = rPrice;
+	this.lSourcing = lSourcing;
+	this.rSourcing = rSourcing;
     }
 
     public int getOrderId() {
@@ -164,6 +169,18 @@ public class EntryDetails implements Serializable
 
 	public void setrPrice(String rPrice) {
 		this.rPrice = rPrice;
+	}	
+	public String getlSourcing() {
+		return lSourcing;
+	}
+	public void setlSourcing(String lSourcing) {
+		this.lSourcing = lSourcing;
+	}
+	public String getrSourcing() {
+		return rSourcing;
+	}
+	public void setrSourcing(String rSourcing) {
+		this.rSourcing = rSourcing;
 	}
 
 	@Override
@@ -171,8 +188,6 @@ public class EntryDetails implements Serializable
 		return "EntryDetails [id1=" + id1 + ", orderDetailsId=" + orderDetailsId + ", orderId=" + orderId + ", rSph="
 				+ rSph + ", rCyl=" + rCyl + ", rAxis=" + rAxis + ", rAdd=" + rAdd + ", rDia=" + rDia + ", lSph=" + lSph
 				+ ", lCyl=" + lCyl + ", lAxis=" + lAxis + ", lAdd=" + lAdd + ", lDia=" + lDia + ", lPrice=" + lPrice
-				+ ", rPrice=" + rPrice + "]";
-	}
-    
-    
+				+ ", rPrice=" + rPrice + ", lSourcing=" + lSourcing + ", rSourcing=" + rSourcing +"]";
+	}        
 }

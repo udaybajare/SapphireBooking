@@ -4,6 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.ManagedBean;
 
@@ -17,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ResourceUtils;
 
 import com.sapphire.dao.OrderDao;
+import com.sapphire.dao.OrganizationDao;
 import com.sapphire.entity.EntryDetails;
 import com.sapphire.entity.OrderDetails;
 import com.sun.media.sound.InvalidFormatException;
@@ -26,7 +29,10 @@ public class ReportCreator {
 
 	@Autowired
 	OrderDao orderDao;
-
+	
+	@Autowired
+	OrganizationDao organizationDao;
+	
 	public byte[] writeExcel(ArrayList<OrderDetails> orerDetailList) throws IOException {
 
 		Workbook workbook = null;
@@ -41,7 +47,19 @@ public class ReportCreator {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		Map<String, String> cuetomerDetailsMap = new HashMap<String, String>();
 
+		ArrayList<ArrayList<String>> registeredOrgs = organizationDao.getRegisteredOrganization();
+		
+		
+		for (Object name : registeredOrgs) {
+			
+			Object[] nameList = (Object[]) name;
+			
+			cuetomerDetailsMap.put((String)nameList[1],(String)nameList[0]);
+		}
+		
 		Sheet sheet = workbook.getSheetAt(0);
 
 		int index = 0;
@@ -74,7 +92,9 @@ public class ReportCreator {
 			int row = nextRow + i;
 
 			Cell cellToUpdate0 = sheet.getRow(row).getCell(0);
-			cellToUpdate0.setCellValue(1);
+			
+			String customerNo = cuetomerDetailsMap.get(orerDetail.getOrganizationName());
+			cellToUpdate0.setCellValue(customerNo+"/"+orerDetail.getCustOrderNumber());
 			Cell cellToUpdate1 = sheet.getRow(row).getCell(1);
 			cellToUpdate1.setCellValue(orerDetail.getOrganizationName());
 			Cell cellToUpdate2 = sheet.getRow(row).getCell(2);
@@ -130,7 +150,7 @@ public class ReportCreator {
 			cellToUpdate8.setCellValue(orerDetail.getCoating() + " " + orerDetail.getTint());
 
 			Cell cellToUpdate10 = sheet.getRow(row).getCell(10);
-			cellToUpdate10.setCellValue("Remark???");
+			cellToUpdate10.setCellValue(orerDetail.getComment());
 
 			// Nothing to set in 12
 			/*

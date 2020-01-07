@@ -45,13 +45,13 @@
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		
-		<property name="url" value="jdbc:mysql://localhost:3306/sapphireBookings"/> 
+	<property name="url" value="jdbc:mysql://localhost:3306/sapphireBookings"/> 
 		<property name="username" value="admin" /> 
 		<property name="password" value="admin123"/> 
 		 
 <!-- 		<property name="url" value="jdbc:mysql://hamdule.cmbzdfvjyats.us-east-2.rds.amazonaws.com:3306/sapphireBookings" />
 		<property name="username" value="mhamdule" />
-		<property name="password" value="mhamdule9933"/> --> 
+		<property name="password" value="mhamdule9933"/>  -->
 	</bean>
 
 	<bean id="sessionFactory"

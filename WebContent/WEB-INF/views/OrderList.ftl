@@ -41,31 +41,34 @@
         <header class="header fixed fixed-desktop clearfix">
           <div class="container">
             <div class="row">
-              <div class="col-md-auto hidden-md-down">
-                <div class="header-first clearfix">
+              <div class="col-md-4">
+           
+               
 
                   <div id="logo" class="logo">
-                    <a href="index.html"><img id="logo_img" src="images/logo_light_blue.png" alt="The Project"></a>
+                    <img src="images/img/logo.jpg" alt="" style="width: 100px;height: 55px;margin-top: 10px;margin-left: -20px;">
                   </div>
-
-                  <div class="site-slogan">
-                    Multipurpose HTML5 Template
-                  </div>
-
+                </div>
+              
+                <div class="col-md-6">
+                  <div class="row">
+                    <a class="font-weight-bold text-uppercase p-1 bg-light border rounded border-default" href="home" style="margin-top: 3%;margin-left: 50%;">Home</a>
+          
+          
+                   <a class="font-weight-bold text-uppercase p-1 bg-light border rounded border-default" href="bookorder" style="margin-left: 5%;margin-top: 3%;">Book Now</a>
+                   </div>
+                </div>
+                <div class="col-md-2">
+                	<form class="form-horizontal mt-4 " action="logout" method="POST">  
+                   		<button type="submit" class="btn btn-group btn-default btn-animated" style="margin-top: 8%;margin-left: 10%;">Log Out <i class="fa fa-user"></i></button>
+                   	</form>	
                 </div>
 
+                </div>
               </div>
-              <div class="col-lg-8 ml-auto">
-
-                <div class="header-second clearfix">
                   
-                
-                </div>
-
-              </div>
-              </div>
-            </div>
-          </div>
+               
+             
         </header>
       </div>
       
@@ -76,7 +79,7 @@
                 	<div class="col-auto ml-auto hidden-md-down">
                 	<div class="col-lg-7 col-xl-8 mr-20">
         
-                	 <button type="submit" class="btn btn-group btn-default btn-animated">Log Out <i class="fa fa-user"></i></button>
+                	
                							</div>
 					</div>
 					</form>
@@ -93,35 +96,35 @@
 				</select>
                 <label class="sr-only" for="inlineFormInputGroup">Value</label>
                 <div class="input-group mb-2 mr-sm-2 mb-sm-0">
-                  <input type="text" id="orderId" class="form-control" style="display:none;">
-				  <input type="text" id="userName" class="form-control" style="display:none;">
-				  <select class="form-control" id="organizationName" style="display:none;">
+                  <input type="text" id="orderId" class="form-control" style="display:none;margin-left: 2%;">
+				  <input type="text" id="userName" class="form-control" style="display:none;margin-left: 2%;">
+				  <select class="form-control" id="organizationName" style="display:none;margin-left: 2%;">
 					${organizationOptions}
 				  </select>
-				  <select class="form-control" id="status" style="display:none;">
+				  <select class="form-control" id="status" style="display:none;margin-left: 3%;">
 				  <option value="Pending">Pending</option>
 				  <option value="accepted">Accepted</option>
 				  <option value="processing" >Processing</option>
 				  <option value="readyToDeliver">Ready To Deliver</option>
 				  <option value="delivered" >Delivered</option>
 				  </select>
-				  <input type="text" id="datepicker" class="form-control fromDate" placeholder = "select from date">
-				  <input type="text" id="datepicker1" class="form-control toDate" placeholder = "select to date">
+				  <input type="text" id="datepicker" class="form-control fromDate" style="margin-left: 2%;" placeholder = "select from date">
+				  <input type="text" id="datepicker1" class="form-control toDate" style="margin-left: 2%;" placeholder = "select to date">
                 </div>
-                <button type="button" class="btn btn-default" onClick="searchOrder()">Submit</button>
-                <button type="button" class="btn btn-default" onClick="generateReport()">Generate Report</button>
+                <button type="button" class="btn btn-default" onClick="searchOrder()" style="margin-left: 3%;">Submit</button>
+                <button type="button" class="btn btn-default" onClick="generateReport()" style="margin-left: 2%;">Generate Report</button>
               </form>
         <div id="orders">
      	${orderList}
      	</div>
         </div>
       </section>
-        <div class="subfooter">
+        <div class="subfooter" style="margin-top: 17%;">
           <div class="container">
             <div class="subfooter-inner">
               <div class="row">
                 <div class="col-md-12">
-                  <p class="text-center">Copyright © 2018 The Project. All rights reserved.</p>
+                  <p class="text-center">Powered By Social Angels Digital Solution Pvt Ltd.</p>
                 </div>
               </div>
             </div>
@@ -276,7 +279,8 @@ $('.updateOrder').on('click',function updateTotal()
 	
 	var para = $(this.offsetParent.children);
 	
-	var sourcingVals = '';
+	var lSourcing = '';
+	var rSourcing = '';
 	
 	for(var j = 1; j< $(this.offsetParent.children).length; j++)
 	{
@@ -287,6 +291,32 @@ $('.updateOrder').on('click',function updateTotal()
 				sourcing = sourcing + "," +para[j].children[0].value;
 			}
 		}
+		else if(para[j].tagName==='TABLE')		
+		{
+			var trs = para[j].rows;
+
+							$.each(trs, function(a)
+							{
+								var cells = $(this).children('td');
+									$.each(cells, function(b){
+										var ab = $(this).children()[0];
+											if(ab!==undefined)
+											{
+												if(ab.name==='rSourcing')
+												{
+													rSourcing = rSourcing + ab.value+',';
+												}
+												else if(ab.name==='lSourcing')
+												{
+													lSourcing = lSourcing + ab.value+',';
+												}
+											}
+											
+											
+									});		
+									
+							});					
+		}
 		
 	}
 	
@@ -294,7 +324,7 @@ $('.updateOrder').on('click',function updateTotal()
 	var ajaxReq = $.ajax({
 	  url : 'updateTotal',
 	  type : 'POST',
-	  data : {'totalAmount' : totalAmount, 'comment' : comment, 'orderId': orderId , 'sourcing': sourcing},
+	  data : {'totalAmount' : totalAmount, 'comment' : comment, 'orderId': orderId , 'rSourcing': rSourcing, 'lSourcing': lSourcing},
 	  success: function(data) 
 		{
 			console.log(" Received data from BE");

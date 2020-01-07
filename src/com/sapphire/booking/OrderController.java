@@ -106,11 +106,12 @@ public class OrderController {
 	}
 	
 	@RequestMapping(value = "/updateTotal", method = RequestMethod.POST)
-	protected String updateTotal(String orderId, Double totalAmount, String sourcing, String comment) throws Exception {
+	protected String updateTotal(String orderId, Double totalAmount, String lSourcing, String rSourcing, String comment) throws Exception {
 		
-		String[] sourcingValues = sourcing.split(",");
+		String[] lSourcingValues = lSourcing.split(",");
+		String[] rSourcingValues = rSourcing.split(",");
 		
-		orderDao.updateTotal(orderId, totalAmount, sourcingValues, comment);
+		orderDao.updateOrder(orderId, totalAmount, lSourcingValues, rSourcingValues, comment);
 		
 		return "redirect:/listOrders";
 	}
@@ -152,6 +153,10 @@ public class OrderController {
 		
 		Date dateFromDate = dateFormat.parse(fromDate);
 		Date dateToDate = dateFormat.parse(toDate);
+		
+		dateToDate.setHours(23);
+		dateToDate.setMinutes(59);
+		dateToDate.setSeconds(59);
 		
 		
 		SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -204,8 +209,9 @@ public class OrderController {
 	@RequestMapping(value = "/confirmOrder", method = RequestMethod.POST)
 	protected ModelAndView confirmOrder(String orgName, String userName, String mobileNo, String[] material,
 			String[] type, String[] index, String[] coating, String[] tint, String[] qtyNos, String[] frameType,
-			String[] sourcing, String[] rSph, String[] rCyl, String[] rAxis, String[] rAdd, String[] rDia,
-			String[] lSph, String[] lCyl, String[] lAxis, String[] lAdd, String[] lDia) throws Exception {
+			String[] fitting, String[] custOrderNumber, String[] lSourcing, String[] rSourcing, String[] rSph,
+			String[] rCyl, String[] rAxis, String[] rAdd, String[] rDia, String[] lSph, String[] lCyl, String[] lAxis,
+			String[] lAdd, String[] lDia) throws Exception {
 
 		ModelAndView modelAndView = new ModelAndView(ORDER_SUBMITTED);
 
@@ -226,11 +232,9 @@ public class OrderController {
 			for (int i = 0; i < material.length; i++) {
 				
 				OrderDetails orderDetail = new OrderDetails(material[i], type[i], index[i], coating[i], tint[i], qtyNos[i],
-						frameType[i], sourcing[i], orgName, userName, mobileNo, orderDate, status, "", 0.0);
-				
-				
+						frameType[i], orgName, userName, mobileNo, orderDate, status, "", 0.0, fitting[i], custOrderNumber[i]);
 
-				// get right and left lence price
+				// get right and left lens price
 
 				int rPrise = 0;
 				int lPrise = 0;
@@ -274,18 +278,31 @@ public class OrderController {
 
 				}
 
-				totalPrice = ((((lPrise+rPrise)+5)/10)*10) * Integer.parseInt(qtyNos[i]);
+				int remainder = 10 - (lPrise+rPrise)%10;
+				totalPrice = ((((lPrise+rPrise)+remainder)/10)*10) * Integer.parseInt(qtyNos[i]);
+				
+				//Add fitting price as well 
+				// totalPrice = totalPrice + FittingPrice
 				
 				entryDetails.add(new EntryDetails(
 						rSph.length > 0 && !(rSph[i] == null || rSph[i].equals("")) ? rSph[i] : null,
-						rCyl.length > 0 && !(rCyl[i] == null || rCyl[i].equals("")) ? rCyl[i] : null, rAxis[i], rAdd[i],
-						rDia[i], lSph.length > 0 && !(lSph[i] == null || lSph[i].equals("")) ? lSph[i] : null,
-						lCyl.length > 0 && !(lCyl[i] == null || lCyl[i].equals("")) ? lCyl[i] : null, lAxis[i], lAdd[i],
-						lDia[i], String.valueOf(lPrise*Integer.parseInt(qtyNos[i])), String.valueOf(rPrise*Integer.parseInt(qtyNos[i]))));
+						rCyl.length > 0 && !(rCyl[i] == null || rCyl[i].equals("")) ? rCyl[i] : null, 
+						rAxis.length > 0 && !(rAxis[i] == null || rAxis[i].equals("")) ? rAxis[i] : null, 
+						rAdd.length > 0 && !(rAdd[i] == null || rAdd[i].equals("")) ? rAdd[i] : null,
+						rDia.length > 0 && !(rDia[i] == null || rDia[i].equals("")) ? rDia[i] : null, 
+						lSph.length > 0 && !(lSph[i] == null || lSph[i].equals("")) ? lSph[i] : null,
+						lCyl.length > 0 && !(lCyl[i] == null || lCyl[i].equals("")) ? lCyl[i] : null,
+						lAxis.length > 0 && !(lAxis[i] == null || lAxis[i].equals("")) ? lAxis[i] : null, 
+						lAdd.length > 0 && !(lAdd[i] == null || lAdd[i].equals("")) ? lAdd[i] : null,
+						lDia.length > 0 && !(lDia[i] == null || lDia[i].equals("")) ? lDia[i] : null, 
+						String.valueOf(lPrise * Integer.parseInt(qtyNos[i])),
+						String.valueOf(rPrise * Integer.parseInt(qtyNos[i])),
+						lSourcing.length > 0 && !(lSourcing[i] == null || lSourcing[i].equals("")) ? lSourcing[i] : null,
+						rSourcing.length > 0 && !(rSourcing[i] == null || rSourcing[i].equals("")) ? rSourcing[i] : null));
 				
 							
 				orderDetails.add(orderDetail);
-				totalAmount = totalAmount + rPrise + lPrise;	
+				totalAmount = totalAmount + totalPrice;	
 				
 				for(int j=0; j<orderDetails.size(); j++){orderDetails.get(j).setTotalAmount(totalAmount);}
 			}
@@ -334,20 +351,20 @@ public class OrderController {
 						lSph.length > 0 && !(lSph[i] == null || lSph[i].equals("")) ? lSph[i] : null,
 						lCyl.length > 0 && !(lCyl[i] == null || lCyl[i].equals("")) ? lCyl[i] : null, coating[i]);
 
-				if (Math.ceil(lCyl.length > 0 ? Float.parseFloat(lCyl[i]) : 0) > 4) {
+				if (Math.ceil((lCyl.length > 0 && !(lCyl[i].equals("")))? Float.parseFloat(lCyl[i]) : 0) > 4) {
 					rPrise = rPrise != 0 ? Math.addExact(rPrise, 50) : rPrise;
 					lPrise = lPrise != 0 ? Math.addExact(lPrise, 50) : lPrise;
 				}
 
 			}
-			
-			totalPrice = ((((lPrise+rPrise)+5)/10)*10) * Integer.parseInt(qtyNos[i]);
+			int remainder  = 10 - (lPrise+rPrise)%10;
+			totalPrice = ((((lPrise+rPrise)+remainder)/10)*10) * Integer.parseInt(qtyNos[i]);
 			
 			priseList.append(String.valueOf(totalPrice) + ",");
 		}
 
 		if (priseList.toString().split("0,").length == 0) {
-			return "Please verify the details you selected and retry..!!!";
+			return "0";
 		}
 
 		return priseList.toString();

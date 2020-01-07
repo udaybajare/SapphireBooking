@@ -46,15 +46,15 @@ public class SessionDao {
 	}
 
 	@Transactional
-	public boolean deleteSession(String sessionId) {
+	public boolean deleteSession(String userName) {
 		boolean sessiondelete = true;
 		try {
 			Session session = sessionFactory.getCurrentSession();
 
-			String sql = "delete from SessionEntry SE where SE.sessionId=:sessionId";
+			String sql = "delete from SessionEntry SE where SE.userName=:userName";
 
 			Query query = session.createQuery(sql);
-			query.setParameter("sessionId", sessionId);
+			query.setParameter("userName", userName);
 
 			query.executeUpdate();
 

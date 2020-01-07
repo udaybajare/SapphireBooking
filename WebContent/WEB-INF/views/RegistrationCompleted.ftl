@@ -3,8 +3,8 @@
 
   <head>
     <meta charset="utf-8">
-    <title>The Project | Page 404</title>
-    <meta name="description" content="The Project a Bootstrap-based, Responsive HTML5 Template">
+    <title>Sapphire Lences</title>
+    <meta name="description" content="">
     <meta name="author" content="author">
 
     <!-- Mobile Meta -->
@@ -108,9 +108,13 @@
               <h1 class="page-title medium"><span class="text-default">Registration Completed</span></h1>
               <p class="lead">Thanks You!! Your registration is complete. Please Login to place your Order.</p>
             </div>
+             </div>
+              <div class="row">
+                <a class="font-weight-bold text-uppercase text-center p-2 bg-light border rounded border-info" href="login" style="margin-left: 48%">Log In</a>
+              </div>
             <!-- main end -->
 
-          </div>
+        
         </div>
       </section>
       <!-- main-container end -->
@@ -124,7 +128,7 @@
             <div class="subfooter-inner">
               <div class="row">
                 <div class="col-md-12">
-                  <p class="text-center">Copyright © 2018 The Project. All rights reserved.</p>
+                  <p class="text-center">Powered By Social Angels Digital Solution Pvt Ltd.</p>
                 </div>
               </div>
             </div>

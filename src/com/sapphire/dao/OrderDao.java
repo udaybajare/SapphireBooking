@@ -179,21 +179,19 @@ public class OrderDao {
 		return false;
 	}
 	@Transactional
-	public boolean updateTotal(String orderId, Double totalAmount, String[] sourcing, String comment) {
+	public boolean updateOrder(String orderId, Double totalAmount, String[] lSourcing, String[] rSourcing, String comment) {
 		
 		ArrayList<Integer> subOrderIds = getSubOrderIds(orderId);
 		
-		for(int i=0; i < sourcing.length;i++)
+		for(int i=0; i < subOrderIds.size();i++)
 		{
-
-			try {
-				Session session = sessionFactory.getCurrentSession();
-
-				String hql = " update OrderDetails OD set OD.totalAmount=:TotalAmount, OD.sourcing=:Sourcing, OD.comment=:Comment where OD.orderId=:OrderId and OD.id=:id";
+			Session session = sessionFactory.getCurrentSession();
+			try 
+			{
+				String hql = " update OrderDetails OD set OD.totalAmount=:TotalAmount, OD.comment=:Comment where OD.orderId=:OrderId and OD.id=:id";
 
 				Query query = session.createQuery(hql);
 				query.setParameter("TotalAmount", totalAmount);
-				query.setParameter("Sourcing", sourcing[i]);
 				query.setParameter("Comment", comment);
 				query.setInteger("OrderId", Integer.parseInt(orderId));
 				query.setInteger("id", subOrderIds.get(i));
@@ -202,7 +200,21 @@ public class OrderDao {
 				
 			} catch (Exception ex) {
 				ex.printStackTrace();
-				return false;
+			}
+			
+			try
+			{
+				String hqlEntryDetails = " update EntryDetails ED set ED.lSourcing=:lSourcing, ED.rSourcing=:rSourcing where ED.orderDetailsId=:OrderDetailsId";
+				Query queryEntryDetails = session.createQuery(hqlEntryDetails);
+				queryEntryDetails.setParameter("lSourcing", lSourcing[i]);
+				queryEntryDetails.setParameter("rSourcing", rSourcing[i]);
+				queryEntryDetails.setParameter("OrderDetailsId", subOrderIds.get(i));
+
+				queryEntryDetails.executeUpdate();
+			}
+			catch(Exception ex)
+			{
+				ex.printStackTrace();
 			}
 		}
 		return true;

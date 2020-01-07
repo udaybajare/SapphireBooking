@@ -30,17 +30,18 @@ public class OrderDetails implements Serializable {
     private String tint;
     private String qtyNos;
     private String frameType;
-    private String sourcing;
     private String status;
     private Double totalAmount;
     private String comment;
     private String organizationName;
     private String userName;
     private String contactNo;
+    private String fitting;
+    private String custOrderNumber;    
 
     public OrderDetails(String material, String type, String index, String coating, String tint, String qtyNos,
-	    String frameType, String sourcing, String organizatioName, String userName, String contactNo,
-	    Date orderDate, String status, String comment, Double totalAmount) {
+	    String frameType, String organizatioName, String userName, String contactNo,
+	    Date orderDate, String status, String comment, Double totalAmount, String fitting, String custOrderNumber) {
 	super();
 	this.material = material;
 	this.type = type;
@@ -49,7 +50,6 @@ public class OrderDetails implements Serializable {
 	this.tint = tint;
 	this.qtyNos = qtyNos;
 	this.frameType = frameType;
-	this.sourcing = sourcing;
 	this.organizationName = organizatioName;
 	this.userName = userName;
 	this.contactNo = contactNo;
@@ -57,6 +57,8 @@ public class OrderDetails implements Serializable {
 	this.status = status;
 	this.comment = comment;
 	this.totalAmount = totalAmount;
+	this.fitting = fitting;
+	this.custOrderNumber = custOrderNumber;
     }
 
     public int getId() {
@@ -131,14 +133,6 @@ public class OrderDetails implements Serializable {
 	this.frameType = frameType;
     }
 
-    public String getSourcing() {
-	return sourcing;
-    }
-
-    public void setSourcing(String sourcing) {
-	this.sourcing = sourcing;
-    }
-
     public String getOrganizationName() {
 	return organizationName;
     }
@@ -194,14 +188,30 @@ public class OrderDetails implements Serializable {
 	this.orderDate = orderDate;
     }
 
-    @Override
+    public String getFitting() {
+		return fitting;
+	}
+
+	public void setFitting(String fitting) {
+		this.fitting = fitting;
+	}
+
+	public String getCustOrderNumber() {
+		return custOrderNumber;
+	}
+
+	public void setCustOrderNumber(String custOrderNumber) {
+		this.custOrderNumber = custOrderNumber;
+	}
+
+	@Override
 	public String toString() {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		
 		return "OrderDetails [id=" + id + ", orderId=" + orderId + ", orderDate=" + dateFormat.format(orderDate) + ", material=" + material
 				+ ", type=" + type + ", indx=" + indx + ", coating=" + coating + ", tint=" + tint + ", qtyNos=" + qtyNos
-				+ ", frameType=" + frameType + ", sourcing=" + sourcing + ", status=" + status + ", organizationName="
-				+ organizationName + ", userName=" + userName + ", contactNo=" + contactNo + ", comment=" + comment + ", totalAmount=" + totalAmount + " ]";
+				+ ", frameType=" + frameType + ", status=" + status + ", organizationName="
+				+ organizationName + ", userName=" + userName + ", contactNo=" + contactNo + ", comment=" + comment + ", totalAmount=" + totalAmount + ", fitting=" + fitting + ", custOrderNumber=" + custOrderNumber + " ]";
 	}
     
 }

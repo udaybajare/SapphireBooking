@@ -3,8 +3,8 @@
 
   <head>
     <meta charset="utf-8">
-    <title>The Project | Page 404</title>
-    <meta name="description" content="The Project a Bootstrap-based, Responsive HTML5 Template">
+    <title>Sapphire Lences</title>
+    <meta name="description" content="">
     <meta name="author" content="author">
 
     <!-- Mobile Meta -->
@@ -68,8 +68,45 @@
         <!-- "dark": dark version of header top e.g. class="header-top dark" -->
         <!-- "colored": colored version of header top e.g. class="header-top colored" -->
         <!-- ================ -->
-        <div class="header-top dark">
+        <div class="header-top">
           <div class="container">
+             <div class="row">
+
+            <!-- main start -->
+            <!-- ================ -->
+            <div class="main col-md-6">
+               <div id="logo" class="logo">
+                    <img src="images/img/logo.jpg" alt="" style="width: 200px;height: 55px;margin-top: 25px;margin-left: -20px;">
+                  </div>
+              <!-- page-title start -->
+              <!-- ================ -->
+              
+            </div>
+            <div class="main col-md-3">
+              <div class="row">
+               
+            <a class="font-weight-bold text-uppercase p-2 bg-light border rounded border-info" href="home" style="margin-top: 17%;margin-left: 2%">Home</a>
+          
+          
+            <a class="font-weight-bold text-uppercase  p-2 bg-light border rounded border-info" href="bookorder" style="margin-left: 2%;margin-top: 17%;">Book Now</a>
+          
+          
+            <a class="font-weight-bold text-uppercase  p-2 bg-light border rounded border-info" href="listOrders" style="margin-left: 2%;margin-top: 17%;">Show Orders</a>
+          
+            </div>
+            </div>
+            
+            <div class="main col-md-3">
+              <!-- page-title end -->
+               <form class="form-horizontal" action="logout" method="POST">
+                  
+                  <div class="col-lg-7 col-xl-8 mr-20">
+                    <button type="submit" class="btn btn-group btn-default btn-animated mt-4">Log Out <i class="fa fa-user"></i></button>
+                  </div>
+                 
+              </form>
+            </div>
+          </div>
           </div>
         </div>
         <!-- header-top end -->
@@ -124,7 +161,7 @@
             <div class="subfooter-inner">
               <div class="row">
                 <div class="col-md-12">
-                  <p class="text-center">Copyright © 2018 The Project. All rights reserved.</p>
+                  <p class="text-center">Powered By Social Angels Digital Solution Pvt Ltd</p>
                 </div>
               </div>
             </div>

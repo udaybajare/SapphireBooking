@@ -138,35 +138,47 @@
 
           <!-- main start -->
           <!-- ================ -->
-          <div class="main col-md-4">
-            <!-- page-title start -->
-            <!-- ================ -->
-            <h1 class="page-title">Order Details</h1>
+            <div class="main col-lg-4">
+                <div id="logo" class="logo">
+                    <img src="images/img/logo.jpg" alt="" style="width: 200px;height: 55px;margin-top: 20px;margin-left: -20px;">
+                  </div>
+              <!-- page-title start -->
+              <!-- ================ -->
+             
+              </div>
+              <!-- page-title end -->
+              <div class="main col-lg-2">
+              </div>
+                <div class="main col-lg-4">
+                  <div class="row">
+               
+            <a class="font-weight-bold text-uppercase p-1 bg-light border rounded border-info" href="home" style="margin-top: 13%;margin-left: 40%;">Home</a>
+            <a class="font-weight-bold text-uppercase p-1 bg-light border rounded border-info" href="listOrders" style="margin-left: 5%;margin-top: 13%;">Show Orders</a>
+          
+            </div>
+                </div>
+               <div class="main col-lg-2">
+               <form class="form-horizontal mt-4 " action="logout" method="POST">      	
+                	<button type="submit" class="btn btn-group btn-default btn-animated mt-4">Log Out <i class="fa fa-user"></i></button>
+                </form>
+              </div>
+            
           </div>
-          <!-- page-title end -->
-          <div class="col-md-6  hidden-md-down">
-            <p class="text text-danger" id="customMessage" >${message}</p>
-
-          </div>
-          <div class="col-md-2">
-           <form class="form-horizontal" action="logout" method="POST">
-            <button type="submit" class="btn btn-group btn-default btn-animated">Log Out <i class="fa fa-user"></i></button>
-          </form>					
         </div>
-      </div>
-    </div>
-  </section>
-  <!-- main-container end -->
+      </section>
+      <!-- main-container end --> 
 
   <!-- section start -->
   <!-- ================ -->
 
 
   <div class="section light-gray-bg">
-    <div class="container">
-
+    <div class="container" style="max-width:90%;">
+          <div class="row">
+             <h1 class="page-title mt-5 text-default align-text-bottom" style="margin-left: 2%;">Order Details</h1>
+          </div>
       <div class="form-row">
-       <table class="table">
+       <table class="table table-colored">
 
         <thead>
           <tr>          	
@@ -177,7 +189,8 @@
             <th>Tint</th>
             <th>Quantity (nos.)</th>
             <th>Frame Type</th>
-            <th>Sourcing</th>
+            <th>Fitting</th>
+            <th>Cust Order #</th>
           </tr>
         </thead>
 
@@ -206,7 +219,7 @@
           </td>
           <td>
             <div class="form-group">
-             <input type="text" name="index" id="index" value="" />
+             <input class="form-control" type="text" name="index" id="index" value="" />
            </div>
          </td>
          <td>
@@ -234,7 +247,7 @@
         </td>
         <td>
           <div class="form-group">
-           <input type="text" name="qtyNos" id="qtyNos" value="1"/>
+   <input class="form-control" type="text" name="qtyNos" id="qtyNos" value="1"/>
          </div>
        </td>
        <td>
@@ -247,48 +260,64 @@
           </select>
         </div>
       </td>
-      <td>
-        <div class="form-group">
-          <select class="form-control" name="sourcing" id="sourcing">
-            <option></option>
-            <option value="Factory Order">Factory Order</option>
-            <option value="Ready Stock">Ready Stock</option>
-          </select>
-        </div>
-      </td>
+	   <td>
+	   		<div class='form-group'>
+		  		<select class='form-control' name='fitting' id='fitting'>
+	         		<option></option>
+	             	<option value='With Fitting'>With Fitting</option>            
+					<option value='Without Fitting'>Without Fitting</option>      
+				</select>        
+			</div>      
+		</td>
+		<td>
+		 	<div class="form-group">
+           		<input class="form-control" type="text" name="custOrderNumber" id="custOrderNumber" value=""/>
+         	</div>
+		</td>
     </tr>            
-    <tr>
+    <tr  class="table-grey">
      <td>LENS SIDE</td>
      <td>SPH</td>
      <td>CYL</td>
      <td>AXIS</td>
      <td>ADD</td>
      <td>DIA</td>
+     <td></td>
+     <td></td>
+     <td></td>
    </tr>
    <tr>
     <td>R</td>
-    <td><input type='text' id='rSph' name='rSph' value=' '  /></td>
-    <td><input type='text' id='rCyl' name='rCyl' value=' ' /></td>
-    <td><input type='text' id='rAxis' name='rAxis' /></td>
-    <td><input type='text' id='rAdd' name='rAdd' /></td>
-    <td><input type='text' id='rDia' name='rDia' /></td>
+<td><input class="form-control" type='text' id='rSph' name='rSph' value=' ' /></td>
+<td><input class="form-control" type='text' id='rCyl' name='rCyl' value=' ' /></td>
+<td><input class="form-control" type='text' id='rAxis' name='rAxis' value=' ' /></td>
+<td><input class="form-control" type='text' id='rAdd' name='rAdd' value=' ' /></td>
+<td><input class="form-control" type='text' id='rDia' name='rDia' value=' ' /></td>
+  <td> </td>
+  <td> </td>
+  <td> </td>
+  <td> </td>
   </tr>
   <tr>
     <td>L</td>
-    <td><input type='text'  id='lSph' name='lSph' value=' '  /></td>
-    <td><input type='text'  id='lCyl' name='lCyl' value=' ' /></td>
-    <td><input type='text'  id='lAxis' name='lAxis' /></td>
-    <td><input type='text'  id='lAdd' name='lAdd' /></td>
-    <td><input type='text'  id='lDia' name='lDia' /></td>
+<td><input class="form-control" type='text'  id='lSph' name='lSph' value=' ' /></td>
+<td><input class="form-control"  type='text'  id='lCyl' name='lCyl' value=' ' /></td>
+<td><input class="form-control" type='text'  id='lAxis' name='lAxis' value=' ' /></td>
+<td><input class="form-control" type='text'  id='lAdd' name='lAdd' value=' ' /></td>
+<td><input class="form-control" type='text'  id='lDia' name='lDia' value=' ' /></td>
+  <td> </td>
+  <td> </td>
+  <td> </td>
+  <td> </td>
   </tr>     
 </tbody>
 </table>
 </div> 
 <div class="form-row">
   <div class="col-md-3 ">
-   <div class="ph-20 feature-box text-center object-non-visible" data-animation-effect="fadeInDownSmall" data-effect-delay="100">
+   <div class="ph-20 feature-box text-left object-non-visible" data-animation-effect="fadeInDownSmall" data-effect-delay="100">
      <br>
-     <button type="button" id ="myerrorModel" class="btn btn-default" onClick="appendInventory();">Add Item</button>
+     <button type="button" data-toggle="collapse" id ="myerrorModel" class="btn btn-default" onClick="appendInventory();">Add Item</button>
      
    </div>	
  </div>
@@ -332,7 +361,8 @@
             <th>Tint</th>
             <th>Quantity (nos.)</th>
             <th>Frame Type</th>
-            <th>Sourcing</th>
+            <th>Fitting</th>
+            <th>Cust Order #</th>
           </tr>
         </thead>
         <tbody id="tableContentDetails">
@@ -346,7 +376,7 @@
 
 <div class="form-row">
   <div class="col-md-3 ">
-   <div class="ph-20 feature-box text-center object-non-visible" data-animation-effect="fadeInDownSmall" data-effect-delay="100">
+			<div class="ph-20 feature-box text-left object-non-visible" data-animation-effect="fadeInDownSmall" data-effect-delay="100">
      <button type="button" id ="reviewAndConfirmButton" class="btn btn-default" data-toggle="modal" data-target="#myModal" onClick="getAndUpdatePrise();" disabled>Review And Confirm Order</button>
      <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
        <div class="modal-dialog" role="document">
@@ -389,6 +419,7 @@
 </div>
 
 <!-- section end -->
+
 <div class="space"></div>
 <!-- section start -->
 <!-- ================ -->
@@ -486,8 +517,9 @@
     var coating = $('#coating').children("option:selected").val();
     var tint = $('#tint').children("option:selected").val();
     var qtyNos = $('#qtyNos').val();
-    var frameType = $('#frameType').children("option:selected").val(); 
-    var sourcing = $('#sourcing').children("option:selected").val(); 
+    var frameType = $('#frameType').children("option:selected").val();
+    var fitting = $('#fitting').children("option:selected").val(); 
+    var custOrderNumber = $('#custOrderNumber').val();
 
     var rSph       =     $('#rSph').val();
     var rCyl       =     $('#rCyl').val();
@@ -501,7 +533,7 @@
     var lDia	   =     $('#lDia').val();
 
     var rowId = "'"+'row'+i+"'";
-    if( (material !== "" && type !== "" && index !== "" && coating !== "" && tint !== "" && qtyNos !== "" && frameType !== "" && sourcing !== "" ) && ( rSph !== "" || rCyl !=="" || lSph !== "" || lCyl !== ""))
+    if( (material !== "" && type !== "" && index !== "" && tint !== "" && qtyNos !== "" && frameType !== "") && ( rSph !== "" || rCyl !=="" || lSph !== "" || lCyl !== ""))
     {
       var	template = "<tr class="+rowId+">"
       + "    <td> <input type='button' value='x' onClick=removeRow(" + rowId +");></td>" 
@@ -512,7 +544,9 @@
       + "    <td> <input type='hidden' name='tint' value='"+tint+"'></input>"+tint+"</td>"
       + "    <td> <input type='hidden' name='qtyNos' value='"+qtyNos+"'></input>"+qtyNos+"</td>"
       + "    <td> <input type='hidden' name='frameType' value='"+frameType+"'></input>"+frameType+"</td>"
-      + "    <td> <input type='hidden' name='sourcing' value='"+sourcing+"'></input>"+sourcing+"</td> </tr>"
+      + "    <td> <input type='hidden' name='fitting' value='"+fitting+"'></input>"+fitting+"</td>"
+      + "    <td> <input type='hidden' name='custOrderNumber' value='"+custOrderNumber+"'></input>"+custOrderNumber+"</td>"
+      + "    </tr>"
       + "<tr class="+rowId+">"
       + "			<td>LENS SIDE</td>"
       + "			<td>SPH</td>"
@@ -520,22 +554,45 @@
       + "			<td>AXIS</td>"
       + "			<td>ADD</td>"
       + "			<td>DIA</td>"
+      + "			<td>Sourcing</td>"
       + "		  </tr>"
       + "<tr class="+rowId+">"
       + "		<td>R</td>"
-      + "	   <td> <input type='text' name='rSph'  value='"+rSph+"' /></td>"
-      + "	   <td> <input type='text' name='rCyl'  value='"+rCyl+"' /></td>"
-      + "	   <td> <input type='text' name='rAxis' value='"+rAxis+"' /></td>"
-      + "	   <td> <input type='text' name='rAdd'  value='"+rAdd+"' /></td>"
-      + "	   <td> <input type='text' name='rDia'  value='"+rDia+"' /></td>"
+      + "	   <td> <input class='form-control' type='text' name='rSph'  value='"+rSph+"' /></td>"
+      + "	   <td> <input class='form-control' type='text' name='rCyl'  value='"+rCyl+"' /></td>"
+      + "	   <td> <input class='form-control' type='text' name='rAxis' value='"+rAxis+"' /></td>"
+      + "	   <td> <input class='form-control' type='text' name='rAdd'  value='"+rAdd+"' /></td>"
+      + "	   <td> <input class='form-control' type='text' name='rDia'  value='"+rDia+"' /></td>"
+      + "	   <td>	<div class='form-group'>"
+      + "		  	<select class='form-control' name='rSourcing' id='sourcing'>"
+      + "           	<option></option>"
+      + "               <option value='Factory Order'>Factory Order</option>"            
+      + "				<option value='Ready Stock'>Ready Stock</option>"          
+      + "			</select>"        
+      + "			</div>"      
+      + "		</td>"
+      + "		<td></td>"
+      + "		<td></td>"
+      + "		<td></td>"
       + "		  </tr>"
       + "<tr class="+rowId+">"
       + "		<td>L</td>"	
-      + "	   <td> <input type='text' name='lSph'  value='"+lSph+"' /></td>"
-      + "	   <td> <input type='text' name='lCyl'  value='"+lCyl+"' /></td>"
-      + "	   <td> <input type='text' name='lAxis' value='"+lAxis+"' /></td>"
-      + "	   <td> <input type='text' name='lAdd'  value='"+lAdd+"' /></td>"
-      + "	   <td> <input type='text' name='lDia'  value='"+lDia+"' /></td>"
+      + "	   <td> <input class='form-control' type='text' name='lSph'  value='"+lSph+"' /></td>"
+      + "	   <td> <input class='form-control' type='text' name='lCyl'  value='"+lCyl+"' /></td>"
+      + "	   <td> <input class='form-control' type='text' name='lAxis' value='"+lAxis+"' /></td>"
+      + "	   <td> <input class='form-control' type='text' name='lAdd'  value='"+lAdd+"' /></td>"
+      + "	   <td> <input class='form-control' type='text' name='lDia'  value='"+lDia+"' /></td>"
+      + "	   <td>	<div class='form-group'>"
+      + "		  	<select class='form-control' name='lSourcing' id='sourcing'>"
+      + "           	<option></option>"
+      + "               <option value='Factory Order'>Factory Order</option>"            
+      + "				<option value='Ready Stock'>Ready Stock</option>"          
+      + "			</select>"        
+      + "			</div>"      
+      + "		</td>"
+      + "		<td></td>"
+      + "		<td></td>"
+      + "		<td></td>"
       + "		  </tr>"
       ;
 
@@ -597,18 +654,16 @@
    $('#priceTableRow').html("<tr> <td>Total Prise :</td> <td id='totalPrice'></td> </tr>");
    $.each( priseArray, function( key, value) 
    {
-    if(value==='Please verify the details you selected and retry..!!!')
+	if(value==='0')
+	{
+	 	total = 'Your Order will be accepted. Please contact Sapphire Lens for the final price.';
+	}else if(value != '')
     {
-     $('#confirmButton').hide();
-   }
-
-   if(value != '')
-   {
-     var itemNo = parseInt(key)+ 1;
-     $('#priceTableRow').append('<tr><td>Item '+itemNo+'</td><td>'+value+'</td></tr>');
-     console.log('total inside is : ' + total);
-     total += parseInt(value);
-   }		
+	     var itemNo = parseInt(key)+ 1;
+	     $('#priceTableRow').append('<tr><td>Item '+itemNo+'</td><td>'+value+'</td></tr>');
+	     console.log('total inside is : ' + total);
+	     total += parseInt(value);
+    }		
 
  });
 
@@ -622,16 +677,11 @@
 
 
 }
-
-
 </script>
 <script>
   $( document ).ready(function(){
     setTimeout(function(){$('#customMessage').hide();}, 5000);
   });
 </script>
-
-
-
 </body>
 </html>

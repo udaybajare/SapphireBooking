@@ -62,7 +62,7 @@
                 <div class="header-first clearfix">
 
                   <div id="logo" class="logo">
-                    <a><img id="logo_img" src="images/Logo.png" alt="SAPPHIRE LENCES"></a>
+                    <img src="images/img/logo.jpg" alt="" style="width: 200px;height: 55px;margin-top: 20px;margin-left: -20px;">
                   </div>
                 </div>                
               </div>
@@ -72,7 +72,7 @@
                   <form class="form-horizontal" action="logout" method="POST">
                 	<div class="col-auto ml-auto hidden-md-down">
                 	
-                	<button type="submit" class="btn btn-group btn-default btn-animated">Log Out <i class="fa fa-user"></i></button>
+                	<button type="submit" class="btn btn-group btn-default btn-animated" style="margin-left: 50%;">Log Out <i class="fa fa-user"></i></button>
                							
 					</div>
 					</form>
@@ -86,58 +86,64 @@
         </header>
       </div>
 
-      <section class="container">
-        <div class="container">
-          <div class="row">
-            <div class="main col-lg-8">
-            </div>
-          </div>
-        </div>
-      </section>
+      
 
       <!-- section start -->
       <!-- ================ -->
       
 	  
 	  <div class="section light-gray-bg">
-        <div class="container">
-		  	<div class="form-row">
-				<div class="col-md-3">
+        <div class="container" style="max-width: 90%;margin-top: 0%;">
+           <div class="form-row">
+                <div class="col-md-12">
+                <h1 class="text-default text-center">
+                 Welcome to Sapphire Lenses
+                </h1>
+              </div>
+           </div>
+		  	     <div class="form-row" style="margin-left: 5%">
+				          <div class="col-md-3">
                 	<div class="form-group has-feedback">
                 		<form id="addOrg" action="addOrgForm" method="GET">
-	                  		<button type="button" class="btn btn-sm btn-default" onClick="$('#addOrg').submit();">Add Organization</button>
+                   
+                         <img src="images/img/addOrg1.jpg" alt="" width="200" height="200" style="margin-top: 10%;">
+                    
+	                  		<button type="button" class="btn btn-sm btn-default" onClick="$('#addOrg').submit();" style="margin-top: 14%;margin-left: 12%">Add Organization</button>
 	                  	</form>
                 	</div>
               	</div>
-              	</div>
-              	<div class="form-row">
+              	
+              	
               	
               	<div class="col-md-3">
                 	<div class="form-group has-feedback">
                 		<form id="registration" action="registrationForm" method="GET">
-	                  		<button type="button" class="btn btn-sm btn-default" onClick="$('#registration').submit();">User Registration</button>
+                       <img src="images/img/registration1.png" alt="" width="200" height="200">
+	                  		<button type="button" class="btn btn-sm btn-default" onClick="$('#registration').submit();" style="margin-top: 13%;margin-left: 12%">User Registration</button>
 	                  	</form>
                 	</div>
               	</div>
-              	</div>
-              	<div class="form-row">
+              
+              
               	<div class="col-md-3">
                 	<div class="form-group has-feedback">
                 		<form id="bookorder" action="bookorder" method="GET">
-	                  		<button type="button" class="btn btn-sm btn-default" onClick="$('#bookorder').submit();">Order Now</button>
+                       <img src="images/img/Order1.png" alt="" width="200" height="200">
+	                  		<button type="button" class="btn btn-sm btn-default" onClick="$('#bookorder').submit();" style="margin-top: 7%;margin-left: 14%">Order Now</button>
 	                  	</form>
                 	</div>
               	</div>
-              	</div>
-              	<div class="form-row">
-              	<div class="col-md-3">
+             
+              
+              	<div class="col-md-3"> 
                 	<div class="form-group has-feedback">
                 		<form id="listOrders" action="listOrders" method="GET">
-	                  		<button type="button" class="btn btn-sm btn-default" onClick="$('#listOrders').submit();">Show Orders</button>
+                        <img src="images/img/showOrder5.png" alt="" width="200" height="200">
+	                  		<button type="button" class="btn btn-sm btn-default" onClick="$('#listOrders').submit();" style="margin-top: 3%;margin-left: 14%">Show Orders</button>
 	                  	</form>
                 	</div>
               	</div>
-			</div>	
+				
         </div>
       </div>
 			  
@@ -185,7 +191,7 @@
             <div class="subfooter-inner">
               <div class="row">
                 <div class="col-md-12">
-                  <p class="text-center">Copyright © 2018 The Project. All rights reserved.</p>
+                  <p class="text-center">Powered by Social Angels Digital Solution Pvt Ltd.</p>
                 </div>
               </div>
             </div>

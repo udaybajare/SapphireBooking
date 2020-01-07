@@ -114,20 +114,38 @@
 
             <!-- main start -->
             <!-- ================ -->
-            <div class="main col-lg-8">
-
+            <div class="main col-md-6">
+               <div id="logo" class="logo">
+                    <img src="images/img/logo.jpg" alt="" style="width: 200px;height: 55px;margin-top: 20px;margin-left: -20px;">
+                  </div>
               <!-- page-title start -->
               <!-- ================ -->
-              <h1 class="page-title">Organization Register</h1>
+              
+            </div>
+            <div class="main col-md-3">
+              <div class="row">
+               
+            <a class="font-weight-bold text-uppercase p-1 bg-light border rounded border-info" href="home" style="margin-top: 17%;margin-left: 2%">Home</a>
+          
+          
+            <a class="font-weight-bold text-uppercase  p-1 bg-light border rounded border-info" href="bookorder" style="margin-left: 2%;margin-top: 17%;">Book Now</a>
+          
+          
+            <a class="font-weight-bold text-uppercase  p-1 bg-light border rounded border-info" href="listOrders" style="margin-left: 2%;margin-top: 17%;">Show Orders</a>
+          
+            </div>
+            </div>
+            
+            <div class="main col-md-3">
               <!-- page-title end -->
                <form class="form-horizontal" action="logout" method="POST">
-                	<div class="col-auto ml-auto hidden-md-down">
+                	
                 	<div class="col-lg-7 col-xl-8 mr-20">
-                	 	<button type="submit" class="btn btn-group btn-default btn-animated">Log Out <i class="fa fa-user"></i></button>
+                	 	<button type="submit" class="btn btn-group btn-default btn-animated mt-4">Log Out <i class="fa fa-user"></i></button>
+               		</div>
+					       
+				      </form>
             </div>
-          </div>
-				</form>
-        </div>
           </div>
         </div>
       </section>
@@ -139,14 +157,11 @@
         <div class="container">
           <form action="addOrganization" method="POST">
             <div class="form-row">
-            <div class="col-md-2">
-                <div class="form-group ">
-                  <label >Customer Number</label>
-                  <input type="text" name="custNumber" class="form-control " >
-                </div>
-              </div>
+              <h2 class="page-title text-default text-md-center mt-5" style="margin-left: 2%">ADD ORGANISATION</h2>
+            </div>
+            <div class="form-row">
               <div class="col-md-2">
-                <div class="form-group ">
+                <div class="form-group ml-3">
                   <label >Organization Name</label>
                   <input type="text" name="orgName" class="form-control " >
                 </div>
@@ -166,7 +181,7 @@
             </div>	
 			<div class="form-row">
 			<div class="col-md-3 ">
-			<div class="ph-20 feature-box text-center object-non-visible" data-animation-effect="fadeInDownSmall" data-effect-delay="100">
+			<div class="ph-20 feature-box text-left object-non-visible" data-animation-effect="fadeInDownSmall" data-effect-delay="100">
 				<br>
 				<button type="submit" data-toggle="collapse" class="btn btn-default" >Add Organization</button>
 			</div>	
@@ -223,7 +238,7 @@
             <div class="subfooter-inner">
               <div class="row">
                 <div class="col-md-12">
-                  <p class="text-center">Copyright © 2018 The Project. All rights reserved.</p>
+                  
                 </div>
               </div>
             </div>

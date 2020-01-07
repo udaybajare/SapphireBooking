@@ -86,6 +86,11 @@ public class LoginController {
 	protected ModelAndView logout(HttpSession session) {
 		double sessionId = (double) session.getAttribute("sessionId");
 		boolean sessionDelete = true;
+		
+		//TODO Delete all the sessions for current userID
+		
+		String userName = (String) session.getAttribute("userName");
+		
 		sessionDelete = sessionDao.deleteSession(String.valueOf(sessionId));
 
 		return new ModelAndView("redirect:login");
