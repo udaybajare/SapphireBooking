@@ -282,7 +282,7 @@
      <td>AXIS</td>
      <td>ADD</td>
      <td>DIA</td>
-     <td></td>
+     <td>SOURCING</td>
      <td></td>
      <td></td>
    </tr>
@@ -293,8 +293,15 @@
 <td><input class="form-control" type='text' id='rAxis' name='rAxis' value=' ' /></td>
 <td><input class="form-control" type='text' id='rAdd' name='rAdd' value=' ' /></td>
 <td><input class="form-control" type='text' id='rDia' name='rDia' value=' ' /></td>
-  <td> </td>
-  <td> </td>
+<td>
+	<div class='form-group'>
+		<select class='form-control' id='rSourcingSelect' >
+			<option></option>
+			<option value='Factory Order'>Factory Order</option>            
+			<option value='Ready Stock'>Ready Stock</option>          
+	</select>        
+	</div>      
+</td>
   <td> </td>
   <td> </td>
   </tr>
@@ -305,8 +312,15 @@
 <td><input class="form-control" type='text'  id='lAxis' name='lAxis' value=' ' /></td>
 <td><input class="form-control" type='text'  id='lAdd' name='lAdd' value=' ' /></td>
 <td><input class="form-control" type='text'  id='lDia' name='lDia' value=' ' /></td>
-  <td> </td>
-  <td> </td>
+<td>
+	<div class='form-group'>
+		<select class='form-control' id='lSourcingSelect'>
+			<option></option>
+			<option value='Factory Order'>Factory Order</option>            
+			<option value='Ready Stock'>Ready Stock</option>          
+	</select>        
+	</div>      
+</td>
   <td> </td>
   <td> </td>
   </tr>     
@@ -532,6 +546,30 @@
     var lAdd       =     $('#lAdd').val();
     var lDia	   =     $('#lDia').val();
 
+	var rFactory = '';
+	var rReady = '';
+	var lFactory = '';
+	var lReady = '';
+	
+	if($('#lSourcingSelect').children("option:selected").val() === 'Factory Order')
+	{
+		lFactory = 'selected';
+	}
+	else if($('#lSourcingSelect').children("option:selected").val() === 'Ready Stock')
+	{
+		lReady = 'selected';
+	}
+	
+	if($('#rSourcingSelect').children("option:selected").val() === 'Factory Order')
+	{
+		rFactory = 'selected';
+	}
+	else if($('#rSourcingSelect').children("option:selected").val() === 'Ready Stock')
+	{
+		rReady = 'selected';
+	}
+	
+	
     var rowId = "'"+'row'+i+"'";
     if( (material !== "" && type !== "" && index !== "" && tint !== "" && qtyNos !== "" && frameType !== "") && ( rSph !== "" || rCyl !=="" || lSph !== "" || lCyl !== ""))
     {
@@ -566,8 +604,8 @@
       + "	   <td>	<div class='form-group'>"
       + "		  	<select class='form-control' name='rSourcing' id='sourcing'>"
       + "           	<option></option>"
-      + "               <option value='Factory Order'>Factory Order</option>"            
-      + "				<option value='Ready Stock'>Ready Stock</option>"          
+      + "               <option value='Factory Order' "+rFactory+">Factory Order</option>"            
+      + "				<option value='Ready Stock' "+rReady+">Ready Stock</option>"          
       + "			</select>"        
       + "			</div>"      
       + "		</td>"
@@ -585,8 +623,8 @@
       + "	   <td>	<div class='form-group'>"
       + "		  	<select class='form-control' name='lSourcing' id='sourcing'>"
       + "           	<option></option>"
-      + "               <option value='Factory Order'>Factory Order</option>"            
-      + "				<option value='Ready Stock'>Ready Stock</option>"          
+      + "               <option value='Factory Order' "+lFactory+" >Factory Order</option>"            
+      + "				<option value='Ready Stock' "+lReady+">Ready Stock</option>"          
       + "			</select>"        
       + "			</div>"      
       + "		</td>"

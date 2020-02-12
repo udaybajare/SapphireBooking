@@ -48,8 +48,11 @@ public class OrganizationDao {
 
 		String maxCustNo = (String)qry.uniqueResult();
 	
-
-		return Integer.valueOf(maxCustNo);	
+		if(!maxCustNo.equals(""))
+		{
+			return Integer.valueOf(maxCustNo);	
+		}
+		return 0;	
 	}
 	@Transactional
 	public ArrayList<ArrayList<String>> getRegisteredOrganization() {

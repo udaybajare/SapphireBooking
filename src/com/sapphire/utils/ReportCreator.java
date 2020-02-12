@@ -3,7 +3,9 @@ package com.sapphire.utils;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,10 +31,10 @@ public class ReportCreator {
 
 	@Autowired
 	OrderDao orderDao;
-	
+
 	@Autowired
 	OrganizationDao organizationDao;
-	
+
 	public byte[] writeExcel(ArrayList<OrderDetails> orerDetailList) throws IOException {
 
 		Workbook workbook = null;
@@ -47,20 +49,21 @@ public class ReportCreator {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		Map<String, String> cuetomerDetailsMap = new HashMap<String, String>();
 
 		ArrayList<ArrayList<String>> registeredOrgs = organizationDao.getRegisteredOrganization();
-		
-		
+
 		for (Object name : registeredOrgs) {
-			
+
 			Object[] nameList = (Object[]) name;
-			
-			cuetomerDetailsMap.put((String)nameList[1],(String)nameList[0]);
+
+			cuetomerDetailsMap.put((String) nameList[1], (String) nameList[0]);
 		}
-		
+
 		Sheet sheet = workbook.getSheetAt(0);
+
+		sheet.getRow(0).getCell(0, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK).setCellValue(new SimpleDateFormat("dd.MM.yy").format(new Date()));
 
 		int index = 0;
 		int nextRow = 4;
@@ -71,19 +74,28 @@ public class ReportCreator {
 			int orderDetailsId = orerDetail.getId();
 			String lenseSide = "";
 
+			boolean isRPresent = false;
+			boolean isLPresent = false;
+
 			EntryDetails entry = orderDao.getEntryDetails(orderId, orderDetailsId);
 
+			/*
+			 * if ((entry.getrAdd() != null || entry.getrAxis() != null ||
+			 * entry.getrCyl() != null || entry.getrDia() != null ||
+			 * entry.getrSph() != null) && (entry.getlAdd() != null ||
+			 * entry.getlAxis() != null || entry.getlCyl() != null ||
+			 * entry.getlDia() != null || entry.getlSph() != null)) { lenseSide
+			 * = "B"; } else
+			 */
 			if ((entry.getrAdd() != null || entry.getrAxis() != null || entry.getrCyl() != null
-					|| entry.getrDia() != null || entry.getrSph() != null)
-					&& (entry.getlAdd() != null || entry.getlAxis() != null || entry.getlCyl() != null
-							|| entry.getlDia() != null || entry.getlSph() != null)) {
-				lenseSide = "B";
-			} else if ((entry.getrAdd() != null || entry.getrAxis() != null || entry.getrCyl() != null
 					|| entry.getrDia() != null || entry.getrSph() != null)) {
 				lenseSide = "R";
-			} else if ((entry.getlAdd() != null || entry.getlAxis() != null || entry.getlCyl() != null
+				isRPresent = true;
+			} 
+			if ((entry.getlAdd() != null || entry.getlAxis() != null || entry.getlCyl() != null
 					|| entry.getlDia() != null || entry.getlSph() != null)) {
 				lenseSide = "L";
+				isLPresent = true;
 			}
 
 			int sph = 0;
@@ -91,30 +103,48 @@ public class ReportCreator {
 
 			int row = nextRow + i;
 
-			Cell cellToUpdate0 = sheet.getRow(row).getCell(0);
-			
 			String customerNo = cuetomerDetailsMap.get(orerDetail.getOrganizationName());
-			cellToUpdate0.setCellValue(customerNo+"/"+orerDetail.getCustOrderNumber());
-			Cell cellToUpdate1 = sheet.getRow(row).getCell(1);
-			cellToUpdate1.setCellValue(orerDetail.getOrganizationName());
-			Cell cellToUpdate2 = sheet.getRow(row).getCell(2);
-			cellToUpdate2.setCellValue(orerDetail.getOrderDate());
 
-			Cell cellToUpdate3 = sheet.getRow(row).getCell(3);
-			cellToUpdate3.setCellValue(lenseSide.equals("B") ? "R" : lenseSide);
+			if (isRPresent) {
+				Cell cellToUpdate0 = sheet.getRow(row).getCell(0);
+				cellToUpdate0.setCellValue(get4DigitNumber(orerDetail.getOrderId()));
 
-			if (lenseSide.equalsIgnoreCase("R")) {
+				Cell cellToUpdate1 = sheet.getRow(row).getCell(1);
+				cellToUpdate1.setCellValue(customerNo);
+
+				Cell cellToUpdate2 = sheet.getRow(row).getCell(2);
+				cellToUpdate2.setCellValue(orerDetail.getCustOrderNumber());
+
+				Cell cellToUpdate3 = sheet.getRow(row).getCell(3);
+				cellToUpdate3.setCellValue(orerDetail.getOrganizationName());
+
 				Cell cellToUpdate4 = sheet.getRow(row).getCell(4);
-				cellToUpdate4.setCellValue(entry.getrSph());
-				Cell cellToUpdate5 = sheet.getRow(row).getCell(5);
-				cellToUpdate5.setCellValue(entry.getrCyl());
-				Cell cellToUpdate6 = sheet.getRow(row).getCell(6);
-				cellToUpdate6.setCellValue(entry.getrAxis());
-				Cell cellToUpdate7 = sheet.getRow(row).getCell(7);
-				cellToUpdate7.setCellValue(entry.getrAdd());
+				cellToUpdate4.setCellValue(orerDetail.getOrderDate());
 
+				Cell cellToUpdate5 = sheet.getRow(row).getCell(5);
+				cellToUpdate5.setCellValue("R");
+				Cell cellToUpdate6 = sheet.getRow(row).getCell(6);
+				cellToUpdate6.setCellValue(entry.getrSph());
+				Cell cellToUpdate7 = sheet.getRow(row).getCell(7);
+				cellToUpdate7.setCellValue(entry.getrCyl());
+				Cell cellToUpdate8 = sheet.getRow(row).getCell(8);
+				cellToUpdate8.setCellValue(entry.getrAxis());
 				Cell cellToUpdate9 = sheet.getRow(row).getCell(9);
-				cellToUpdate9.setCellValue(entry.getrPrice());
+				cellToUpdate9.setCellValue(entry.getrAdd());
+
+				Cell cellToUpdate10 = sheet.getRow(row).getCell(10);
+				cellToUpdate10.setCellValue(orerDetail.getCoating() + " " + orerDetail.getTint());
+				
+				Double rPrise = Double.valueOf(entry.getrPrice());
+				
+				if(!isLPresent)
+				{
+					double remainder = 10 - (rPrise)%10;
+					rPrise = ((((rPrise)+remainder)/10)*10);
+				}
+					
+				Cell cellToUpdate11 = sheet.getRow(row).getCell(11);
+				cellToUpdate11.setCellValue(rPrise);
 
 				if (entry.getrSph() != null) {
 					sph = 1;
@@ -123,102 +153,64 @@ public class ReportCreator {
 					cyl = 1;
 				}
 
+				Cell cellToUpdate12 = sheet.getRow(row).getCell(12, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+				cellToUpdate12.setCellValue(orerDetail.getComment());
+
+				Cell cellToUpdate14 = sheet.getRow(row).getCell(14, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+				cellToUpdate14.setCellValue(sph);
+				Cell cellToUpdate15 = sheet.getRow(row).getCell(15, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+				cellToUpdate15.setCellValue(cyl);
+				Cell cellToUpdate16 = sheet.getRow(row).getCell(16, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+				cellToUpdate16.setCellValue(Integer.sum(sph, cyl));
+				Cell cellToUpdate17 = sheet.getRow(row).getCell(17, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+				cellToUpdate17.setCellValue(1);
 			}
 
-			if (lenseSide.equalsIgnoreCase("L")) {
+			if (isLPresent) {
+
+				// Go to next row
+				row++;
+				nextRow++;
+
+				Cell cellToUpdate0 = sheet.getRow(row).getCell(0);
+				cellToUpdate0.setCellValue(get4DigitNumber(orerDetail.getOrderId()));
+
+				Cell cellToUpdate1 = sheet.getRow(row).getCell(1);
+				cellToUpdate1.setCellValue(customerNo);
+
+				Cell cellToUpdate2 = sheet.getRow(row).getCell(2);
+				cellToUpdate2.setCellValue(orerDetail.getCustOrderNumber());
+
+				Cell cellToUpdate3 = sheet.getRow(row).getCell(3);
+				cellToUpdate3.setCellValue(orerDetail.getOrganizationName());
+
 				Cell cellToUpdate4 = sheet.getRow(row).getCell(4);
-				cellToUpdate4.setCellValue(entry.getlSph());
+				cellToUpdate4.setCellValue(orerDetail.getOrderDate());
+
 				Cell cellToUpdate5 = sheet.getRow(row).getCell(5);
-				cellToUpdate5.setCellValue(entry.getlCyl());
+				cellToUpdate5.setCellValue("L");
 				Cell cellToUpdate6 = sheet.getRow(row).getCell(6);
-				cellToUpdate6.setCellValue(entry.getlAxis());
+				cellToUpdate6.setCellValue(entry.getlSph());
 				Cell cellToUpdate7 = sheet.getRow(row).getCell(7);
-				cellToUpdate7.setCellValue(entry.getlAdd());
-
+				cellToUpdate7.setCellValue(entry.getlCyl());
+				Cell cellToUpdate8 = sheet.getRow(row).getCell(8);
+				cellToUpdate8.setCellValue(entry.getlAxis());
 				Cell cellToUpdate9 = sheet.getRow(row).getCell(9);
-				cellToUpdate9.setCellValue(entry.getlPrice());
+				cellToUpdate9.setCellValue(entry.getlAdd());
 
-				if (entry.getlSph() != null) {
-					sph = 1;
+				Cell cellToUpdate10 = sheet.getRow(row).getCell(10);
+				cellToUpdate10.setCellValue(orerDetail.getCoating() + " " + orerDetail.getTint());
+
+				Double lPrise = Double.valueOf(entry.getlPrice());
+				
+				if(!isRPresent)
+				{
+					double remainder = 10 - (lPrise)%10;
+					lPrise = ((((lPrise)+remainder)/10)*10);
 				}
-				if (entry.getlCyl() != null) {
-					cyl = 1;
-				}
-			}
-
-			Cell cellToUpdate8 = sheet.getRow(row).getCell(8);
-			cellToUpdate8.setCellValue(orerDetail.getCoating() + " " + orerDetail.getTint());
-
-			Cell cellToUpdate10 = sheet.getRow(row).getCell(10);
-			cellToUpdate10.setCellValue(orerDetail.getComment());
-
-			// Nothing to set in 12
-			/*
-			 * Cell cellToUpdate0 = sheet.getRow(row).getCell(12);
-			 * cellToUpdate0.setCellValue();
-			 */
-
-			Cell cellToUpdate11 = sheet.getRow(row).getCell(12);
-			cellToUpdate11.setCellValue(sph);
-			Cell cellToUpdate12 = sheet.getRow(row).getCell(13, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-			cellToUpdate12.setCellValue(cyl);
-			Cell cellToUpdate13 = sheet.getRow(row).getCell(14, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-			cellToUpdate13.setCellValue(Integer.sum(sph, cyl));
-			Cell cellToUpdate14 = sheet.getRow(row).getCell(15, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-			cellToUpdate14.setCellValue(1);
-
-			if (lenseSide == "B") {
-				// Add R lense details
-				Cell cellToUpdate4 = sheet.getRow(row).getCell(4);
-				cellToUpdate4.setCellValue(entry.getrSph());
-				Cell cellToUpdate5 = sheet.getRow(row).getCell(5);
-				cellToUpdate5.setCellValue(entry.getrCyl());
-				Cell cellToUpdate6 = sheet.getRow(row).getCell(6);
-				cellToUpdate6.setCellValue(entry.getrAxis());
-				Cell cellToUpdate7 = sheet.getRow(row).getCell(7);
-				cellToUpdate7.setCellValue(entry.getrAdd());
-
-				Cell cellToUpdate9 = sheet.getRow(row).getCell(9);
-				cellToUpdate9.setCellValue(entry.getrPrice());
-
-				if (entry.getrSph() != null) {
-					sph = 1;
-				}
-				if (entry.getrCyl() != null) {
-					cyl = 1;
-				}
-
-				Cell cellToUpdateR11 = sheet.getRow(row).getCell(12);
-				cellToUpdateR11.setCellValue(sph);
-				Cell cellToUpdateR12 = sheet.getRow(row).getCell(13, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-				cellToUpdateR12.setCellValue(cyl);
-				Cell cellToUpdateR13 = sheet.getRow(row).getCell(14, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-				cellToUpdateR13.setCellValue(Integer.sum(sph, cyl));
-				Cell cellToUpdateR14 = sheet.getRow(row).getCell(15, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-				cellToUpdateR14.setCellValue(1);
-
-				row = row + 1;
-				Cell cellToUpdateR0 = sheet.getRow(row).getCell(0);
-				cellToUpdateR0.setCellValue(1);
-				Cell cellToUpdateR1 = sheet.getRow(row).getCell(1);
-				cellToUpdateR1.setCellValue(orerDetail.getOrganizationName());
-				Cell cellToUpdateR2 = sheet.getRow(row).getCell(2);
-				cellToUpdateR2.setCellValue(orerDetail.getOrderDate());
-				Cell cellToUpdateR3 = sheet.getRow(row).getCell(3);
-				cellToUpdateR3.setCellValue("L");
-
-				// Add L lense details
-				Cell cellToUpdateL4 = sheet.getRow(row).getCell(4);
-				cellToUpdateL4.setCellValue(entry.getlSph());
-				Cell cellToUpdateL5 = sheet.getRow(row).getCell(5);
-				cellToUpdateL5.setCellValue(entry.getlCyl());
-				Cell cellToUpdateL6 = sheet.getRow(row).getCell(6);
-				cellToUpdateL6.setCellValue(entry.getlAxis());
-				Cell cellToUpdateL7 = sheet.getRow(row).getCell(7);
-				cellToUpdateL7.setCellValue(entry.getlAdd());
-
-				Cell cellToUpdateR9 = sheet.getRow(row).getCell(9);
-				cellToUpdateR9.setCellValue(entry.getlPrice());
+				
+				Cell cellToUpdate11 = sheet.getRow(row).getCell(11);
+				cellToUpdate11.setCellValue(lPrise);
 
 				if (entry.getlSph() != null) {
 					sph = 1;
@@ -227,18 +219,20 @@ public class ReportCreator {
 					cyl = 1;
 				}
 
-				Cell cellToUpdateL11 = sheet.getRow(row).getCell(12);
-				cellToUpdateL11.setCellValue(sph);
-				Cell cellToUpdateL12 = sheet.getRow(row).getCell(13, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-				cellToUpdateL12.setCellValue(cyl);
-				Cell cellToUpdateL13 = sheet.getRow(row).getCell(14, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-				cellToUpdateL13.setCellValue(Integer.sum(sph, cyl));
-				Cell cellToUpdateL14 = sheet.getRow(row).getCell(15, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-				cellToUpdateL14.setCellValue(1);
+				Cell cellToUpdate12 = sheet.getRow(row).getCell(12, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+				cellToUpdate12.setCellValue(orerDetail.getComment());
 
+				Cell cellToUpdate14 = sheet.getRow(row).getCell(14, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+				cellToUpdate14.setCellValue(sph);
+				Cell cellToUpdate15 = sheet.getRow(row).getCell(15, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+				cellToUpdate15.setCellValue(cyl);
+				Cell cellToUpdate16 = sheet.getRow(row).getCell(16, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+				cellToUpdate16.setCellValue(Integer.sum(sph, cyl));
+				Cell cellToUpdate17 = sheet.getRow(row).getCell(17, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+				cellToUpdate17.setCellValue(1);
 			}
+
 			i++;
-
 		}
 
 		inputStream.close();
@@ -257,5 +251,17 @@ public class ReportCreator {
 		workbook.close();
 
 		return bytes;
+	}
+	
+	public String get4DigitNumber(int number)
+	{
+		String orderIdStr = String.valueOf(number);
+		
+		while(orderIdStr.length()<4)
+		{
+			orderIdStr = "0"+orderIdStr;
+		}
+		
+		return orderIdStr;
 	}
 }

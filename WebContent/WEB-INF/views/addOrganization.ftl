@@ -160,22 +160,28 @@
               <h2 class="page-title text-default text-md-center mt-5" style="margin-left: 2%">ADD ORGANISATION</h2>
             </div>
             <div class="form-row">
-              <div class="col-md-2">
+              <div class="col-md-3">
                 <div class="form-group ml-3">
                   <label >Organization Name</label>
                   <input type="text" name="orgName" class="form-control " >
                 </div>
               </div>
-              <div class="col-md-2">
+              <div class="col-md-3">
                 <div class="form-group ">
                   <label >Organization Contact</label>
                   <input type="text" name="orgContact" class="form-control " >
                 </div>
               </div>
-              <div class="col-md-2">
+              <div class="col-md-3">
                 <div class="form-group ">
                   <label >Organization Address</label>
                   <input type="text" name="orgAddress" class="form-control " >
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group ">
+                  <label >Customer Number</label>
+                  <input type="text" name="custNumber" class="form-control" value="${nextCustNumber}">
                 </div>
               </div>			  
             </div>	

@@ -258,77 +258,73 @@ public class BookingUtility {
 			orderContent = orderContent + orderDetailsContentHTMLStart;
 
 			EntryDetails entryDetails = orderDao.getEntryDetails(orderId, orderDetails.getId());
-			
+
 			boolean isRightPresent = false;
 			boolean isLeftPresent = false;
-			
-			if(!((entryDetails.getrSph() == null || entryDetails.getrSph().equals("")) && (entryDetails.getrCyl() == null || entryDetails.getrSph().equals(""))))
-			{
+
+			if (!((entryDetails.getrSph() == null || entryDetails.getrSph().equals(""))
+					&& (entryDetails.getrCyl() == null || entryDetails.getrSph().equals("")))) {
 				isRightPresent = true;
 			}
-			
-			if(!((entryDetails.getlSph() == null || entryDetails.getlSph().equals("")) && (entryDetails.getlCyl() == null || entryDetails.getlSph().equals(""))))
-			{
+
+			if (!((entryDetails.getlSph() == null || entryDetails.getlSph().equals(""))
+					&& (entryDetails.getlCyl() == null || entryDetails.getlSph().equals("")))) {
 				isLeftPresent = true;
 			}
-			
-			if(isRightPresent)
-			{
+
+			if (isRightPresent) {
 				orderContent = orderContent + orderDetailsContentHTMLRight;
 			}
-			
-			if(isLeftPresent)
-			{
+
+			if (isLeftPresent) {
 				orderContent = orderContent + orderDetailsContentHTMLLeft;
 			}
-			
+
 			orderContent = orderContent + orderDetailsContentHTMLEnd;
-			
+
 			orderContent = orderContent.replace("rSph", entryDetails.getrSph() == null ? "" : entryDetails.getrSph());
 			orderContent = orderContent.replace("rCyl", entryDetails.getrCyl() == null ? "" : entryDetails.getrCyl());
-			orderContent = orderContent.replace("rAxis", entryDetails.getrAxis() == null ? "" : entryDetails.getrAxis());
+			orderContent = orderContent.replace("rAxis",
+					entryDetails.getrAxis() == null ? "" : entryDetails.getrAxis());
 			orderContent = orderContent.replace("rAdd", entryDetails.getrAdd() == null ? "" : entryDetails.getrAdd());
 			orderContent = orderContent.replace("rDia", entryDetails.getrDia() == null ? "" : entryDetails.getrDia());
-			orderContent = orderContent.replace("rSourcingStr", entryDetails.getrSourcing() == null ? "" : entryDetails.getrSourcing());
-			
-			if (entryDetails.getrSourcing() != null && entryDetails.getrSourcing().equalsIgnoreCase("Factory Order"))
-			{
+			orderContent = orderContent.replace("rSourcingStr",
+					entryDetails.getrSourcing() == null ? "" : entryDetails.getrSourcing());
+
+			if (entryDetails.getrSourcing() != null && entryDetails.getrSourcing().equalsIgnoreCase("Factory Order")) {
 				orderContent = orderContent.replace("rFoSelectedStr", "selected");
 				orderContent = orderContent.replace("rRsSelectedStr", "");
-			}
-			else
-			{
+			} else {
 				orderContent = orderContent.replace("rFoSelectedStr", "");
 				orderContent = orderContent.replace("rRsSelectedStr", "selected");
 			}
-			
+
 			orderContent = orderContent.replace("lSph", entryDetails.getlSph() == null ? "" : entryDetails.getlSph());
 			orderContent = orderContent.replace("lCyl", entryDetails.getlCyl() == null ? "" : entryDetails.getlCyl());
-			orderContent = orderContent.replace("lAxis", entryDetails.getlAxis() == null ? "" : entryDetails.getlAxis());
+			orderContent = orderContent.replace("lAxis",
+					entryDetails.getlAxis() == null ? "" : entryDetails.getlAxis());
 			orderContent = orderContent.replace("lAdd", entryDetails.getlAdd() == null ? "" : entryDetails.getlAdd());
 			orderContent = orderContent.replace("lDia", entryDetails.getlDia() == null ? "" : entryDetails.getlDia());
 			boolean lSourcingNull = entryDetails.getlSourcing() == null;
-			orderContent = orderContent.replace("lSourcingStr",  lSourcingNull ? "" : entryDetails.getlSourcing());
-				
-				if (entryDetails.getlSourcing() != null && entryDetails.getlSourcing().equalsIgnoreCase("Factory Order"))
-				{
-					orderContent = orderContent.replace("lFoSelectedStr", "selected");
-					orderContent = orderContent.replace("lRsSelectedStr", "");
-				}
-				else
-				{
-					orderContent = orderContent.replace("lFoSelectedStr", "");
-					orderContent = orderContent.replace("lRsSelectedStr", "selected");
-				}		
-			
+			orderContent = orderContent.replace("lSourcingStr", lSourcingNull ? "" : entryDetails.getlSourcing());
+
+			if (entryDetails.getlSourcing() != null && entryDetails.getlSourcing().equalsIgnoreCase("Factory Order")) {
+				orderContent = orderContent.replace("lFoSelectedStr", "selected");
+				orderContent = orderContent.replace("lRsSelectedStr", "");
+			} else {
+				orderContent = orderContent.replace("lFoSelectedStr", "");
+				orderContent = orderContent.replace("lRsSelectedStr", "selected");
+			}
+
 			orderContent = orderContent.replace("qtyNos", orderDetails.getQtyNos());
 			orderContent = orderContent.replace("subOrderId", String.valueOf(entryDetails.getlOrderDetailsId()));
+			orderContent = orderContent.replace("orderNo", String.valueOf(orderDetailsList.get(0).getOrderId()));
 			orderContent = orderContent.replace("typeStr", orderDetails.getType());
 			orderContent = orderContent.replace("index1", orderDetails.getIndex());
 			orderContent = orderContent.replace("coatingStr", orderDetails.getCoating());
 			orderContent = orderContent.replace("tintStr", orderDetails.getTint());
 			orderContent = orderContent.replace("frameType", orderDetails.getFrameType());
-			
+
 			orderContent = orderContent.replace("material", orderDetails.getMaterial());
 			orderContent = orderContent.replace("organizationName", orderDetails.getOrganizationName());
 			orderContent = orderContent.replace("orderIdStr", "orderId" + orderDetails.getId());
@@ -339,10 +335,16 @@ public class BookingUtility {
 			orderContent = orderContent.replace("lPrice", String.valueOf(lPrice));
 			orderContent = orderContent.replace("rPrice", String.valueOf(rPrice));
 		}
-		
+
 		totalAmount = orderDetailsList.get(0).getTotalAmount();
-		
-		orderRow = orderRow.replace("orderNo", String.valueOf(orderDetailsList.get(0).getOrderId()));
+
+		String orderIdStr = String.valueOf(orderDetailsList.get(0).getOrderId());
+
+		while (orderIdStr.length() < 4) {
+			orderIdStr = "0" + orderIdStr;
+		}
+
+		orderRow = orderRow.replace("orderNo", orderIdStr);
 		orderRow = orderRow.replace("organizationName", orderDetailsList.get(0).getOrganizationName());
 		orderRow = orderRow.replace("fullName", String.valueOf(orderDetailsList.get(0).getUserName()));
 		orderRow = orderRow.replace("orderDate", String.valueOf(orderDetailsList.get(0).getOrderDate()));
@@ -350,7 +352,7 @@ public class BookingUtility {
 		orderRow = orderRow.replace("orderDetailsContent", orderContent);
 		orderRow = orderRow.replace("myModalStr", "myModal" + String.valueOf(orderId));
 		orderRow = orderRow.replace("totalAmountStr", String.valueOf(totalAmount));
-		
+
 		return orderRow;
 	}
 
@@ -425,8 +427,8 @@ public class BookingUtility {
 			+ "			<button type='button' class='btn btn-sm btn-default' onClick='printItem(\"orderIdStr\");'>Print</button>"
 			+ "			<div class='separator clearfix'></div>"
 			+ "			<div style='display:none;' id='orderIdStr' >"
-			+ "			<div style='height : 33mm; width : 70mm;' >"
-			+ "			organizationName UON: orderNo Qty:qtyNos Rate:rPrice"
+			+ "			<div style='height : 37mm; width : 69mm;' >"
+			+ "			organizationName UON: orderNo/subOrderId Qty:qtyNos Rate:rPrice"
 			+ "			<table border='1' style='border-collapse:collapse;'>"
 			+ "				<thead>"
 			+ "					<tr>"
@@ -447,6 +449,26 @@ public class BookingUtility {
 			+ "						<td>rAdd</td>    "
 			+ "						<td>rDia</td>  			"
 			+ "					</tr>  			"
+			+ "					<tr>  "
+			+ "						<td colspan='6'>material, typeStr, index1, coatingStr, tintStr</td>"
+			+ "					</tr>			"
+			+ "					</tbody>			"
+			+ "				</table>"
+			+ "			</div>"
+			+ "			<div style='height : 37mm; width : 69mm;' >"
+			+ "			organizationName UON: orderNo/subOrderId Qty:qtyNos Rate:lPrice"
+			+ "			<table border='1' style='border-collapse:collapse;'>"
+			+ "				<thead>"
+			+ "					<tr>"
+			+ "						<th>SIDE</th>"
+			+ "						<th>SPH</th>"
+			+ "						<th>CYL</th>"
+			+ "						<th>AXIS</th>"
+			+ "						<th>ADD</th>    "
+			+ "						<th>DIA</th>									"
+			+ "					</tr>			"
+			+ "				</thead>			"
+			+ "				<tbody>  						"
 			+ "					<tr>    "
 			+ "						<td>L</td>    "
 			+ "						<td>lSph</td>    "

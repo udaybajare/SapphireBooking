@@ -66,7 +66,23 @@ public class OrderController {
 
 		ModelAndView modelAndView = new ModelAndView(ADD_ORGANIZATION_FORM);
 
+		int nextCustNumber = organizationDao.getMaxCustNumber()+1;
+		
+		String nextCustNumberStr = String.valueOf(nextCustNumber);
+		
+		int custNolength = nextCustNumberStr.length();
+		int zerosToAdd = 4-custNolength;
+		
+		nextCustNumberStr = String.valueOf(nextCustNumber);
+		
+		for(int i=0;i<zerosToAdd;i++)
+		{
+			nextCustNumberStr = "0"+nextCustNumberStr;
+		}
+		
+		
 		modelAndView.addObject("message", " ");
+		modelAndView.addObject("nextCustNumber",nextCustNumberStr);
 
 		return modelAndView;
 	}
@@ -151,8 +167,28 @@ public class OrderController {
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		
-		Date dateFromDate = dateFormat.parse(fromDate);
-		Date dateToDate = dateFormat.parse(toDate);
+		Date dateFromDate = null;
+		
+		if(fromDate!=null && !(fromDate.equals("")))
+		{
+			dateFromDate = dateFormat.parse(fromDate);
+		}
+		else
+		{
+			dateFromDate = dateFormat.parse("01/01/2020");
+		}
+		
+		Date dateToDate = null;
+		
+		if(toDate!=null && !(toDate.equals("")))
+		{
+			dateToDate = dateFormat.parse(toDate);
+		}
+		else
+		{
+			dateToDate = new Date();
+		}
+		
 		
 		dateToDate.setHours(23);
 		dateToDate.setMinutes(59);
@@ -231,8 +267,23 @@ public class OrderController {
 		if (material != null) {
 			for (int i = 0; i < material.length; i++) {
 				
-				OrderDetails orderDetail = new OrderDetails(material[i], type[i], index[i], coating[i], tint[i], qtyNos[i],
-						frameType[i], orgName, userName, mobileNo, orderDate, status, "", 0.0, fitting[i], custOrderNumber[i]);
+				OrderDetails orderDetail = new OrderDetails(
+						material.length>0?material[i]:"",
+						type.length>0?type[i]:"",
+						index.length>0?index[i]:"",
+						coating.length>0?coating[i]:"",
+						tint.length>0?tint[i]:"",
+						qtyNos[i],
+						frameType.length>0?frameType[i]:"",
+						orgName,
+						userName,
+						mobileNo,
+						orderDate,
+						status, 
+						"", 
+						0.0, 
+						fitting.length>0?fitting[i]:"",
+						custOrderNumber.length>0?custOrderNumber[i]:"");
 
 				// get right and left lens price
 
@@ -244,16 +295,16 @@ public class OrderController {
 				if (material[i].equalsIgnoreCase("Glass")) {
 
 					rPrise = bookingUtility.getGlassLensePrice(
-							rSph.length > 0 && !(rSph[i] == null || rSph[i].equals("")) ? Float.parseFloat(rSph[i])
+							rSph.length > 0 && rSph[i] != null && !(rSph[i].trim().equals("")) ? Float.parseFloat(rSph[i])
 									: null,
-							rCyl.length > 0 && !(rCyl[i] == null || rCyl[i].equals("")) ? Float.parseFloat(rCyl[i])
+							rCyl.length > 0 && rCyl[i] != null && !(rCyl[i].trim().equals("")) ? Float.parseFloat(rCyl[i])
 									: null,
 							tint[i], type[i]);
 
 					lPrise = bookingUtility.getGlassLensePrice(
-							lSph.length > 0 && !(lSph[i] == null || lSph[i].equals("")) ? Float.parseFloat(lSph[i])
+							lSph.length > 0 && lSph[i] != null && !(lSph[i].trim().equals("")) ? Float.parseFloat(lSph[i])
 									: null,
-							lCyl.length > 0 && !(lCyl[i] == null || lCyl[i].equals("")) ? Float.parseFloat(lCyl[i])
+							lCyl.length > 0 && lCyl[i] != null && !(lCyl[i].trim().equals("")) ? Float.parseFloat(lCyl[i])
 									: null,
 							tint[i], type[i]);
 					
@@ -264,14 +315,15 @@ public class OrderController {
 
 				} else if (material[i].equalsIgnoreCase("CR")) {
 					rPrise = bookingUtility.getCRLensePrice(type[i], tint[i], index[i],
-							rSph.length > 0 && !(rSph[i] == null || rSph[i].equals("")) ? rSph[i] : null,
-							rCyl.length > 0 && !(rCyl[i] == null || rCyl[i].equals("")) ? rCyl[i] : null, coating[i]);
+							rSph.length > 0 && rSph[i] != null && !(rSph[i].trim().equals("")) ? rSph[i] : null,
+							rCyl.length > 0 && rCyl[i] != null && !(rCyl[i].trim().equals("")) ? rCyl[i] : null, coating[i]);
 					
 					lPrise = bookingUtility.getCRLensePrice(type[i], tint[i], index[i],
-							lSph.length > 0 && !(lSph[i] == null || lSph[i].equals("")) ? lSph[i] : null,
-							lCyl.length > 0 && !(lCyl[i] == null || lCyl[i].equals("")) ? lCyl[i] : null, coating[i]);
+							lSph.length > 0 && lSph[i] != null && !(lSph[i].trim().equals("")) ? lSph[i] : null,
+							lCyl.length > 0 && lCyl[i] != null && !(lCyl[i].trim().equals("")) ? lCyl[i] : null, coating[i]);
 
-					if (Math.ceil(Float.parseFloat(lCyl[i])) > 4) {
+					if (Math.ceil(Float.parseFloat(
+							lCyl.length > 0 && lCyl[i] != null && !(lCyl[i].trim().equals("")) ? lCyl[i] : "0")) > 4) {
 						rPrise = rPrise != 0 ? Math.addExact(rPrise, 25) : rPrise;
 						lPrise = lPrise != 0 ? Math.addExact(lPrise, 25) : lPrise;
 					}
@@ -279,6 +331,10 @@ public class OrderController {
 				}
 
 				int remainder = 10 - (lPrise+rPrise)%10;
+				if (remainder == 10)
+				{
+					remainder = 0;
+				}
 				totalPrice = ((((lPrise+rPrise)+remainder)/10)*10) * Integer.parseInt(qtyNos[i]);
 				
 				//Add fitting price as well 
@@ -304,7 +360,10 @@ public class OrderController {
 				orderDetails.add(orderDetail);
 				totalAmount = totalAmount + totalPrice;	
 				
-				for(int j=0; j<orderDetails.size(); j++){orderDetails.get(j).setTotalAmount(totalAmount);}
+				for(int j=0; j<orderDetails.size(); j++)
+				{
+					orderDetails.get(j).setTotalAmount(totalAmount);
+				}
 			}
 
 			orderDao.saveInventory(orderDetails, entryDetails);
@@ -330,34 +389,37 @@ public class OrderController {
 			if (material[i].equalsIgnoreCase("Glass")) {
 
 				 rPrise = bookingUtility.getGlassLensePrice(
-						rSph.length > 0 && !(rSph[i] == null || rSph[i].equals("")) ? Float.parseFloat(rSph[i]) : null,
-						rCyl.length > 0 && !(rCyl[i] == null || rCyl[i].equals("")) ? Float.parseFloat(rCyl[i]) : null,
+						rSph.length > 0 && rSph[i] != null && !(rSph[i].trim().equals("")) ? Float.parseFloat(rSph[i]) : null,
+						rCyl.length > 0 && rCyl[i] != null && !(rCyl[i].trim().equals("")) ? Float.parseFloat(rCyl[i]) : null,
 						tint[i], type[i]);
 
 				 lPrise = bookingUtility.getGlassLensePrice(
-						lSph.length > 0 && !(lSph[i] == null || lSph[i].equals("")) ? Float.parseFloat(lSph[i]) : null,
-						lCyl.length > 0 && !(lCyl[i] == null || lCyl[i].equals("")) ? Float.parseFloat(lCyl[i]) : null,
+						lSph.length > 0 && lSph[i] != null && !(lSph[i].trim().equals("")) ? Float.parseFloat(lSph[i]) : null,
+						lCyl.length > 0 && lCyl[i] != null && !(lCyl[i].trim().equals("")) ? Float.parseFloat(lCyl[i]) : null,
 						tint[i], type[i]);
 				
-				System.out.println(rPrise);
-				System.out.println(lPrise);
 				itemTotal = Math.addExact(rPrise, lPrise);
 
 			} else if (material[i].equalsIgnoreCase("CR")) {
 				 rPrise = bookingUtility.getCRLensePrice(type[i], tint[i], index[i],
-						rSph.length > 0 && !(rSph[i] == null || rSph[i].equals("")) ? rSph[i] : null,
-						rCyl.length > 0 && !(rCyl[i] == null || rCyl[i].equals("")) ? rCyl[i] : null, coating[i]);
+						rSph.length > 0 && rSph[i] != null && !(rSph[i].trim().equals("")) ? rSph[i] : null,
+						rCyl.length > 0 && rCyl[i] != null && !(rCyl[i].trim().equals("")) ? rCyl[i] : null, coating[i]);
 				 lPrise = bookingUtility.getCRLensePrice(type[i], tint[i], index[i],
-						lSph.length > 0 && !(lSph[i] == null || lSph[i].equals("")) ? lSph[i] : null,
-						lCyl.length > 0 && !(lCyl[i] == null || lCyl[i].equals("")) ? lCyl[i] : null, coating[i]);
+						lSph.length > 0 && lSph[i] != null && !(lSph[i].trim().equals("")) ? lSph[i] : null,
+						lCyl.length > 0 && lCyl[i] != null && !(lCyl[i].trim().equals("")) ? lCyl[i] : null, coating[i]);
 
-				if (Math.ceil((lCyl.length > 0 && !(lCyl[i].equals("")))? Float.parseFloat(lCyl[i]) : 0) > 4) {
+				if (Math.ceil((lCyl.length > 0 && !(lCyl[i].trim().equals("")))? Float.parseFloat(lCyl[i]) : 0) > 4) {
 					rPrise = rPrise != 0 ? Math.addExact(rPrise, 50) : rPrise;
 					lPrise = lPrise != 0 ? Math.addExact(lPrise, 50) : lPrise;
 				}
 
 			}
 			int remainder  = 10 - (lPrise+rPrise)%10;
+			
+			if (remainder == 10)
+			{
+				remainder = 0;
+			}
 			totalPrice = ((((lPrise+rPrise)+remainder)/10)*10) * Integer.parseInt(qtyNos[i]);
 			
 			priseList.append(String.valueOf(totalPrice) + ",");
@@ -375,9 +437,11 @@ public class OrderController {
 			throws Exception {
 
 		ArrayList<OrderDetails> orderDetailsList = orderDao.getAllOrders(orderId);
+		
 		ArrayList<EntryDetails> entryDetails = new ArrayList<>();
+		
 		for (int i = 0; i < orderDetailsList.size(); i++) {
-			EntryDetails ed = orderDao.getEntryDetails(orderId, orderDetailsList.get(i).getId());
+			EntryDetails ed = orderDao.getEntryDetails(orderDetailsList.get(i).getOrderId(), orderDetailsList.get(i).getId());
 			entryDetails.add(ed);
 		}
 
