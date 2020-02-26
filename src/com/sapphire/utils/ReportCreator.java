@@ -52,7 +52,7 @@ public class ReportCreator {
 
 		Map<String, String> cuetomerDetailsMap = new HashMap<String, String>();
 
-		ArrayList<ArrayList<String>> registeredOrgs = organizationDao.getRegisteredOrganization();
+		ArrayList<ArrayList<String>> registeredOrgs = organizationDao.getRegisteredOrganization(null);
 
 		for (Object name : registeredOrgs) {
 

@@ -39,7 +39,7 @@ public class RegistrationAndLoginController {
 
 	ModelAndView modelAndView = new ModelAndView(REGISTRATION_VIEW_NAME);
 
-	ArrayList<ArrayList<String>> registeredOrg = organizationDao.getRegisteredOrganization();
+	ArrayList<ArrayList<String>> registeredOrg = organizationDao.getRegisteredOrganization(null);
 	String registeredOrgStr = bookingUtility.getOrganizationList(registeredOrg);
 
 	modelAndView.addObject("organizationOptions", registeredOrgStr);

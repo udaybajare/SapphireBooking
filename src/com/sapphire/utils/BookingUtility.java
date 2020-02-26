@@ -246,7 +246,7 @@ public class BookingUtility {
 		return unitPrise;
 	}
 
-	public String getOrderRowHTML(int orderId) {
+	public String getOrderRowHTML(int orderId, boolean isAdmin) {
 		String orderRow = templateHTML;
 		String orderContent = "";
 		double totalAmount = 0;
@@ -281,7 +281,16 @@ public class BookingUtility {
 			}
 
 			orderContent = orderContent + orderDetailsContentHTMLEnd;
-
+			if(isAdmin)
+			{
+				orderContent = orderContent.replace("sourcingSection", sourcingSection);
+				orderContent = orderContent.replace("printButton", printButton);
+			}
+			else
+			{
+				orderContent = orderContent.replace("sourcingSection", "sourcingStr");
+				orderContent = orderContent.replace("printButton", "");
+			}
 			orderContent = orderContent.replace("rSph", entryDetails.getrSph() == null ? "" : entryDetails.getrSph());
 			orderContent = orderContent.replace("rCyl", entryDetails.getrCyl() == null ? "" : entryDetails.getrCyl());
 			orderContent = orderContent.replace("rAxis",
@@ -337,6 +346,14 @@ public class BookingUtility {
 		}
 
 		totalAmount = orderDetailsList.get(0).getTotalAmount();
+		
+		if (isAdmin) {
+			orderRow = orderRow.replace("updateOrderSection", updateOrderSection);
+			orderRow = orderRow.replace("statusUpdateSection", statusUpdateSection);
+		} else {
+			orderRow = orderRow.replace("updateOrderSection", "<p>Total Amount : totalAmountStr");
+			orderRow = orderRow.replace("statusUpdateSection", "");
+		}
 
 		String orderIdStr = String.valueOf(orderDetailsList.get(0).getOrderId());
 
@@ -356,36 +373,39 @@ public class BookingUtility {
 		return orderRow;
 	}
 
-	public static final String templateHTML = "<div class=\"row\"><div class=\"main col-lg-12\">"
-			+ "<div class=\"pv-30 ph-20 feature-box bordered shadow text-center\" "
-			+ "data-animation-effect=\"fadeInDownSmall\" data-effect-delay=\"100\"><h4 name=\"orderDesc\">"
-			+ "OrderId: orderNo Organization: organizationName Booked By: fullName on Date: orderDate</h4>"
-			+ "<button type=\"button\" class=\"btn btn-default\" data-toggle=\"modal\" data-target=\"#myModalStr\">"
-			+ "Order Status Details</button><div class=\"modal fade\" id=\"myModalStr\" tabindex=\"-1\" "
-			+ "role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\"><div class=\"modal-dialog\""
-			+ " role=\"document\"><div class=\"modal-content\"><div class=\"modal-header\"><h4 class=\"modal-title\""
-			+ " id=\"myModalLabel\">OrderId is : orderNo</h4><button type=\"button\" class=\"close\" data-dismiss=\"modal\""
-			+ " aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span>"
-			+ "</button></div><div class=\"modal-body\">orderDetailsContent"
-			+ "<p>Current Status : currentStatus</p><form action=\"updateTotal\" method=\"POST\"><p>Total Amount : <input type = \"text\" name =\"totalAmount\" value=\"totalAmountStr\"></p>"
-			+ "<p>Comments : <input type=\"text\" name=\"comment\" value=\"\"></p><input type=\"hidden\" name=\"orderId\" value=\"orderNo\">"
-			+ "<button type=\"button\" class=\"btn btn-sm btn-default updateOrder\" >Update Order</button></form></div><div class=\"modal-footer\"><h4>Mark As</h4><form id=\"accept\""
-			+ " action=\"updateStatus\" method=\"POST\"><input type=\"hidden\" name=\"orderId\" value=\"orderNo\">"
-			+ "<input type=\"hidden\" name=\"status\" value=\"accepted\"><button type=\"submit\""
-			+ " class=\"btn btn-sm btn-default\" >Accepted</button></form>"
-			+ "<form id=\"process\" action=\"updateStatus\" method=\"POST\"><input type=\"hidden\" name=\"orderId\""
-			+ " value=\"orderNo\"><input type=\"hidden\" name=\"status\" value=\"processing\"><button type=\"submit\""
-			+ " class=\"btn btn-sm btn-default\">Processing</button></form><form id=\"ready\""
-			+ " action=\"updateStatus\" method=\"POST\"><input type=\"hidden\" name=\"orderId\" value=\"orderNo\">"
-			+ "<input type=\"hidden\" name=\"status\" value=\"readyToDeliver\"><button type=\"submit\" class=\"btn btn-sm btn-default\""
-			+ " >Ready to Deliver</button></form><form id=\"deliver\" action=\"updateStatus\""
-			+ " method=\"POST\"><input type=\"hidden\" name=\"orderId\" value=\"orderNo\"><input type=\"hidden\" name=\"status\""
-			+ " value=\"delivered\"><button type=\"submit\" class=\"btn btn-sm btn-default\" >"
-			+ "Delivered</button></form></div></div></div></div></div></div></div>";
+	public static final String templateHTML = "	<div class=\"row\"><div class=\"main col-lg-12\"><div class=\"pv-30 ph-20 feature-box bordered shadow text-center\" data-animation-effect=\"fadeInDownSmall\" data-effect-delay=\"100\">"
+			+"<h4 name=\"orderDesc\">OrderId: orderNo Organization: organizationName Booked By: fullName on Date: orderDate</h4>"
+			+"<button type=\"button\" class=\"btn btn-default\" data-toggle=\"modal\" data-target=\"#myModalStr\">Order Status Details</button>"
+			+"<div class=\"modal fade\" id=\"myModalStr\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">"
+			+"<div class=\"modal-dialog\" role=\"document\"><div class=\"modal-content\">"
+			+"<div class=\"modal-header\"><h4 class=\"modal-title\" id=\"myModalLabel\">OrderId is : orderNo</h4><button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">"
+			+"<span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
+			+"</div><div class=\"modal-body\">orderDetailsContent<p>Current Status : currentStatus</p>updateOrderSection</div>statusUpdateSection"
+			+"</div></div></div></div></div></div>";
+	
+	public static final String updateOrderSection="<form action=\"updateTotal\" method=\"POST\"><p>	Total Amount : <input type =\"text\" name =\"totalAmount\" value=\"totalAmountStr\">"
+									+"</p><p>Comments : <input type=\"text\" name=\"comment\" value=\"\"></p>"
+									+"<input type=\"hidden\" name=\"orderId\" value=\"orderNo\">"
+									+"<button type=\"button\" class=\"btn btn-sm btn-default updateOrder\">"	
+									+"Update Order</button>	</form>";
+										 
+	public static final String statusUpdateSection ="<div class=\"modal-footer\"><h4>Mark As</h4>"
+								+"<form id=\"accept\" action=\"updateStatus\" method=\"POST\"><input type=\"hidden\" name=\"orderId\" value=\"orderNo\">"
+								+ "<input type=\"hidden\" name=\"status\" value=\"accepted\">"
+								+ "<button type=\"submit\" class=\"btn btn-sm btn-default\" >Accepted</button></form>"
+								+ "<form id=\"process\" action=\"updateStatus\" method=\"POST\">"
+								+ "<input type=\"hidden\" name=\"orderId\" value=\"orderNo\"><input type=\"hidden\" name=\"status\" value=\"processing\">"
+								+ "<button type=\"submit\" class=\"btn btn-sm btn-default\">Processing</button></form>"
+								+ "<form id=\"ready\" action=\"updateStatus\" method=\"POST\"><input type=\"hidden\" name=\"orderId\" value=\"orderNo\"><input type=\"hidden\" name=\"status\" value=\"readyToDeliver\">"
+								+"<button type=\"submit\" class=\"btn btn-sm btn-default\" >Ready to Deliver</button></form>"
+								+"<form id=\"deliver\" action=\"updateStatus\" method=\"POST\"><input type=\"hidden\" name=\"orderId\" value=\"orderNo\">"
+								+"<input type=\"hidden\" name=\"status\" value=\"delivered\"><button type=\"submit\" class=\"btn btn-sm btn-default\" >Delivered</button></form></div>";
+	
+	
 
 	public static final String orderDetailsContentHTMLStart = 
 			  "<p><b>SubOrder NO</b>: subOrderId <b>Material</b>: material <b>Type</b> : typeStr <b>Quantity</b> : qtyNos <b>Index</b> : index1 <b>Coating</b> : coatingStr <b>Tint</b> : tintStr <b>Frame Type</b> : frameType</p>"
-			+ "		<table class='table table-striped'>"
+			+ "		<table class=\"table table-striped\">"
 			+ "			<thead>"
 			+ "				<tr>"
 			+ "					<th>LENS SIDE</th>"
@@ -484,6 +504,19 @@ public class BookingUtility {
 			+ "				</table>"
 			+ "			</div>"
 			+ "		</div>";
+	
+	
+	public static final String sourcingSection ="<select name=\"sourcing\" value=\"sourcingStr\"><option value=\"Factory Order\">Factory Order</option><option value=\"Ready Stock\">"	
+			+ "	Ready Stock</option></select>";
+												
+	public static final String printButton ="<button type=\"button\" class=\"btn btn-sm btn-default\" onClick=\"printItem('orderIdStr');\">Print</button><div class=\"separator clearfix\">"	
+			+ "	</div><div style=\"display:none;\" id=\"orderIdStr\" ><div style=\"height : 33mm; width : 70mm;\" ><p>organizationName	UON:99999	Rate:totalAmountStr</p>"	
+			+ "	<table border=\"1\"><thead><tr><th>LENS SIDE</th><th>SPH</th><th>CYL</th><th>AXIS</th><th>ADD</th><th>DIA</th></tr>"	
+			+ "	</thead><tbody><tr><td>R</td><td>rSph</td><td>rCyl</td><td>rAxis</td><td>rAdd</td><td>rDia</td></tr><tr><td>L</td><td>lSph</td><td>lCyl</td><td>lAxis</td><td>lAdd</td><td>lDia</td></tr>"	
+			+ "	<tr><td colspan=\"6\">material, typeStr, index1, coatingStr, tintStr, qtyNos</td></tr></tbody></table></div><div style=\"height : 33mm; width : 70mm;\">"	
+			+ "	<p>organizationName	UON:99999	Rate:lPrice</p><table border=\"1\"><thead><tr><th>LENS SIDE</th><th>SPH</th><th>CYL</th><th>AXIS</th><th>ADD</th><th>DIA</th></tr></thead><tbody>	<tr><td>L</td><td>lSph</td><td>lCyl</td><td>lAxis</td><td>lAdd</td><td>lDia</td></tr>"	
+			+ " <tr><td colspan=\"6\">material, typeStr, index1, coatingStr, tintStr, qtyNos</td></tr></tbody></table></div></div>";
+	
 	public static final String optionsHTMLOpen = "<option";
 	public static final String optionsHTMLClose = "</option>";
 }

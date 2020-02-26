@@ -69,11 +69,12 @@ public class LoginController {
 		return modelAndView;
 
 	}
+	
 
 	private boolean validateLogin(LoginDetails loginDetails) {
 		boolean validLogin = false;
 
-		String validPassword = loginDetailsDao.getPasswordToValidate(new LoginDetails(loginDetails.getUserName(), ""));
+		String validPassword = loginDetailsDao.getPasswordToValidate(new LoginDetails(loginDetails.getUserName(), "", ""));
 
 		if (validPassword.equalsIgnoreCase(loginDetails.getPassword())) {
 			validLogin = true;

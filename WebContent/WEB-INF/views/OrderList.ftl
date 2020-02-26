@@ -75,15 +75,7 @@
       <section class="main-container">
 
         <div class="container">
-        <form class="form-horizontal" action="logout" method="POST">
-                	<div class="col-auto ml-auto hidden-md-down">
-                	<div class="col-lg-7 col-xl-8 mr-20">
-        
-                	
-               							</div>
-					</div>
-					</form>
-        <h2 class="mt-5">Search Orders</h2>
+              <h2 class="mt-5">Search Orders</h2>
               <form class="form-inline">
                 <label class="sr-only" for="inlineFormInput">Search By:</label>
                 <select class="form-control" id="criteriaSection" onchange="showValSec($('#criteriaSection').val());">
@@ -111,15 +103,18 @@
 				  <input type="text" id="datepicker" class="form-control fromDate" style="margin-left: 2%;" placeholder = "select from date">
 				  <input type="text" id="datepicker1" class="form-control toDate" style="margin-left: 2%;" placeholder = "select to date">
                 </div>
-                <button type="button" class="btn btn-default" onClick="searchOrder()" style="margin-left: 3%;">Submit</button>
-                <button type="button" class="btn btn-default" onClick="generateReport()" style="margin-left: 2%;">Generate Report</button>
+
+                <button type="button" class="btn btn-default" onClick="searchOrder()">Submit</button>
+                ${generateButton}
               </form>
         <div id="orders">
      	${orderList}
      	</div>
         </div>
-      </section>
-        <div class="subfooter" style="margin-top: 17%;">
+
+      </section> 
+        <div class="subfooter">
+
           <div class="container">
             <div class="subfooter-inner">
               <div class="row">
@@ -223,7 +218,9 @@ function printItem(itemId)
 
 
 <script>
-  function generateReport(){			  
+  function generateReport(){
+  	
+  
   var selector = $('#criteriaSection').val();
   
   var selectorVal = "";
@@ -254,6 +251,9 @@ function printItem(itemId)
     $(document.body).append(newForm);
     
     newForm.submit();
+    
+    
+   
   }
 </script>
 
