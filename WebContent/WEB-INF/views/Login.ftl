@@ -99,7 +99,7 @@
                       </div>
                     </div>
                   </form>
-                 
+                 <p class="text-center">New user<a href="/SapphireBooking/registrationForm"> Register </a>here.</p>
                 </div>
                 <!-- .subfooter start -->
                 <!-- ================ -->

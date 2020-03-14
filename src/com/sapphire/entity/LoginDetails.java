@@ -14,8 +14,6 @@ public class LoginDetails {
 	
 	
 
-	
-
 	public LoginDetails(String userName, String password, String role) {
 		super();
 		this.userName = userName;
@@ -42,6 +40,7 @@ public class LoginDetails {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	
 	public String getRole() {
 		return role;
 	}
@@ -49,7 +48,5 @@ public class LoginDetails {
 	public void setRole(String role) {
 		this.role = role;
 	}
-
-	
 
 }

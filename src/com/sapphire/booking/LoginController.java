@@ -4,8 +4,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -52,7 +52,8 @@ public class LoginController {
 
 			while (!sessionSaved) {
 				sessionId = Math.random();
-				sessionSaved = sessionDao.saveSession(new SessionEntry(String.valueOf(sessionId), loginDetails.getUserName()));
+				sessionSaved = sessionDao
+						.saveSession(new SessionEntry(String.valueOf(sessionId), loginDetails.getUserName()));
 			}
 
 			session.setAttribute("userName", loginDetails.getUserName());
@@ -63,18 +64,52 @@ public class LoginController {
 			view = "Login";
 
 		}
-
+		String userName = (String) session.getAttribute("userName");
+		String orgName = "";
+		String userRole = "";
+		if (userName != null && !(userName.equals(""))) {
+			userRole = loginDetailsDao.getUserRole(userName);
+		}
 		ModelAndView modelAndView = new ModelAndView(view);
+
+		if (userRole.equalsIgnoreCase("Admin")) {
+			modelAndView.addObject("invoiceButton", invoiceButton);
+			modelAndView.addObject("userListButton", userListButton);
+		} else {
+			modelAndView.addObject("invoiceButton", "");
+			modelAndView.addObject("userListButton", "");
+		}
 
 		return modelAndView;
 
 	}
-	
+
+	@RequestMapping(value = "/home", method = RequestMethod.GET)
+	public ModelAndView home(HttpSession session) {
+		String userName = (String) session.getAttribute("userName");
+		String orgName = "";
+		String userRole = "";
+		if (userName != null && !(userName.equals(""))) {
+			userRole = loginDetailsDao.getUserRole(userName);
+		}
+		ModelAndView modelAndView = new ModelAndView("home");
+
+		if (userRole.equalsIgnoreCase("Admin")) {
+			modelAndView.addObject("invoiceButton", invoiceButton);
+			modelAndView.addObject("userListButton", userListButton);
+		} else {
+			modelAndView.addObject("invoiceButton", "");
+			modelAndView.addObject("userListButton", "");
+		}
+
+		return modelAndView;
+	}
 
 	private boolean validateLogin(LoginDetails loginDetails) {
 		boolean validLogin = false;
 
-		String validPassword = loginDetailsDao.getPasswordToValidate(new LoginDetails(loginDetails.getUserName(), "", ""));
+		String validPassword = loginDetailsDao
+				.getPasswordToValidate(new LoginDetails(loginDetails.getUserName(), "", ""));
 
 		if (validPassword.equalsIgnoreCase(loginDetails.getPassword())) {
 			validLogin = true;
@@ -84,17 +119,22 @@ public class LoginController {
 	}
 
 	@RequestMapping(value = "/logout", method = RequestMethod.POST)
-	protected ModelAndView logout(HttpSession session) {
+	protected ModelAndView logout(HttpSession session, HttpServletRequest request) {
 		double sessionId = (double) session.getAttribute("sessionId");
 		boolean sessionDelete = true;
-		
-		//TODO Delete all the sessions for current userID
-		
+
+		// TODO Delete all the sessions for current userID
+
 		String userName = (String) session.getAttribute("userName");
-		
+
+		request.getSession().invalidate();
+
 		sessionDelete = sessionDao.deleteSession(String.valueOf(sessionId));
 
 		return new ModelAndView("redirect:login");
 	}
+
+	public static final String invoiceButton = "<form id=\"addInvoice\" action=\"generateInvoice\" method=\"GET\"><img src=\"images/img/invoice.jpg\" alt=\"\" width=\"200\" height=\"200\" onClick=\"$('#addInvoice').submit();\"><button type=\"button\" class=\"btn btn-sm btn-default\" onClick=\"$('#addInvoice').submit();\" style=\"margin-top: 14%;margin-left: 12%\">Invoice</button></form>";
+	public static final String userListButton = "<form id=\"userList\" action=\"listUser\" method=\"GET\"><img src=\"images/img/userlist1.png\" alt=\"\" width=\"170\" height=\"170\" onClick=\"$('#userList').submit();\"> <button type=\"button\" class=\"btn btn-sm btn-default\" onClick=\"$('#userList').submit();\" style=\"margin-top: 14%;margin-left: 12%\">User List</button></form>";
 
 }

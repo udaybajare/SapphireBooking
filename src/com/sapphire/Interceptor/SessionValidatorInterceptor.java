@@ -13,7 +13,9 @@ import com.sapphire.dao.SessionDao;
 import com.sapphire.entity.SessionEntry;
 
 public class SessionValidatorInterceptor extends HandlerInterceptorAdapter {
-
+	
+	
+	
 	@Autowired
 	SessionDao sessionDao;
 	// before the actual handler will be executed

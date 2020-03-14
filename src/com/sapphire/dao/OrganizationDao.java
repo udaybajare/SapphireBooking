@@ -50,7 +50,7 @@ public class OrganizationDao {
 
 		String maxCustNo = (String)qry.uniqueResult();
 	
-		if(!maxCustNo.equals(""))
+		if(maxCustNo!=null && !maxCustNo.equals(""))
 		{
 			return Integer.valueOf(maxCustNo);	
 		}

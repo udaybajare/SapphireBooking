@@ -3,8 +3,8 @@
 
   <head>
     <meta charset="utf-8">
-    <title>The Project | Forms</title>
-    <meta name="description" content="The Project a Bootstrap-based, Responsive HTML5 Template">
+    <title>Home</title>
+    <meta name="description" content="">
     <meta name="author" content="author">
 
     <!-- Mobile Meta -->
@@ -106,7 +106,7 @@
                 	<div class="form-group has-feedback">
                 		<form id="addOrg" action="addOrgForm" method="GET">
                    
-                         <img src="images/img/addOrg1.jpg" alt="" width="200" height="200" style="margin-top: 10%;">
+                         <img src="images/img/addOrg1.jpg" alt="" width="200" height="200" style="margin-top: 10%;" onClick="$('#addOrg').submit();">
                     
 	                  		<button type="button" class="btn btn-sm btn-default" onClick="$('#addOrg').submit();" style="margin-top: 14%;margin-left: 12%">Add Organization</button>
 	                  	</form>
@@ -118,7 +118,7 @@
               	<div class="col-md-3">
                 	<div class="form-group has-feedback">
                 		<form id="registration" action="registrationForm" method="GET">
-                       <img src="images/img/registration1.png" alt="" width="200" height="200">
+                       <img src="images/img/registration1.png" alt="" width="200" height="200" onClick="$('#registration').submit();">
 	                  		<button type="button" class="btn btn-sm btn-default" onClick="$('#registration').submit();" style="margin-top: 13%;margin-left: 12%">User Registration</button>
 	                  	</form>
                 	</div>
@@ -128,7 +128,7 @@
               	<div class="col-md-3">
                 	<div class="form-group has-feedback">
                 		<form id="bookorder" action="bookorder" method="GET">
-                       <img src="images/img/Order1.png" alt="" width="200" height="200">
+                       <img src="images/img/Order1.png" alt="" width="200" height="200" onClick="$('#bookorder').submit();">
 	                  		<button type="button" class="btn btn-sm btn-default" onClick="$('#bookorder').submit();" style="margin-top: 7%;margin-left: 14%">Order Now</button>
 	                  	</form>
                 	</div>
@@ -138,12 +138,24 @@
               	<div class="col-md-3"> 
                 	<div class="form-group has-feedback">
                 		<form id="listOrders" action="listOrders" method="GET">
-                        <img src="images/img/showOrder5.png" alt="" width="200" height="200">
+                        <img src="images/img/showOrder5.png" alt="" width="200" height="200" onClick="$('#listOrders').submit();">
 	                  		<button type="button" class="btn btn-sm btn-default" onClick="$('#listOrders').submit();" style="margin-top: 3%;margin-left: 14%">Show Orders</button>
 	                  	</form>
                 	</div>
               	</div>
+              	
+				    <div class="col-md-3">
+                	<div class="form-group has-feedback">
+                       ${invoiceButton}
+	                 </div>
+              		</div>
 				
+				
+				 <div class="col-md-3">
+                	<div class="form-group has-feedback">
+                		${userListButton}
+	                </div>
+              	</div>
         </div>
       </div>
 			  

@@ -41,27 +41,23 @@
         <header class="header fixed fixed-desktop clearfix">
           <div class="container">
             <div class="row">
-              <div class="col-md-4">
-           
-               
-
-                  <div id="logo" class="logo">
-                    <img src="images/img/logo.jpg" alt="" style="width: 100px;height: 55px;margin-top: 10px;margin-left: -20px;">
-                  </div>
-                </div>
-              
-                <div class="col-md-6">
-                  <div class="row">
-                    <a class="font-weight-bold text-uppercase p-1 bg-light border rounded border-default" href="home" style="margin-top: 3%;margin-left: 50%;">Home</a>
-          
-          
-                   <a class="font-weight-bold text-uppercase p-1 bg-light border rounded border-default" href="bookorder" style="margin-left: 5%;margin-top: 3%;">Book Now</a>
-                   </div>
-                </div>
-                <div class="col-md-2">
-                	<form class="form-horizontal mt-4 " action="logout" method="POST">  
-                   		<button type="submit" class="btn btn-group btn-default btn-animated" style="margin-top: 8%;margin-left: 10%;">Log Out <i class="fa fa-user"></i></button>
-                   	</form>	
+            <div class="main col-md-4">
+              <div id="logo" class="logo">
+                <img src="images/img/logo.jpg" alt="" style="width: 200px;height: 55px;margin-top: 10px;margin-left: -20px;">
+              </div>
+            </div>
+            <div class="main col-lg-2">
+            </div>
+            <div class="main col-md-4">
+              <div class="row">
+                <a class="font-weight-bold text-uppercase p-1 bg-light border rounded border-info" href="home" style="margin-top: 13%;margin-left: 40%;">Home</a>          
+                <a class="font-weight-bold text-uppercase p-1 bg-light border rounded border-info" href="bookorder" style="margin-left: 5%;margin-top: 13%;">Book Now</a>
+              </div>
+            </div>
+            <div class="main col-md-2">
+             <form class="form-horizontal mt-4 " action="logout" method="POST">  
+               <button type="submit" class="btn btn-group btn-default btn-animated mt-4" >Log Out <i class="fa fa-user"></i></button>
+             </form>	
                 </div>
 
                 </div>
@@ -75,7 +71,9 @@
       <section class="main-container">
 
         <div class="container">
-              <h2 class="mt-5">Search Orders</h2>
+
+        <h2 class="mt-5">Search Orders</h2>
+
               <form class="form-inline">
                 <label class="sr-only" for="inlineFormInput">Search By:</label>
                 <select class="form-control" id="criteriaSection" onchange="showValSec($('#criteriaSection').val());">
@@ -99,23 +97,25 @@
 				  <option value="processing" >Processing</option>
 				  <option value="readyToDeliver">Ready To Deliver</option>
 				  <option value="delivered" >Delivered</option>
+				  <option value="Rejected" >Rejected</option>
 				  </select>
 				  <input type="text" id="datepicker" class="form-control fromDate" style="margin-left: 2%;" placeholder = "select from date">
 				  <input type="text" id="datepicker1" class="form-control toDate" style="margin-left: 2%;" placeholder = "select to date">
                 </div>
 
-                <button type="button" class="btn btn-default" onClick="searchOrder()">Submit</button>
+    <button type="button" class="btn btn-default" onClick="searchOrder()" style="margin-left: 3%;">Submit</button>
                 ${generateButton}
+
               </form>
-        <div id="orders">
-     	${orderList}
-     	</div>
-        </div>
+       				 <div id="orders">
+     					${orderList}
+     				 </div>
+              </div>
 
-      </section> 
-        <div class="subfooter">
 
-          <div class="container">
+      </section>
+        <div class="subfooter" style="margin-top: 17%;">
+		<div class="container">
             <div class="subfooter-inner">
               <div class="row">
                 <div class="col-md-12">
@@ -278,7 +278,13 @@ $('.updateOrder').on('click',function updateTotal()
 	var sourcing = $(this.offsetParent.children)[0].children[0].value;
 	
 	var para = $(this.offsetParent.children);
-	
+   var items = $(this.form).closest('.modal-body').find('input[name="itemPrice"]');
+   
+   var itemVals = "";
+   for(var i=0;i<items.length;i++)
+   {
+   	itemVals = itemVals + items[i].value+",";
+   }
 	var lSourcing = '';
 	var rSourcing = '';
 	
@@ -324,7 +330,7 @@ $('.updateOrder').on('click',function updateTotal()
 	var ajaxReq = $.ajax({
 	  url : 'updateTotal',
 	  type : 'POST',
-	  data : {'totalAmount' : totalAmount, 'comment' : comment, 'orderId': orderId , 'rSourcing': rSourcing, 'lSourcing': lSourcing},
+ data : {'totalAmount' : totalAmount, 'comment' : comment, 'orderId': orderId , 'rSourcing': rSourcing, 'lSourcing': lSourcing,'updatedItemPrice':itemVals},
 	  success: function(data) 
 		{
 			console.log(" Received data from BE");
@@ -333,6 +339,44 @@ $('.updateOrder').on('click',function updateTotal()
 	});
 
 });
+</script>
+<script>
+
+  function updatePrice(thisObj) 
+  {		
+   var that = thisObj.closest('.modal-body');	
+   var items = that.find('input[name="itemPrice"]');
+   var total = 0;
+   var k = 0;
+   for(var i=0; i<items.length; i++)
+   {
+     total = parseFloat(total) + parseFloat(items[i].value);
+     
+     try
+     {
+     thisObj.closest('div').find("span[class^=orderId]")[k].innerHTML = 'Rate:'+items[i].value;
+     thisObj.closest('div').find("span[class^=orderId]")[++k].innerHTML = 'Rate:'+items[i].value;
+     }
+     catch(er)
+     {
+     	console.log(er);
+     }
+     k++;
+   }
+   
+   var itemPrints = thisObj.closest('div').find("span[class^=orderId]");
+        
+   for(var j=0;j<itemPrints.length;j++)
+   {
+   		console.log(itemPrints[j].innerHTML);
+   }
+   
+   var totalAmountEle = that.find('form').find('input[name="totalAmount"]')[0];
+   totalAmountEle.value = total;
+   
+   console.log(totalAmountEle);
+ }
+
 </script>
 </body>
 </html>

@@ -293,6 +293,7 @@
 <td><input class="form-control" type='text' id='rAxis' name='rAxis' value=' ' /></td>
 <td><input class="form-control" type='text' id='rAdd' name='rAdd' value=' ' /></td>
 <td><input class="form-control" type='text' id='rDia' name='rDia' value=' ' /></td>
+
 <td>
 	<div class='form-group'>
 		<select class='form-control' id='rSourcingSelect' >
@@ -302,6 +303,7 @@
 	</select>        
 	</div>      
 </td>
+
   <td> </td>
   <td> </td>
   </tr>
@@ -312,6 +314,7 @@
 <td><input class="form-control" type='text'  id='lAxis' name='lAxis' value=' ' /></td>
 <td><input class="form-control" type='text'  id='lAdd' name='lAdd' value=' ' /></td>
 <td><input class="form-control" type='text'  id='lDia' name='lDia' value=' ' /></td>
+
 <td>
 	<div class='form-group'>
 		<select class='form-control' id='lSourcingSelect'>
@@ -321,6 +324,7 @@
 	</select>        
 	</div>      
 </td>
+
   <td> </td>
   <td> </td>
   </tr>     
@@ -569,8 +573,7 @@
 		rReady = 'selected';
 	}
 	
-	
-    var rowId = "'"+'row'+i+"'";
+	var rowId = "'"+'row'+i+"'";
     if( (material !== "" && type !== "" && index !== "" && tint !== "" && qtyNos !== "" && frameType !== "") && ( rSph !== "" || rCyl !=="" || lSph !== "" || lCyl !== ""))
     {
       var	template = "<tr class="+rowId+">"
@@ -723,3 +726,4 @@
 </script>
 </body>
 </html>
+

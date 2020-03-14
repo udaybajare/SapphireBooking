@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.sapphire.entity.EntryDetails;
 import com.sapphire.entity.LoginDetails;
 import com.sapphire.entity.OrderDetails;
+import com.sapphire.entity.UserDetails;
 
 @Repository
 public class OrderDao {
@@ -97,16 +98,18 @@ public class OrderDao {
 		Session session = sessionFactory.getCurrentSession();
 		String hqlString = "select DISTINCT orderId from OrderDetails WHERE status NOT IN ('delivered')";
 
-		if (orgName != null && !orgName.equals("")) {
+		if(orgName !=null && !orgName.equals(""))
+		{
 			hqlString = hqlString + " and organizationName=:orgName";
 		}
-
+		
 		Query query = session.createQuery(hqlString);
-
-		if (orgName != null && !orgName.equals("")) {
-			query.setParameter("orgName", orgName);
+		
+		if(orgName !=null && !orgName.equals(""))
+		{
+			query.setParameter("orgName",orgName);
 		}
-
+		
 		List<Integer> OrderDetailsList = query.list();
 
 		return (ArrayList<Integer>) OrderDetailsList;
@@ -140,6 +143,7 @@ public class OrderDao {
 	}
 
 	@Transactional
+
 	public ArrayList<Integer> getOrderDetailsFromCriteriaAndDate(String criteria, String criteriaVal, String fromDate,
 			String toDate, String organizationName) {
 		Session session = sessionFactory.getCurrentSession();
@@ -168,7 +172,30 @@ public class OrderDao {
 	}
 
 	@Transactional
-	public String getOrgName(String organizationName, String selector, String selectorValue) {
+
+	public ArrayList<OrderDetails> getOrderDetailsFromCriteriaAndDate(String criteria, String criteriaVal, String fromDate, String toDate) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "";
+
+		hql = "from OrderDetails OD where OD.orderDate" + " BETWEEN '" + fromDate + "' AND '" + toDate
+				+ "'";
+
+		if(null!=criteria && !("".equals(criteria)))
+		{
+			hql = hql + " and OD."+criteria+"='" + criteriaVal + "'";
+		}
+		
+		System.out.println("SQL query is : " + hql);
+
+		Query query = session.createQuery(hql);
+		
+		ArrayList<OrderDetails> OrderDetailsList = (ArrayList<OrderDetails>) query.list();
+
+		return OrderDetailsList;
+	}
+	
+	@Transactional
+	public String getOrgName(String organizationName, String selector, String selectorValue){
 		Session session = sessionFactory.getCurrentSession();
 		String[] dateRange = selectorValue.split("-");
 		String hql = "select organizationName from OrderDetails OD where  OD." + selector + " BETWEEN '" + dateRange[0]
@@ -198,7 +225,7 @@ public class OrderDao {
 
 	@Transactional
 	public boolean updateOrder(String orderId, Double totalAmount, String[] lSourcing, String[] rSourcing,
-			String comment) {
+			String comment, String[] updatedItemPrices) {
 
 		ArrayList<Integer> subOrderIds = getSubOrderIds(orderId);
 
@@ -220,10 +247,12 @@ public class OrderDao {
 			}
 
 			try {
-				String hqlEntryDetails = " update EntryDetails ED set ED.lSourcing=:lSourcing, ED.rSourcing=:rSourcing where ED.orderDetailsId=:OrderDetailsId";
+				String hqlEntryDetails = " update EntryDetails ED set ED.lSourcing=:lSourcing, ED.rSourcing=:rSourcing, ED.lPrice=:lPrice, ED.rPrice=:rPrice where ED.orderDetailsId=:OrderDetailsId";
 				Query queryEntryDetails = session.createQuery(hqlEntryDetails);
 				queryEntryDetails.setParameter("lSourcing", lSourcing[i]);
 				queryEntryDetails.setParameter("rSourcing", rSourcing[i]);
+				queryEntryDetails.setParameter("rPrice", String.valueOf(Double.parseDouble(updatedItemPrices[i])/2));
+				queryEntryDetails.setParameter("lPrice", String.valueOf(Double.parseDouble(updatedItemPrices[i])/2));
 				queryEntryDetails.setParameter("OrderDetailsId", subOrderIds.get(i));
 
 				queryEntryDetails.executeUpdate();
@@ -267,20 +296,38 @@ public class OrderDao {
 		entryDetailsList = (EntryDetails) query.uniqueResult();
 		return entryDetailsList;
 	}
+	
+	@Transactional
+	public UserDetails getUserDetails(String orgName) {
+		UserDetails userDetailsList = new UserDetails();
+		Session session = sessionFactory.getCurrentSession();
+		String hql = " from UserDetails  where orgName=:orgName";
+		Query query = session.createQuery(hql);
+		//query.setInteger("orderId", orderId);
+		//query.setInteger("orderDetailsId", orderDetailsId);
+		query.setString("orgName", orgName);
+		
+		userDetailsList = (UserDetails) query.uniqueResult();
+		return userDetailsList;
+	}
+	
+	
+	
 
 	@Transactional
-	public ArrayList<Integer> getUserOrderDetailsFromCriteriaAndDate(String criteria, String criteriaVal,
-			String fromDate, String toDate) {
+	public ArrayList<Integer> getUserOrderDetailsFromCriteriaAndDate(String criteria, String criteriaVal, String fromDate, String toDate) {
+
 		Session session = sessionFactory.getCurrentSession();
 		String hql = "";
 
 		hql = "select userName from OrderDetails OD where OD.orderDate" + " BETWEEN '" + fromDate + "' AND '" + toDate
 				+ "'";
 
-		if (null != criteria && !("".equals(criteria))) {
-			hql = hql + " and OD." + criteria + "='" + criteriaVal + "'";
+		if(null!=criteria && !("".equals(criteria)))
+		{
+			hql = hql + " and OD."+criteria+"='" + criteriaVal + "'";
 		}
-
+		
 		System.out.println("SQL query is : " + hql);
 
 		Query query = session.createQuery(hql);
@@ -288,5 +335,4 @@ public class OrderDao {
 
 		return (ArrayList<Integer>) OrderDetailsList;
 	}
-
 }

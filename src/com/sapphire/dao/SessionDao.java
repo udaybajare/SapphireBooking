@@ -63,7 +63,7 @@ public class SessionDao {
 			ex.printStackTrace();
 		}
 
-		return  sessiondelete;
+		return sessiondelete;
 	}
 
 }

@@ -25,6 +25,7 @@ public class LoginDetailsDao {
 
 		Query query = session.createQuery(selectHql);
 		query.setParameter("userName", loginDetails.getUserName());
+
 		//if(query .equals(loginDetails.getRole()))
 			
 		
@@ -42,12 +43,16 @@ public class LoginDetailsDao {
 
 		Query query = session.createQuery(selectHql);
 		query.setParameter("userName", userName);
-		
-			
-		
 		List loginList = query.getResultList();
 
-		return (String)loginList.get(0);
+		return (String) loginList.get(0);
+	}
+
+	@Transactional
+	public void saveLoginDetails(LoginDetails loginDetails) {
+		Session session = sessionFactory.getCurrentSession();
+
+		session.save(loginDetails);
 	}
 
 }

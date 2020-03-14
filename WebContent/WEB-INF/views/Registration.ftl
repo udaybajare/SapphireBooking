@@ -166,88 +166,102 @@
           </div>
             
        </div>
-          <form action="register" method="POST">
-          
-            <div class="form-row">
-              <div class="col-md-6">
-                <div class="form-group has-feedback">
-                  <label>Full Name</label>
-                  <input type="text" name="customerName" class="form-control">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group has-feedback">
-                  <label>Contact Number</label>
-                  <input type="text" name="contactNumber" class="form-control">
-				  
-                </div>
-              </div>
-              
-            </div>
-			<div class="form-row">
+       <form action="register" method="POST">
+       
+       	<div class="form-row">
+       	<div class="col-md-12">
+        ${errorMessage}
+        </div>
+        </div>
+        
+       	<div class="form-row">
+       	<div class="col-md-6">
+       <div class="form-group has-feedback">
+			<label>Full Name</label>
+			<input type="text" name="customerName" class="form-control" value='${customerName}'>
+			</div>
+			</div>
+			
 			<div class="col-md-6">
-                <div class="form-group has-feedback">
-                  <label>Username</label>
-                  <input type="text" name="userName" class="form-control">
-                </div>
-              </div>
-			  <div class="col-md-6">
-                <div class="form-group has-feedback">
-                  <label>Password</label>
-                  <input type="password" name="password" class="form-control">
-                </div>
-              </div>
-			  <div class="col-md-6">
-                <div class="form-group has-feedback">
-                  <label>GST number</label>
-                  <input type="text" name="gstNo" class="form-control">
-                </div>
-              </div>
+			<div class="form-group has-feedback">
+			<label>Contact Number</label>
+			<input type="text" name="contactNumber" class="form-control" value='${contactNumber}'>
+			</div>
+			</div> 
+			</div>
+			<div class="form-row">
+			
+			<div class="col-md-6">
+            <div class="form-group has-feedback">
+             <label>Username</label> 
+             <input type="text" name="userName" class="form-control" value='${userName}'>   
+             </div>   
+             </div>
+            
+              <div class="col-md-6">
+             <div class="form-group has-feedback">        
+             <label>Password</label>        
+             <input type="password" name="password" class="form-control" value='${password}'>
+             </div>
+             </div>
+            
+              <div class="col-md-6">
+             <div class="form-group has-feedback">
+             <label>GST number</label>
+             <input type="text" name="gstNo" class="form-control" value='${gstNo}'>
+             </div>
+             </div>
 			  
 			    <div class="col-md-6">
 			     <div class="form-group has-feedback">
                   <label>Email</label>
-                  <input type="text" name="email" class="form-control">
+                  <input type="text" name="email" class="form-control" value='${email}'>
                  </div>
 				 </div>
+				 
 				 <div class="col-md-6">
                 <div class="form-group has-feedback">
                   <label>Address Line 1</label>
-                  <input type="text" name="addressLine1" class="form-control">
-                </div>
-              </div>
-			   <div class="col-md-6">
-                <div class="form-group has-feedback">
-                  <label>Address Line 2</label>
-                  <input type="text" name="addressLine2" class="form-control">
-                </div>
-              </div>
-			   <div class="col-md-6">
-                <div class="form-group has-feedback">
-                  <label>Address Line 3</label>
-                  <input type="text" name="addressLine3" class="form-control">
-                </div>
-              </div>
-		
-			<div class="col-md-6">
-                <div class="form-group has-feedback">
-                  <label>Postal Code</label>
-                  <input type="text" name="postalCode" class="form-control">
+                  <input type="text" name="addressLine1" class="form-control" value='${addressLine1}'>
                 </div>
               </div>
               
-              <div class="col-md-6">
+			   <div class="col-md-6">
                 <div class="form-group has-feedback">
-                  <label>Organization</label>
-                  	 <select class="form-control" name="orgName" >
-                  		<option></option>
-                  		${organizationOptions}
-			</select>
-                </div>
-              </div>
-			  </div>
-		<input type="submit" href="#" class="btn btn-default btn-lg" value="Register">
-          </form>		    
+                  <label>Address Line 2</label>
+                  <input type="text" name="addressLine2" class="form-control" value='${addressLine2}'> 
+                    </div> 
+                        </div>
+                        
+			   <div class="col-md-6">
+			   <div class="form-group has-feedback">
+			   <label>Address Line 3</label>
+			     <input type="text" name="addressLine3" class="form-control" value='${addressLine3}'>
+                </div>    
+                   </div>
+		
+		<div class="col-md-6">
+		<div class="form-group has-feedback"> 
+		<label>Postal Code</label>
+		 <input type="text" name="postalCode" class="form-control" value='${postalCode}'>
+		 </div>
+		 </div>
+              
+             <div class="col-md-6">
+             <div class="form-group has-feedback">
+             <label>Organization</label>
+             <select class="form-control" name="orgName" > 
+            		<option></option>       
+            		 		${organizationOptions}	
+            </select>    
+             </div>
+             </div> 
+             </div>
+       
+		${registerUserDetails}
+		${updateUserDetails}
+		 </form>
+          		    
       </div>
         
            </div>

@@ -12,9 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.sapphire.dao.CRPriceDao;
 import com.sapphire.dao.GlassPriceDao;
 import com.sapphire.dao.OrderDao;
+import com.sapphire.dao.RegistrationDao;
 import com.sapphire.entity.CRPrise;
 import com.sapphire.entity.EntryDetails;
 import com.sapphire.entity.OrderDetails;
+import com.sapphire.entity.UserDetails;
 
 @ManagedBean
 public class BookingUtility {
@@ -28,15 +30,19 @@ public class BookingUtility {
 	@Autowired
 	CRPriceDao crPriceDao;
 
+	@Autowired
+	RegistrationDao registrationDao;
+
 	public String getOrganizationList(ArrayList<ArrayList<String>> registeredOrgs) {
 		StringBuilder registeredOrgsStr = new StringBuilder();
 
 		for (Object name : registeredOrgs) {
-			
+
 			Object[] nameList = (Object[]) name;
-			
+
 			registeredOrgsStr.append(optionsHTMLOpen);
-			registeredOrgsStr.append(" value='" + (String)nameList[1] + "'>" + (String)nameList[0]+" - "+(String)nameList[1]);
+			registeredOrgsStr.append(
+					" value='" + (String) nameList[1] + "'>" + (String) nameList[1] + " - " + (String) nameList[0]);
 			registeredOrgsStr.append(optionsHTMLClose);
 		}
 		return registeredOrgsStr.toString();
@@ -73,9 +79,8 @@ public class BookingUtility {
 
 		String typeToSelect = "";
 		boolean isExeOrder = false;
-		
-		switch(type)
-		{
+
+		switch (type) {
 		case "Single Vision":
 			typeToSelect = "_SV";
 			break;
@@ -138,13 +143,11 @@ public class BookingUtility {
 					}
 				}
 			}
-		} 
-		catch (Exception ex) 
-		{
+		} catch (Exception ex) {
 			System.out.println("Glass Combination not found in DB. Price will be decided manually.");
 		}
-		unitPrice = unitPrice/2;
-		
+
+		unitPrice = unitPrice / 2;
 
 		System.out.println("unitPrice is " + unitPrice);
 
@@ -152,27 +155,24 @@ public class BookingUtility {
 	}
 
 	public int getCRLensePrice(String type, String tint, String index, String sph, String cyl, String coating) {
-		
-		if(sph==null&&cyl==null)
-		{
+
+		if (sph == null && cyl == null) {
+
 			return 0;
 		}
-		
+
 		Double sphInt = 0.0;
 		Double cylInt = 0.0;
 		boolean isSphNtv = false;
-		
-		if(sph!=null)
-		{
+
+		if (sph != null) {
 			isSphNtv = sph.startsWith("-");
 			sphInt = Math.ceil(Float.parseFloat(isSphNtv ? sph.substring(1) : sph));
 		}
-		
-		if(cyl!=null)
-		{
+
+		if (cyl != null) {
 			cylInt = Math.ceil(Float.parseFloat(cyl.startsWith("-") ? cyl.substring(1) : cyl));
 		}
-		
 
 		switch (type) {
 		case "Single Vision":
@@ -237,19 +237,23 @@ public class BookingUtility {
 					break;
 				}
 			}
-		}
-		catch (Exception ex) 
-		{
+		} catch (Exception ex) {
 			System.out.println("Glass Combination not found in DB. Price will be decided manually.");
 		}
-		unitPrise = unitPrise/2;		
+
+		unitPrise = unitPrise / 2;
 		return unitPrise;
 	}
 
 	public String getOrderRowHTML(int orderId, boolean isAdmin) {
 		String orderRow = templateHTML;
+
 		String orderContent = "";
 		double totalAmount = 0;
+
+		// A + x + x + B
+
+		// A if(Admin) +l if(Admin)+k + n(x+if(Admin)s+if(Admin)p)
 
 		ArrayList<OrderDetails> orderDetailsList = orderDao.getAllOrders(orderId);
 
@@ -262,18 +266,19 @@ public class BookingUtility {
 			boolean isRightPresent = false;
 			boolean isLeftPresent = false;
 
-			if (!((entryDetails.getrSph() == null || entryDetails.getrSph().equals(""))
-					&& (entryDetails.getrCyl() == null || entryDetails.getrSph().equals("")))) {
+			if ((entryDetails.getrSph() != null && !(entryDetails.getrSph().trim().equals("")))
+					|| (entryDetails.getrCyl() != null && !(entryDetails.getrCyl().trim().equals("")))) {
 				isRightPresent = true;
 			}
 
-			if (!((entryDetails.getlSph() == null || entryDetails.getlSph().equals(""))
-					&& (entryDetails.getlCyl() == null || entryDetails.getlSph().equals("")))) {
+			if ((entryDetails.getlSph() != null && !(entryDetails.getlSph().trim().equals("")))
+					|| (entryDetails.getlCyl() != null && entryDetails.getlCyl().trim().equals(""))) {
 				isLeftPresent = true;
 			}
 
 			if (isRightPresent) {
 				orderContent = orderContent + orderDetailsContentHTMLRight;
+
 			}
 
 			if (isLeftPresent) {
@@ -281,16 +286,26 @@ public class BookingUtility {
 			}
 
 			orderContent = orderContent + orderDetailsContentHTMLEnd;
-			if(isAdmin)
-			{
+			
+			if (isAdmin) {
 				orderContent = orderContent.replace("sourcingSection", sourcingSection);
 				orderContent = orderContent.replace("printButton", printButton);
-			}
-			else
-			{
-				orderContent = orderContent.replace("sourcingSection", "sourcingStr");
+			} else {
+				orderContent = orderContent.replace("sourcingSection", sourcingSection);
 				orderContent = orderContent.replace("printButton", "");
 			}
+
+			if (isAdmin) {
+				if (isRightPresent) {
+					orderContent = orderContent + orderDetailsContentPrintRight;
+				}
+
+				if (isLeftPresent) {
+					orderContent = orderContent + orderDetailsContentPrintLeft;
+				}
+			}
+
+			orderContent = orderContent + orderDetailsContentPrintEND;
 			orderContent = orderContent.replace("rSph", entryDetails.getrSph() == null ? "" : entryDetails.getrSph());
 			orderContent = orderContent.replace("rCyl", entryDetails.getrCyl() == null ? "" : entryDetails.getrCyl());
 			orderContent = orderContent.replace("rAxis",
@@ -328,25 +343,38 @@ public class BookingUtility {
 			orderContent = orderContent.replace("qtyNos", orderDetails.getQtyNos());
 			orderContent = orderContent.replace("subOrderId", String.valueOf(entryDetails.getlOrderDetailsId()));
 			orderContent = orderContent.replace("orderNo", String.valueOf(orderDetailsList.get(0).getOrderId()));
-			orderContent = orderContent.replace("typeStr", orderDetails.getType());
-			orderContent = orderContent.replace("index1", orderDetails.getIndex());
-			orderContent = orderContent.replace("coatingStr", orderDetails.getCoating());
-			orderContent = orderContent.replace("tintStr", orderDetails.getTint());
+			orderContent = orderContent.replace("typeStr",
+					orderDetails.getType() != null ? orderDetails.getType().toUpperCase() : "");
+			orderContent = orderContent.replace("index1",
+					orderDetails.getIndex() != null ? orderDetails.getIndex().toUpperCase() : "");
+			orderContent = orderContent.replace("coatingStr",
+					orderDetails.getCoating() != null ? orderDetails.getCoating().toUpperCase() : "");
+			orderContent = orderContent.replace("tintStr",
+					orderDetails.getTint() != null ? orderDetails.getTint().toUpperCase() : "");
 			orderContent = orderContent.replace("frameType", orderDetails.getFrameType());
 
-			orderContent = orderContent.replace("material", orderDetails.getMaterial());
+			orderContent = orderContent.replace("material",
+					orderDetails.getMaterial() != null ? orderDetails.getMaterial().toUpperCase() : "");
 			orderContent = orderContent.replace("organizationName", orderDetails.getOrganizationName());
 			orderContent = orderContent.replace("orderIdStr", "orderId" + orderDetails.getId());
 
 			double lPrice = entryDetails.getlPrice() != null ? Double.valueOf(entryDetails.getlPrice()) : 0.0;
 			double rPrice = entryDetails.getrPrice() != null ? Double.valueOf(entryDetails.getrPrice()) : 0.0;
 
-			orderContent = orderContent.replace("lPrice", String.valueOf(lPrice));
-			orderContent = orderContent.replace("rPrice", String.valueOf(rPrice));
+			double remainder = 10 - (lPrice + rPrice) % 10;
+			if (remainder == 10) {
+				remainder = 0;
+			}
+			double itemPrice = ((((lPrice + rPrice) + remainder) / 10) * 10)
+					* Integer.parseInt(orderDetails.getQtyNos());
+
+			orderContent = orderContent.replace("lPrice", String.valueOf(itemPrice));
+			orderContent = orderContent.replace("rPrice", String.valueOf(itemPrice));
+
+			orderContent = orderContent.replace("itemPriceStr", String.valueOf(itemPrice));
 		}
 
 		totalAmount = orderDetailsList.get(0).getTotalAmount();
-		
 		if (isAdmin) {
 			orderRow = orderRow.replace("updateOrderSection", updateOrderSection);
 			orderRow = orderRow.replace("statusUpdateSection", statusUpdateSection);
@@ -373,150 +401,152 @@ public class BookingUtility {
 		return orderRow;
 	}
 
-	public static final String templateHTML = "	<div class=\"row\"><div class=\"main col-lg-12\"><div class=\"pv-30 ph-20 feature-box bordered shadow text-center\" data-animation-effect=\"fadeInDownSmall\" data-effect-delay=\"100\">"
-			+"<h4 name=\"orderDesc\">OrderId: orderNo Organization: organizationName Booked By: fullName on Date: orderDate</h4>"
-			+"<button type=\"button\" class=\"btn btn-default\" data-toggle=\"modal\" data-target=\"#myModalStr\">Order Status Details</button>"
-			+"<div class=\"modal fade\" id=\"myModalStr\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">"
-			+"<div class=\"modal-dialog\" role=\"document\"><div class=\"modal-content\">"
-			+"<div class=\"modal-header\"><h4 class=\"modal-title\" id=\"myModalLabel\">OrderId is : orderNo</h4><button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">"
-			+"<span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
-			+"</div><div class=\"modal-body\">orderDetailsContent<p>Current Status : currentStatus</p>updateOrderSection</div>statusUpdateSection"
-			+"</div></div></div></div></div></div>";
-	
-	public static final String updateOrderSection="<form action=\"updateTotal\" method=\"POST\"><p>	Total Amount : <input type =\"text\" name =\"totalAmount\" value=\"totalAmountStr\">"
-									+"</p><p>Comments : <input type=\"text\" name=\"comment\" value=\"\"></p>"
-									+"<input type=\"hidden\" name=\"orderId\" value=\"orderNo\">"
-									+"<button type=\"button\" class=\"btn btn-sm btn-default updateOrder\">"	
-									+"Update Order</button>	</form>";
-										 
-	public static final String statusUpdateSection ="<div class=\"modal-footer\"><h4>Mark As</h4>"
-								+"<form id=\"accept\" action=\"updateStatus\" method=\"POST\"><input type=\"hidden\" name=\"orderId\" value=\"orderNo\">"
-								+ "<input type=\"hidden\" name=\"status\" value=\"accepted\">"
-								+ "<button type=\"submit\" class=\"btn btn-sm btn-default\" >Accepted</button></form>"
-								+ "<form id=\"process\" action=\"updateStatus\" method=\"POST\">"
-								+ "<input type=\"hidden\" name=\"orderId\" value=\"orderNo\"><input type=\"hidden\" name=\"status\" value=\"processing\">"
-								+ "<button type=\"submit\" class=\"btn btn-sm btn-default\">Processing</button></form>"
-								+ "<form id=\"ready\" action=\"updateStatus\" method=\"POST\"><input type=\"hidden\" name=\"orderId\" value=\"orderNo\"><input type=\"hidden\" name=\"status\" value=\"readyToDeliver\">"
-								+"<button type=\"submit\" class=\"btn btn-sm btn-default\" >Ready to Deliver</button></form>"
-								+"<form id=\"deliver\" action=\"updateStatus\" method=\"POST\"><input type=\"hidden\" name=\"orderId\" value=\"orderNo\">"
-								+"<input type=\"hidden\" name=\"status\" value=\"delivered\"><button type=\"submit\" class=\"btn btn-sm btn-default\" >Delivered</button></form></div>";
-	
-	
+	public static boolean notNullOrBlank(String input) {
+		return !(null == input && input.equals(""));
+	}
 
-	public static final String orderDetailsContentHTMLStart = 
-			  "<p><b>SubOrder NO</b>: subOrderId <b>Material</b>: material <b>Type</b> : typeStr <b>Quantity</b> : qtyNos <b>Index</b> : index1 <b>Coating</b> : coatingStr <b>Tint</b> : tintStr <b>Frame Type</b> : frameType</p>"
-			+ "		<table class=\"table table-striped\">"
-			+ "			<thead>"
-			+ "				<tr>"
-			+ "					<th>LENS SIDE</th>"
-			+ "					<th>SPH</th> "
-			+ "					<th>CYL</th>"
-			+ "					<th>AXIS</th>    "
-			+ "					<th>ADD</th>    "
-			+ "					<th>DIA</th>"
-			+ "					<th>Sourcing</th>"
-			+ "			</thead>"
-			+ "			<tbody>  ";
-	
-	public static final String orderDetailsContentHTMLRight =  "					<tr>    "
-			+ "						<td>R</td>    "
-			+ "						<td>rSph</td>    "
-			+ "						<td>rCyl</td>    "
-			+ "						<td>rAxis</td>    "
-			+ "						<td>rAdd</td>    "
-			+ "						<td>rDia</td>"
-			+ "						<td>"
-			+ "				<select name= 'rSourcing' value='rSourcingStr'><option value='Factory Order' rFoSelectedStr >Factory Order</option><option value='Ready Stock' rRsSelectedStr >Ready Stock</option></select>"
-			+ "			</td>    "
+	public String getUserList(ArrayList<UserDetails> userList) {
+
+		String list = "";
+		// ArrayList<UserDetails> userList1 = registrationDao.getUserDetails();
+		// for(UserDetails uList : userList1)
+		for (int i = 0; i < userList.size(); i++) {
+			String dummy = userListTemp;
+
+			dummy = dummy.replace("serialNumberStr", String.valueOf(userList.get(i).getSerialNumberCustomer()));
+
+			dummy = dummy.replace("orgName", userList.get(i).getOrgName());
+
+			dummy = dummy.replace("addressLine3", userList.get(i).getAddressLine3());
+
+			dummy = dummy.replace("customerName", userList.get(i).getCustomerName());
+
+			list = list + dummy;
+
+		}
+
+		return list;
+	}
+
+	public static final String templateHTML = "	<div class=\"row\"><div class=\"main col-lg-12\">"
+			+ "<div class=\"pv-30 ph-20 feature-box bordered shadow text-center\" "
+			+ "data-animation-effect=\"fadeInDownSmall\" data-effect-delay=\"100\"><h4 name=\"orderDesc\">"
+			+ "OrderId: orderNo Organization: organizationName Booked By: fullName on Date: orderDate</h4>"
+			+ "<div class=\"row\"><div class=\"col-md-4\"></div><div class=\"col-md-4\">"
+			+ "<button type=\"button\" class=\"btn btn-default\" data-toggle=\"modal\" data-target=\"#myModalStr\">Order Status Details</button></div>"
+			+ "<div class=\"col-md-4\"><br><h5>currentStatus</h5></div></div>"
+			+ "<div class=\"modal fade\" id=\"myModalStr\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">"
+			+ "<div class=\"modal-dialog\" role=\"document\"><div class=\"modal-content\">"
+			+ "<div class=\"modal-header\"><h4 class=\"modal-title\" id=\"myModalLabel\">OrderId is : orderNo</h4><button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">"
+			+ "<span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
+			+ "</div><div class=\"modal-body\">orderDetailsContent<p>Current Status : currentStatus</p>updateOrderSection</div>statusUpdateSection"
+			+ "</div></div></div></div></div></div>";
+
+	public static final String updateOrderSection = "<form action=\"updateTotal\" method=\"POST\"><p>	Total Amount : <input type =\"text\" name =\"totalAmount\" readonly=\"true\" value=\"totalAmountStr\">"
+			+ "</p><p>Comments : <input type=\"text\" name=\"comment\" value=\"\"></p>"
+			+ "<input type=\"hidden\" name=\"orderId\" value=\"orderNo\">"
+			+ "<button type=\"button\" class=\"btn btn-sm btn-default updateOrder\">"
+			+ "Update Order</button>	</form>";
+
+	public static final String statusUpdateSection = "<div class=\"modal-footer\"><h4>Mark As</h4>"
+			+ "<form id=\"reject\" action=\"updateStatus\" method=\"POST\"><input type=\"hidden\" name=\"orderId\" value=\"orderNo\">"
+			+ "<input type=\"hidden\" name=\"status\" value=\"rejected\"><button type=\"submit\" class=\"btn btn-sm btn-default\" >Reject</button></form>"
+			+ "<form id=\"accept\" action=\"updateStatus\" method=\"POST\"><input type=\"hidden\" name=\"orderId\" value=\"orderNo\">"
+			+ "<input type=\"hidden\" name=\"status\" value=\"accepted\">"
+			+ "<button type=\"submit\" class=\"btn btn-sm btn-default\" >Accept</button></form>"
+			+ "<form id=\"process\" action=\"updateStatus\" method=\"POST\">"
+			+ "<input type=\"hidden\" name=\"orderId\" value=\"orderNo\"><input type=\"hidden\" name=\"status\" value=\"processing\">"
+			+ "<button type=\"submit\" class=\"btn btn-sm btn-default\">Processing</button></form>"
+			+ "<form id=\"ready\" action=\"updateStatus\" method=\"POST\"><input type=\"hidden\" name=\"orderId\" value=\"orderNo\"><input type=\"hidden\" name=\"status\" value=\"readyToDeliver\">"
+			+ "<button type=\"submit\" class=\"btn btn-sm btn-default\" >Ready to Deliver</button></form>"
+			+ "<form id=\"deliver\" action=\"updateStatus\" method=\"POST\"><input type=\"hidden\" name=\"orderId\" value=\"orderNo\">"
+			+ "<input type=\"hidden\" name=\"status\" value=\"delivered\"><button type=\"submit\" class=\"btn btn-sm btn-default\" >Delivered</button></form></div>";
+
+	/*
+	 * public static final String orderDetailsContentHTML =
+	 * "<p>Material : material Type : typeStr Quantity : qtyNos Index : index1 Coating : coatingStr Tint : tintStr Frame Type : frameType Sourcing : "
+	 * +
+	 * "sourcingSection	</p><table class=\"table table-striped\"><thead><tr><th>LENS SIDE</th><th>SPH</th><th>CYL</th><th>AXIS</th><th>ADD</th><th>DIA</th></tr>"
+	 * +
+	 * "</thead><tbody><tr><td>R</td><td>rSph</td><td>rCyl</td><td>rAxis</td><td>rAdd</td><td>rDia</td>"
+	 * +
+	 * "</tr><tr><td>L</td><td>lSph</td><td>lCyl</td><td>lAxis</td><td>lAdd</td><td>lDia</td></tr></tbody></table>printButton";
+	 */
+	public static final String orderDetailsContentHTMLStart = "<p><b>SubOrder NO</b>: subOrderId <b>Material</b>: material <b>Type</b> : typeStr <b>Quantity</b> : qtyNos <b>Index</b> : index1 <b>Coating</b> : coatingStr <b>Tint</b> : tintStr <b>Frame Type</b> : frameType</p>"
+			+ "		<table class='table table-striped'>" + "			<thead>" + "				<tr>"
+			+ "					<th>LENS SIDE</th>" + "					<th>SPH</th> "
+			+ "					<th>CYL</th>" + "					<th>AXIS</th>    "
+			+ "					<th>ADD</th>    " + "					<th>DIA</th>"
+			+ "					<th>Sourcing</th>" + "			</thead>" + "			<tbody>  ";
+
+	public static final String orderDetailsContentHTMLRight = "					<tr>    "
+			+ "						<td>R</td>    " + "						<td>rSph</td>    "
+			+ "						<td>rCyl</td>    " + "						<td>rAxis</td>    "
+			+ "						<td>rAdd</td>    " + "						<td>rDia</td>"
+			+ "						<td>" + "				sourcingSection" + "			</td>    "
 			+ "					</tr>  ";
-	
+
 	public static final String orderDetailsContentHTMLLeft = "					<tr>    "
-			+ "						<td>L</td>    "
-			+ "						<td>lSph</td>    "
-			+ "						<td>lCyl</td>    "
-			+ "						<td>lAxis</td>"
-			+ "						<td>lAdd</td>    "
-			+ "						<td>lDia</td>"
-			+ "			<td>"
-			+ "				<select name='lSourcing' value='lSourcingStr'><option value='Factory Order' lFoSelectedStr >Factory Order</option><option value='Ready Stock' lRsSelectedStr >Ready Stock</option></select>"
-			+ "			</td>"
-			+ "					</tr>";
-			
-	public static final String orderDetailsContentHTMLEnd =  "				</tbody>"
-			+ "			</table>"
-			+ "			<button type='button' class='btn btn-sm btn-default' onClick='printItem(\"orderIdStr\");'>Print</button>"
-			+ "			<div class='separator clearfix'></div>"
-			+ "			<div style='display:none;' id='orderIdStr' >"
-			+ "			<div style='height : 37mm; width : 69mm;' >"
-			+ "			organizationName UON: orderNo/subOrderId Qty:qtyNos Rate:rPrice"
-			+ "			<table border='1' style='border-collapse:collapse;'>"
-			+ "				<thead>"
-			+ "					<tr>"
-			+ "						<th>SIDE</th>"
-			+ "						<th>SPH</th>"
-			+ "						<th>CYL</th>"
-			+ "						<th>AXIS</th>"
-			+ "						<th>ADD</th>    "
-			+ "						<th>DIA</th>									"
-			+ "					</tr>			"
-			+ "				</thead>			"
-			+ "				<tbody>  						"
-			+ "					<tr>    "
-			+ "						<td>R</td>    "
-			+ "						<td>rSph</td>    "
-			+ "						<td>rCyl</td>    "
-			+ "						<td>rAxis</td>    "
-			+ "						<td>rAdd</td>    "
-			+ "						<td>rDia</td>  			"
-			+ "					</tr>  			"
-			+ "					<tr>  "
-			+ "						<td colspan='6'>material, typeStr, index1, coatingStr, tintStr</td>"
-			+ "					</tr>			"
-			+ "					</tbody>			"
-			+ "				</table>"
-			+ "			</div>"
-			+ "			<div style='height : 37mm; width : 69mm;' >"
-			+ "			organizationName UON: orderNo/subOrderId Qty:qtyNos Rate:lPrice"
-			+ "			<table border='1' style='border-collapse:collapse;'>"
-			+ "				<thead>"
-			+ "					<tr>"
-			+ "						<th>SIDE</th>"
-			+ "						<th>SPH</th>"
-			+ "						<th>CYL</th>"
-			+ "						<th>AXIS</th>"
-			+ "						<th>ADD</th>    "
-			+ "						<th>DIA</th>									"
-			+ "					</tr>			"
-			+ "				</thead>			"
-			+ "				<tbody>  						"
-			+ "					<tr>    "
-			+ "						<td>L</td>    "
-			+ "						<td>lSph</td>    "
-			+ "						<td>lCyl</td>    "
-			+ "						<td>lAxis</td>    "
-			+ "						<td>lAdd</td>    "
-			+ "						<td>lDia</td>  			"
-			+ "					</tr>  			"
-			+ "					<tr>  "
-			+ "						<td colspan='6'>material, typeStr, index1, coatingStr, tintStr</td>"
-			+ "					</tr>			"
-			+ "					</tbody>			"
-			+ "				</table>"
-			+ "			</div>"
-			+ "		</div>";
-	
-	
-	public static final String sourcingSection ="<select name=\"sourcing\" value=\"sourcingStr\"><option value=\"Factory Order\">Factory Order</option><option value=\"Ready Stock\">"	
+			+ "						<td>L</td>    " + "						<td>lSph</td>    "
+			+ "						<td>lCyl</td>    " + "						<td>lAxis</td>"
+			+ "						<td>lAdd</td>    " + "						<td>lDia</td>" + "			<td>"
+			+ "				sourcingSection" + "			</td>" + "					</tr>";
+
+	public static final String orderDetailsContentHTMLEnd = "				</tbody>" + "			</table>"
+			+ "			<h5>Item Price : </h5><br><input type='text' name='itemPrice' onchange='updatePrice($(this));' value='itemPriceStr'> printButton";
+	public static final String sourcingSection = "<select name=\"sourcing\" value=\"sourcingStr\"><option value=\"Factory Order\">Factory Order</option><option value=\"Ready Stock\">"
 			+ "	Ready Stock</option></select>";
-												
-	public static final String printButton ="<button type=\"button\" class=\"btn btn-sm btn-default\" onClick=\"printItem('orderIdStr');\">Print</button><div class=\"separator clearfix\">"	
-			+ "	</div><div style=\"display:none;\" id=\"orderIdStr\" ><div style=\"height : 33mm; width : 70mm;\" ><p>organizationName	UON:99999	Rate:totalAmountStr</p>"	
-			+ "	<table border=\"1\"><thead><tr><th>LENS SIDE</th><th>SPH</th><th>CYL</th><th>AXIS</th><th>ADD</th><th>DIA</th></tr>"	
-			+ "	</thead><tbody><tr><td>R</td><td>rSph</td><td>rCyl</td><td>rAxis</td><td>rAdd</td><td>rDia</td></tr><tr><td>L</td><td>lSph</td><td>lCyl</td><td>lAxis</td><td>lAdd</td><td>lDia</td></tr>"	
-			+ "	<tr><td colspan=\"6\">material, typeStr, index1, coatingStr, tintStr, qtyNos</td></tr></tbody></table></div><div style=\"height : 33mm; width : 70mm;\">"	
-			+ "	<p>organizationName	UON:99999	Rate:lPrice</p><table border=\"1\"><thead><tr><th>LENS SIDE</th><th>SPH</th><th>CYL</th><th>AXIS</th><th>ADD</th><th>DIA</th></tr></thead><tbody>	<tr><td>L</td><td>lSph</td><td>lCyl</td><td>lAxis</td><td>lAdd</td><td>lDia</td></tr>"	
-			+ " <tr><td colspan=\"6\">material, typeStr, index1, coatingStr, tintStr, qtyNos</td></tr></tbody></table></div></div>";
-	
+
+	public static final String printButton = "<button type='button' class='btn btn-sm btn-default' style=\"margin-left:50%;\" onClick='printItem(\"orderIdStr\");'>Print</button>"
+			+ "			<div class='separator clearfix'></div>"
+			+ "			<div style='display:none;margin-left:35%;' id='orderIdStr' >";
+
+	public static final String orderDetailsContentPrintRight = ""
+			+ "			<div style='height : 37mm; width : 69mm;'>"
+			+ "			organizationName UON: orderNo/subOrderId Qty:qtyNos <span class=\"orderIdStr\">Rate:rPrice</span>"
+			+ "			<table border='1' style='border-collapse:collapse;'>" + "				<thead>"
+			+ "					<tr>" + "						<th>SIDE</th>" + "						<th>SPH</th>"
+			+ "						<th>CYL</th>" + "						<th>AXIS</th>"
+			+ "						<th>ADD</th>    "
+			+ "						<th>DIA</th>									"
+			+ "					</tr>			" + "				</thead>			"
+			+ "				<tbody>  						" + "					<tr>    "
+			+ "						<td>R</td>    " + "						<td>rSph</td>    "
+			+ "						<td>rCyl</td>    " + "						<td>rAxis</td>    "
+			+ "						<td>rAdd</td>    " + "						<td>rDia</td>  			"
+			+ "					</tr>  			" + "					<tr>  "
+			+ "						<td colspan='6'>material, typeStr, index1, coatingStr, tintStr</td>"
+			+ "					</tr>			" + "					</tbody>			"
+			+ "				</table>" + "			</div>";
+	public static final String orderDetailsContentPrintLeft = ""
+			+ "			<div style='height : 37mm; width : 69mm;' >"
+			+ "			organizationName UON: orderNo/subOrderId Qty:qtyNos <span class=\"orderIdStr\">Rate:lPrice</span>"
+			+ "			<table border='1' style='border-collapse:collapse;'>" + "				<thead>"
+			+ "					<tr>" + "						<th>SIDE</th>" + "						<th>SPH</th>"
+			+ "						<th>CYL</th>" + "						<th>AXIS</th>"
+			+ "						<th>ADD</th>    "
+			+ "						<th>DIA</th>									"
+			+ "					</tr>			" + "				</thead>			"
+			+ "				<tbody>  						" + "					<tr>    "
+			+ "						<td>L</td>    " + "						<td>lSph</td>    "
+			+ "						<td>lCyl</td>    " + "						<td>lAxis</td>    "
+			+ "						<td>lAdd</td>    " + "						<td>lDia</td>  			"
+			+ "					</tr>  			" + "					<tr>  "
+			+ "						<td colspan='6'>material, typeStr, index1, coatingStr, tintStr</td>"
+			+ "					</tr>			" + "					</tbody>			"
+			+ "				</table>" + "			</div>";
+	public static final String orderDetailsContentPrintEND = "		</div>";
 	public static final String optionsHTMLOpen = "<option";
 	public static final String optionsHTMLClose = "</option>";
+
+	public static final String userListTemp = "<tr>" + "		<td>serialNumberStr</td>" + "		<td>orgName</td>"
+			+ "		<td>addressLine3</td>" + "		<td>customerName</td>"
+			+ "		<form id=\"accept\"  action=\"updateUserStatus\" method=\"POST\">"
+			+ "		<input type=\"hidden\" name=\"status\" value=\"accept\"><input type=\"hidden\" name=\"serialNumberCustomer\" value=\"serialNumberStr\">"
+			+ "		<td><button type=\"submit\" class=\"btn btn-sm btn-default\" >Accept</button></td> </form>"
+			+ "		<form id=\"decline\"  action=\"deleteUserStatus\" method=\"POST\">"
+			+ "		<input type=\"hidden\" name=\"status\" value=\"decline\"><input type=\"hidden\" name=\"serialNumberCustomer\" value=\"serialNumberStr\">"
+			+ "		<td><button type=\"submit\" class=\"btn btn-sm btn-default\" >Decline</button></td>		</form>"
+			+ "		</tr>";
+
 }
