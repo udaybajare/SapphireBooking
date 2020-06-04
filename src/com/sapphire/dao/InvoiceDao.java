@@ -1,6 +1,5 @@
 package com.sapphire.dao;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,9 +18,8 @@ public class InvoiceDao {
 	private SessionFactory sessionFactory;
 
 	@Transactional
-	public void saveInvoice(InvoiceDetails invoiceDetail) 
-	{
-		
+	public void saveInvoice(InvoiceDetails invoiceDetail) {
+
 		Session session = sessionFactory.getCurrentSession();
 
 		try {
@@ -31,7 +29,7 @@ public class InvoiceDao {
 		}
 
 	}
-	
+
 	@Transactional
 	public String getInvoiceNo() {
 		Session session = sessionFactory.getCurrentSession();
@@ -41,22 +39,23 @@ public class InvoiceDao {
 		Query qry = session.createQuery(sql);
 
 		List invoiceNo = qry.getResultList();
-		
 
-		return (String)invoiceNo.get(0);
+		if (invoiceNo.size() > 0) {
+			return (String) invoiceNo.get(0);
+		} else {
+			return "";
+		}
 	}
 
 	@Transactional
-	public InvoiceDetails getInvoiceDetails(String invoiceNo)
-	{
+	public InvoiceDetails getInvoiceDetails(String invoiceNo) {
 		Session session = sessionFactory.getCurrentSession();
-		
+
 		String sql = "from InvoiceDetails where invoiceNo=:invoiceNo";
-		
+
 		Query query = session.createQuery(sql);
 		InvoiceDetails result = (InvoiceDetails) query.uniqueResult();
-		
-		
+
 		return result;
 	}
 }

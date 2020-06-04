@@ -3,7 +3,7 @@
 
   <head>
     <meta charset="utf-8">
-    <title>The Project | Forms</title>
+    <title>Sapphire Lenses</title>
     <meta name="description" content="The Project a Bootstrap-based, Responsive HTML5 Template">
     <meta name="author" content="author">
 

@@ -1,7 +1,6 @@
 package com.sapphire.booking;
 
 import java.io.OutputStream;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -11,7 +10,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.smartcardio.TerminalFactorySpi;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,8 +28,6 @@ import com.sapphire.entity.EntryDetails;
 import com.sapphire.entity.InvoiceDetails;
 import com.sapphire.entity.OrderDetails;
 import com.sapphire.entity.OrganizationDetails;
-
-import com.sapphire.entity.UserDetails;
 import com.sapphire.utils.BookingUtility;
 import com.sapphire.utils.ReportCreator;
 

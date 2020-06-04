@@ -3,7 +3,7 @@
 
   <head>
     <meta charset="utf-8">
-    <title>Sapphire Lences</title>
+    <title>Sapphire Lenses</title>
     <meta name="description" content="">
     <meta name="author" content="author">
 

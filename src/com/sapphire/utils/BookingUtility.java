@@ -3,7 +3,6 @@ package com.sapphire.utils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 import javax.annotation.ManagedBean;
 
@@ -60,11 +59,11 @@ public class BookingUtility {
 		int cylInt = 0;
 
 		if (sph != null) {
-			sphInt = (int) Math.ceil(sph);
+			sphInt = (int) Math.ceil(Math.abs(sph));
 		}
 
 		if (cyl != null) {
-			cylInt = (int) Math.ceil(cyl);
+			cylInt = (int) Math.ceil(Math.abs(cyl));
 		}
 
 		int index = -1;
@@ -139,7 +138,7 @@ public class BookingUtility {
 					if (columnToSelect.equals("W_KT")) {
 						unitPrice = unitPrice + 50;
 					} else {
-						unitPrice = unitPrice + 200;
+						unitPrice = unitPrice + 100;
 					}
 				}
 			}
@@ -286,16 +285,40 @@ public class BookingUtility {
 			}
 
 			orderContent = orderContent + orderDetailsContentHTMLEnd;
-			
+
+			String sourcingRight = sourcingSection;
+			String sourcingLeft = sourcingSection;
+
+			if (isRightPresent && entryDetails.getrSourcing().equalsIgnoreCase("Factory Order")) {
+				sourcingRight = sourcingRight.replace("selectedFactory", "Selected");
+				sourcingRight = sourcingRight.replace("selectedReady", "");
+			} else {
+				sourcingRight = sourcingRight.replace("selectedFactory", "");
+				sourcingRight = sourcingRight.replace("selectedReady", "Selected");
+			}
+
+			if (isLeftPresent && entryDetails.getlSourcing().equalsIgnoreCase("Factory Order")) {
+				sourcingLeft = sourcingLeft.replace("selectedFactory", "Selected");
+				sourcingLeft = sourcingLeft.replace("selectedReady", "");
+			} else {
+				sourcingLeft = sourcingLeft.replace("selectedFactory", "");
+				sourcingLeft = sourcingLeft.replace("selectedReady", "Selected");
+			}
+
 			if (isAdmin) {
-				orderContent = orderContent.replace("sourcingSection", sourcingSection);
+
+				orderContent = orderContent.replace("sourcingSectionRight", sourcingRight);
+				orderContent = orderContent.replace("sourcingSectionLeft", sourcingLeft);
 				orderContent = orderContent.replace("printButton", printButton);
 			} else {
-				orderContent = orderContent.replace("sourcingSection", sourcingSection);
+				orderContent = orderContent.replace("sourcingSectionRight", sourcingRight);
+				orderContent = orderContent.replace("sourcingSectionLeft", sourcingLeft);
 				orderContent = orderContent.replace("printButton", "");
 			}
 
 			if (isAdmin) {
+
+				orderContent = orderContent + orderDetailsContentPrintSTART;
 				if (isRightPresent) {
 					orderContent = orderContent + orderDetailsContentPrintRight;
 				}
@@ -303,9 +326,10 @@ public class BookingUtility {
 				if (isLeftPresent) {
 					orderContent = orderContent + orderDetailsContentPrintLeft;
 				}
+
+				orderContent = orderContent + orderDetailsContentPrintEND;
 			}
 
-			orderContent = orderContent + orderDetailsContentPrintEND;
 			orderContent = orderContent.replace("rSph", entryDetails.getrSph() == null ? "" : entryDetails.getrSph());
 			orderContent = orderContent.replace("rCyl", entryDetails.getrCyl() == null ? "" : entryDetails.getrCyl());
 			orderContent = orderContent.replace("rAxis",
@@ -365,12 +389,12 @@ public class BookingUtility {
 			if (remainder == 10) {
 				remainder = 0;
 			}
-			double itemPrice = ((((lPrice + rPrice) + remainder) / 10) * 10)
-					* Integer.parseInt(orderDetails.getQtyNos());
+			double itemPrice = (lPrice + rPrice) * Integer.parseInt(orderDetails.getQtyNos());
 
 			orderContent = orderContent.replace("lPrice", String.valueOf(itemPrice));
 			orderContent = orderContent.replace("rPrice", String.valueOf(itemPrice));
 
+			orderContent = orderContent.replace("custOrdNo", orderDetails.getCustOrderNumber());
 			orderContent = orderContent.replace("itemPriceStr", String.valueOf(itemPrice));
 		}
 
@@ -402,7 +426,7 @@ public class BookingUtility {
 	}
 
 	public static boolean notNullOrBlank(String input) {
-		return !(null == input && input.equals(""));
+		return null != input && !("".equals(input));
 	}
 
 	public String getUserList(ArrayList<UserDetails> userList) {
@@ -462,16 +486,6 @@ public class BookingUtility {
 			+ "<form id=\"deliver\" action=\"updateStatus\" method=\"POST\"><input type=\"hidden\" name=\"orderId\" value=\"orderNo\">"
 			+ "<input type=\"hidden\" name=\"status\" value=\"delivered\"><button type=\"submit\" class=\"btn btn-sm btn-default\" >Delivered</button></form></div>";
 
-	/*
-	 * public static final String orderDetailsContentHTML =
-	 * "<p>Material : material Type : typeStr Quantity : qtyNos Index : index1 Coating : coatingStr Tint : tintStr Frame Type : frameType Sourcing : "
-	 * +
-	 * "sourcingSection	</p><table class=\"table table-striped\"><thead><tr><th>LENS SIDE</th><th>SPH</th><th>CYL</th><th>AXIS</th><th>ADD</th><th>DIA</th></tr>"
-	 * +
-	 * "</thead><tbody><tr><td>R</td><td>rSph</td><td>rCyl</td><td>rAxis</td><td>rAdd</td><td>rDia</td>"
-	 * +
-	 * "</tr><tr><td>L</td><td>lSph</td><td>lCyl</td><td>lAxis</td><td>lAdd</td><td>lDia</td></tr></tbody></table>printButton";
-	 */
 	public static final String orderDetailsContentHTMLStart = "<p><b>SubOrder NO</b>: subOrderId <b>Material</b>: material <b>Type</b> : typeStr <b>Quantity</b> : qtyNos <b>Index</b> : index1 <b>Coating</b> : coatingStr <b>Tint</b> : tintStr <b>Frame Type</b> : frameType</p>"
 			+ "		<table class='table table-striped'>" + "			<thead>" + "				<tr>"
 			+ "					<th>LENS SIDE</th>" + "					<th>SPH</th> "
@@ -483,27 +497,28 @@ public class BookingUtility {
 			+ "						<td>R</td>    " + "						<td>rSph</td>    "
 			+ "						<td>rCyl</td>    " + "						<td>rAxis</td>    "
 			+ "						<td>rAdd</td>    " + "						<td>rDia</td>"
-			+ "						<td>" + "				sourcingSection" + "			</td>    "
+			+ "						<td>" + "				sourcingSectionRight" + "			</td>    "
 			+ "					</tr>  ";
 
 	public static final String orderDetailsContentHTMLLeft = "					<tr>    "
 			+ "						<td>L</td>    " + "						<td>lSph</td>    "
 			+ "						<td>lCyl</td>    " + "						<td>lAxis</td>"
 			+ "						<td>lAdd</td>    " + "						<td>lDia</td>" + "			<td>"
-			+ "				sourcingSection" + "			</td>" + "					</tr>";
+			+ "				sourcingSectionLeft" + "			</td>" + "					</tr>";
 
 	public static final String orderDetailsContentHTMLEnd = "				</tbody>" + "			</table>"
-			+ "			<h5>Item Price : </h5><br><input type='text' name='itemPrice' onchange='updatePrice($(this));' value='itemPriceStr'> printButton";
-	public static final String sourcingSection = "<select name=\"sourcing\" value=\"sourcingStr\"><option value=\"Factory Order\">Factory Order</option><option value=\"Ready Stock\">"
-			+ "	Ready Stock</option></select>";
+			+ "			<h5>Item Price : </h5><br><input type='text' name='itemPrice' onchange='updatePrice($(this));' value='itemPriceStr'> printButton <div class='separator clearfix'></div>";
+	public static final String sourcingSection = "<select name=\"sourcing\" value=\"sourcingStr\">"
+			+ "<option selectedFactory value=\"Factory Order\">Factory Order</option>"
+			+ "<option selectedReady value=\"Ready Stock\">Ready Stock</option>" + "</select>";
 
-	public static final String printButton = "<button type='button' class='btn btn-sm btn-default' style=\"margin-left:50%;\" onClick='printItem(\"orderIdStr\");'>Print</button>"
-			+ "			<div class='separator clearfix'></div>"
-			+ "			<div style='display:none;margin-left:35%;' id='orderIdStr' >";
+	public static final String printButton = "<button type='button' class='btn btn-sm btn-default' style=\"margin-left:50%;\" onClick='printItem(\"orderIdStr\");'>Print</button>";
+
+	public static final String orderDetailsContentPrintSTART = "			<div style='display:none;margin-left:35%;' id='orderIdStr' >";
 
 	public static final String orderDetailsContentPrintRight = ""
 			+ "			<div style='height : 37mm; width : 69mm;'>"
-			+ "			organizationName UON: orderNo/subOrderId Qty:qtyNos <span class=\"orderIdStr\">Rate:rPrice</span>"
+			+ "			organizationName UON: orderNo/subOrderId Qty:qtyNos <span class=\"orderIdStr\">Cust Order #: custOrdNo</span>"
 			+ "			<table border='1' style='border-collapse:collapse;'>" + "				<thead>"
 			+ "					<tr>" + "						<th>SIDE</th>" + "						<th>SPH</th>"
 			+ "						<th>CYL</th>" + "						<th>AXIS</th>"
@@ -520,7 +535,7 @@ public class BookingUtility {
 			+ "				</table>" + "			</div>";
 	public static final String orderDetailsContentPrintLeft = ""
 			+ "			<div style='height : 37mm; width : 69mm;' >"
-			+ "			organizationName UON: orderNo/subOrderId Qty:qtyNos <span class=\"orderIdStr\">Rate:lPrice</span>"
+			+ "			organizationName UON: orderNo/subOrderId Qty:qtyNos <span class=\"orderIdStr\">Cust Order #: custOrdNo</span>"
 			+ "			<table border='1' style='border-collapse:collapse;'>" + "				<thead>"
 			+ "					<tr>" + "						<th>SIDE</th>" + "						<th>SPH</th>"
 			+ "						<th>CYL</th>" + "						<th>AXIS</th>"

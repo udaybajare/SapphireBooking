@@ -35,6 +35,7 @@ import com.sapphire.dao.OrganizationDao;
 import com.sapphire.entity.EntryDetails;
 import com.sapphire.entity.InvoiceDetails;
 import com.sapphire.entity.OrderDetails;
+import com.sapphire.entity.OrganizationDetails;
 import com.sapphire.entity.UserDetails;
 import com.sun.media.sound.InvalidFormatException;
 
@@ -146,7 +147,8 @@ public class ReportCreator {
 				cellToUpdate9.setCellValue(entry.getrAdd());
 
 				Cell cellToUpdate10 = sheet.getRow(row).getCell(10);
-				cellToUpdate10.setCellValue(orerDetail.getCoating() + " " + orerDetail.getTint());
+				cellToUpdate10.setCellValue(orerDetail.getMaterial() + " " + orerDetail.getType() + " "
+						+ orerDetail.getCoating() + " " + orerDetail.getTint());
 
 				Double rPrise = Double.valueOf(entry.getrPrice());
 
@@ -211,7 +213,8 @@ public class ReportCreator {
 				cellToUpdate9.setCellValue(entry.getlAdd());
 
 				Cell cellToUpdate10 = sheet.getRow(row).getCell(10);
-				cellToUpdate10.setCellValue(orerDetail.getCoating() + " " + orerDetail.getTint());
+				cellToUpdate10.setCellValue(orerDetail.getMaterial() + " " + orerDetail.getType() + " "
+						+ orerDetail.getCoating() + " " + orerDetail.getTint());
 
 				Double lPrise = Double.valueOf(entry.getlPrice());
 
@@ -460,7 +463,7 @@ public class ReportCreator {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		InvoiceDetails invoiceDetail = (InvoiceDetails) get("invoiceDetail");
+		// InvoiceDetails invoiceDetail = (InvoiceDetails) get("invoiceDetail");
 
 		Sheet sheet = workbook.getSheetAt(0);
 		double totalAmount = 0;
@@ -469,7 +472,13 @@ public class ReportCreator {
 		// int nextRow = 5;
 		for (OrderDetails orderDetail : orderDetailList) {
 			String orgName = orderDetail.getOrganizationName();
+
 			UserDetails user = orderDao.getUserDetails(orgName);
+
+			OrganizationDetails orgDetails = (organizationDao.getOrganizationDetails(orgName)).get(0);
+
+			String[] addressList = orgDetails.getOrgAddress().split(",");
+
 			sheet.getRow(4).getCell(7).setCellValue(invoiceNo);
 			DateFormat df = new SimpleDateFormat("dd-MMM-YYYY");
 			Date date = new Date();
@@ -477,15 +486,21 @@ public class ReportCreator {
 			String currentDate = df.format(date);
 			sheet.getRow(5).getCell(7).setCellValue(currentDate);
 			sheet.getRow(9).getCell(5).setCellValue(orderDetail.getOrganizationName());
-			sheet.getRow(10).getCell(5, MissingCellPolicy.CREATE_NULL_AS_BLANK).setCellValue(user.getAddressLine1());
-			sheet.getRow(10).getCell(6, MissingCellPolicy.CREATE_NULL_AS_BLANK).setCellValue(user.getAddressLine2());
-			sheet.getRow(11).getCell(5, MissingCellPolicy.CREATE_NULL_AS_BLANK).setCellValue(user.getAddressLine3());
+			sheet.getRow(10).getCell(5, MissingCellPolicy.CREATE_NULL_AS_BLANK)
+					.setCellValue(addressList.length > 0 ? addressList[0] : "");
+			sheet.getRow(10).getCell(6, MissingCellPolicy.CREATE_NULL_AS_BLANK)
+					.setCellValue(addressList.length > 1 ? addressList[1] : "");
+			sheet.getRow(11).getCell(5, MissingCellPolicy.CREATE_NULL_AS_BLANK)
+					.setCellValue(addressList.length > 2 ? addressList[2] : "");
 			sheet.getRow(12).getCell(5).setCellValue("GST No:");
-			sheet.getRow(12).getCell(6, MissingCellPolicy.CREATE_NULL_AS_BLANK).setCellValue(user.getGstNo());
+			sheet.getRow(12).getCell(6, MissingCellPolicy.CREATE_NULL_AS_BLANK)
+					.setCellValue(user != null ? user.getGstNo() : "");
 			sheet.getRow(13).getCell(5).setCellValue("Cell:");
-			sheet.getRow(13).getCell(6).setCellValue(user.getContactNumber());
+			sheet.getRow(13).getCell(6).setCellValue(user != null ? user.getContactNumber()
+					: (orgDetails.getOrgContact() == null ? "" : orgDetails.getOrgContact()));
 			sheet.getRow(14).getCell(5).setCellValue("E-mail:");
-			sheet.getRow(14).getCell(6, MissingCellPolicy.CREATE_NULL_AS_BLANK).setCellValue(user.getEmail());
+			sheet.getRow(14).getCell(6, MissingCellPolicy.CREATE_NULL_AS_BLANK)
+					.setCellValue(user != null ? user.getEmail() : "");
 			String quantityNo = orderDetail.getQtyNos();
 			quantityPieces += Integer.parseInt(quantityNo);
 			sheet.getRow(17).getCell(6).setCellValue(quantityPieces);
@@ -505,9 +520,9 @@ public class ReportCreator {
 			// totalAmount after disount and sgtst cgst added
 			Double invoiceTotal = totalAmount + sgst + cgst - discountAmount;
 			System.out.println(invoiceTotal);
-			System.out.println(" Round of:" +Math.round(invoiceTotal));
-			Double totalInvoiceAmount =(double) Math.round(invoiceTotal);
-		
+			System.out.println(" Round of:" + Math.round(invoiceTotal));
+			Double totalInvoiceAmount = (double) Math.round(invoiceTotal);
+
 			sheet.getRow(24).getCell(7).setCellValue(totalInvoiceAmount);
 
 			NumberWordConverter numberToWord = new NumberWordConverter();
@@ -515,11 +530,11 @@ public class ReportCreator {
 			sheet.getRow(26).getCell(1).setCellValue(totalInWord);
 			// for loop
 			// String[] terms = invoiceDetail.getTerms();
-			
+
 			int currentRow = 28;
 			String[] termsArray = terms.split(",");
 			for (int i = 0; i < termsArray.length; i++) {
-				sheet.getRow(currentRow+i).getCell(0).setCellValue(termsArray[i]);
+				sheet.getRow(currentRow + i).getCell(0).setCellValue(termsArray[i]);
 			}
 			// nextRow++;
 		}

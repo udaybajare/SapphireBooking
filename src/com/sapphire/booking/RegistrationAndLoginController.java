@@ -235,5 +235,5 @@ public class RegistrationAndLoginController {
 
 	public static final String errorMessage = "<p class=\"lead\"><font size=\"2\" color=\"red\">Something went wrong. Please verify the information you entered and make sure the User Name/Email Address is not already registered.</font></p>";
 	public static final String updateUserDetails = "<input type=\"submit\"  class=\"btn btn-default btn-lg\" value=\"update\" action=\"register\">";
-	public static final String registerUserDetails = "<input type=\"submit\" href=\"#\" class=\"btn btn-default btn-lg\" value=\"Register\" action=\"register\">";
+	public static final String registerUserDetails = "<input id=\"registerBtn\" type=\"submit\" href=\"#\" class=\"btn btn-default btn-lg\" value=\"Register\" action=\"register\">";
 }
