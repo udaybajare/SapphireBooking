@@ -293,8 +293,8 @@ public class BookingUtility {
 			ArrayList<CRPriseReadyStock> crPriceList = (ArrayList<CRPriseReadyStock>) crPriseReadyStockDao
 					.getUnitPrice(type, tint, index, coating, dia, axis);
 
-			Comparator<CRPriseReadyStock> compareById = (CRPriseReadyStock o1, CRPriseReadyStock o2) -> Double.valueOf(o1.getSphUpto())
-					.compareTo(Double.valueOf(o2.getSphUpto()));
+			Comparator<CRPriseReadyStock> compareById = (CRPriseReadyStock o1, CRPriseReadyStock o2) -> Double.valueOf(o2.getSphUpto())
+					.compareTo(Double.valueOf(o1.getSphUpto()));
 
 			Collections.sort(crPriceList, compareById);
 
@@ -306,8 +306,8 @@ public class BookingUtility {
 						+ cylInt + " : " + Double.parseDouble(crPriceList.get(i).getCylUpto()));
 				System.out.println();
 				
-				if (sphInt <= Double.parseDouble(crPriceList.get(i).getSphUpto())
-						&& cylInt <= Double.parseDouble(crPriceList.get(i).getCylUpto())) {
+				if (sphInt >= Double.parseDouble(crPriceList.get(i).getSphUpto())
+						&& cylInt >= Double.parseDouble(crPriceList.get(i).getCylUpto())) {
 
 					System.out.println("sphInt is : " + sphInt);
 					System.out.println("crPrise.getSphUpto() is : " + crPriceList.get(i).getSphUpto());

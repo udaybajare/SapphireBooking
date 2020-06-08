@@ -30,7 +30,7 @@ public class CRPriceReadyStockDao {
 			coating = "";
 		}
 
-		if (null != index && !(index.equalsIgnoreCase("POLY"))) {
+		if (null != index && !(index.equalsIgnoreCase("1.59 Polycarbonate"))) {
 			index = "";
 		}
 		
@@ -77,14 +77,14 @@ public class CRPriceReadyStockDao {
 	}
 
 	@Transactional
-	public List<CRPrise> getPriceList() {
+	public List<CRPriseReadyStock> getPriceList() {
 		Session session = sessionFactory.getCurrentSession();
 
 		String queryStr = "from CRPriseReadyStock";
 
 		Query query = session.createQuery(queryStr);
 
-		List<CRPrise> crPriceList = query.getResultList();
+		List<CRPriseReadyStock> crPriceList = query.getResultList();
 
 		return crPriceList;
 	}

@@ -156,7 +156,29 @@
       <div class="row">
         <div class="col-md-12">
           <table class="table table-striped table-colored">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>TYPE</th>
+                <th>TINT</th>
+                <th>INDEX</th>
+                <th>COATING</th>
+                <th>DIA</th>
+                <th>SPH</th>
+                <th>CYL</th>
+                <th>AXIS</th>
+                <th>UC</th>
+                <th>HC</th>
+                <th>ARC</th>
+              </tr>
+            </thead>
+            <form id="updateCRPriceReadyStockList">
+            <tbody>
+              ${crPriceReadyStockDetails}
+            </tbody>            
+            </form>
           </table>
+          <input id="updateCRPriceReadyStockBtn" type="submit" class="btn btn-primary mt-5" value="Update">
         </div>
       </div>
     </div>
@@ -193,7 +215,7 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 <script type="text/javascript">
-  
+
   $('#updateGlassPriceBtn').on('click', function(e){
 
    e.preventDefault(); 
@@ -216,7 +238,7 @@
 </script>
 
 <script type="text/javascript">
-  
+
   $('#updateCRPriceBtn').on('click', function(e){
 
    e.preventDefault(); 
@@ -225,6 +247,29 @@
      url : 'updateCRPriceList',
      type : 'POST',
      data : $('#updateCRPriceList').serialize(),
+   // data : $('#updateGlassPriceList').clone(true,true).serialize(),
+   success: function(data) 
+   {
+    alert("Price updated Successfully..!!");
+    console.log(" Received data from BE");
+    console.log(data);             
+  }
+});
+
+ });
+
+</script>
+
+<script type="text/javascript">
+
+  $('#updateCRPriceReadyStockBtn').on('click', function(e){
+
+   e.preventDefault(); 
+
+   var ajaxReq = $.ajax({
+     url : 'updateCRPriceReadyStockList',
+     type : 'POST',
+     data : $('#updateCRPriceReadyStockList').serialize(),
    // data : $('#updateGlassPriceList').clone(true,true).serialize(),
    success: function(data) 
    {

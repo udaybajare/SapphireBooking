@@ -375,9 +375,20 @@ public class OrderController {
 
 				// get right and left lens price
 
-				LensPrices lensPrice = bookingUtility.getPrise(material[i], rSph[i], rCyl[i], rAxis[i], rDia[i],
-						rSourcing[i], tint[i], type[i], lSph[i], lCyl[i], lAxis[i], lDia[i], lSourcing[i], coating[i],
-						index[i], qtyNos[i]);
+				LensPrices lensPrice = bookingUtility.getPrise(material[i], 
+						rSph.length>=i+1?rSph[i]:"", 
+								rCyl.length>=i+1?rCyl[i]:"", 
+								rAxis.length>=i+1?rAxis[i]:"", 
+								rDia.length>=i+1?rDia[i]:"",
+								rSourcing.length>=i+1?rSourcing[i]:"", 
+								tint[i], type[i], 
+								lSph.length>=i+1?lSph[i]:"", 
+								lCyl.length>=i+1?lCyl[i]:"", 
+								lAxis.length>=i+1?lAxis[i]:"", 
+								lDia.length>=i+1?lDia[i]:"", 
+								lSourcing.length>=i+1?lSourcing[i]:"", 
+								coating[i],
+								index[i], qtyNos[i]);
 
 				// Add fitting price as well
 				// totalPrice = totalPrice + FittingPrice

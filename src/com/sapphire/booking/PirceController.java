@@ -14,8 +14,10 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.sapphire.dao.CRPriceDao;
+import com.sapphire.dao.CRPriceReadyStockDao;
 import com.sapphire.dao.GlassPriceDao;
 import com.sapphire.entity.CRPrise;
+import com.sapphire.entity.CRPriseReadyStock;
 import com.sapphire.entity.GlassPrice;
 
 @Controller
@@ -24,6 +26,9 @@ public class PirceController {
 
 	@Autowired
 	CRPriceDao crPriceDao;
+
+	@Autowired
+	CRPriceReadyStockDao crPriceReadyStockDao;
 
 	@Autowired
 	GlassPriceDao glassPriceDao;
@@ -116,10 +121,45 @@ public class PirceController {
 			index++;
 		}
 
+		// CR Price for ready Stock Orders
+
+		ArrayList<CRPriseReadyStock> crPriseReadyStockList = (ArrayList<CRPriseReadyStock>) crPriceReadyStockDao
+				.getPriceList();
+
+		StringBuffer crPriceReadyStockDetails = new StringBuffer();
+
+		for (CRPriseReadyStock crPriseReadyStock : crPriseReadyStockList) {
+			crPriceReadyStockDetails.append("<tr>");
+			crPriceReadyStockDetails.append("<td>" + crPriseReadyStock.getRowIndex() + "</td>");
+			crPriceReadyStockDetails.append("<td><input type='hidden' name='typeVal' value='" + crPriseReadyStock.getTypeVal() + "'>" + crPriseReadyStock.getTypeVal() + "</td>");
+			crPriceReadyStockDetails.append("<td><input type='hidden' name='tint' value='" + crPriseReadyStock.getTint() + "'>" + crPriseReadyStock.getTint() + "</td>");
+			crPriceReadyStockDetails.append("<td><input type='text'  					name='indexVal' value='"
+					+ crPriseReadyStock.getIndex() + "'></td>");
+			crPriceReadyStockDetails.append("<td><input type='text' 					name='coating' value='"
+					+ crPriseReadyStock.getCoating() + "'></td>");
+			crPriceReadyStockDetails.append("<td><input type='text' style='width:45px;' name='dia' value='"
+					+ crPriseReadyStock.getDia() + "'></td>");
+			crPriceReadyStockDetails.append("<td><input type='text' style='width:45px;' name='sphUpto' value='"
+					+ crPriseReadyStock.getSphUpto() + "'></td>");
+			crPriceReadyStockDetails.append("<td><input type='text' style='width:45px;' name='cylUpto' value='"
+					+ crPriseReadyStock.getCylUpto() + "'></td>");
+			crPriceReadyStockDetails.append("<td><input type='text' style='width:45px;' name='axis' value='"
+					+ crPriseReadyStock.getAxis() + "'></td>");
+			crPriceReadyStockDetails.append("<td><input type='text' style='width:45px;' name='uc' value='"
+					+ crPriseReadyStock.getUc() + "'></td>");
+			crPriceReadyStockDetails.append("<td><input type='text' style='width:45px;' name='hc' value='"
+					+ crPriseReadyStock.getHc() + "'></td>");
+			crPriceReadyStockDetails.append("<td><input type='text' style='width:45px;' name='arc' value='"
+					+ crPriseReadyStock.getArc() + "'></td>");
+			crPriceReadyStockDetails.append("</tr>");
+
+		}
+
 		modelAndView.setViewName("showPriceList");
 
 		modelAndView.addObject("glassPriceDetails", glassPriceDetails.toString());
 		modelAndView.addObject("crPriceDetails", crPriceDetails.toString());
+		modelAndView.addObject("crPriceReadyStockDetails", crPriceReadyStockDetails.toString());
 		return modelAndView;
 	}
 
@@ -152,6 +192,22 @@ public class PirceController {
 					ucSrp[i], hcSrp[i], arcSrp[i]);
 
 			crPriceDao.saveOrUpdate(crPrice);
+
+		}
+
+		return "true";
+	}
+
+	@RequestMapping(value = "updateCRPriceReadyStockList", method = RequestMethod.POST)
+	public @ResponseBody String updateCRPriceReadyStockList(String[] typeVal, String[] tint, String[] indexVal,
+			String[] coating, String[] dia, String[] sphUpto, String[] cylUpto, String[] axis, String[] uc, String[] hc,
+			String[] arc) {
+
+		for (int i = 0; i < typeVal.length; i++) {
+
+			CRPriseReadyStock crPrice = new CRPriseReadyStock(i + 1, typeVal[i], tint[i], indexVal[i], coating[i],
+					dia[i], sphUpto[i], cylUpto[i], axis[i], uc[i], hc[i], arc[i]);
+			crPriceReadyStockDao.saveOrUpdate(crPrice);
 
 		}
 
