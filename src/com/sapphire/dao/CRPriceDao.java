@@ -36,4 +36,35 @@ public class CRPriceDao
 
 		return crPriceList;
 	}
+	
+	@Transactional
+	public boolean saveOrUpdate(CRPrise crPrice) 
+	{
+		boolean crPriceListUpdated = true; 
+		try{
+		Session session = sessionFactory.getCurrentSession();
+		session.saveOrUpdate(crPrice);
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+			crPriceListUpdated = false;
+		}
+		
+		return crPriceListUpdated;
+	}
+	
+	@Transactional
+	public List<CRPrise> getPriceList() 
+	{
+		Session session = sessionFactory.getCurrentSession();
+			
+		String queryStr = "from CRPrise";
+
+		Query query = session.createQuery(queryStr);
+		
+		List<CRPrise> crPriceList = query.getResultList();
+
+		return crPriceList;
+	}
 }

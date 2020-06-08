@@ -119,16 +119,21 @@
         </td>
         <td>
           <div class="form-group">
-           <input class="form-control" type="text" name="index" id="index" value="" />
+           <select class="form-control" type="text" name="index" id="index" value="">
+
+           </select>
          </div>
        </td>
        <td>
         <div class="form-group">
           <select class="form-control" name="coating" id="coating">
             <option></option>
-            <option name="UC">UC</option>
-            <option name="HC">HC</option>
-            <option name="ARC">ARC</option>
+            <option value="UC">UC</option>
+            <option value="HC">HC</option>
+            <option value="ARC GREEN COAT">ARC GREEN COAT</option>
+            <option value="ARC BLUE COAT">ARC BLUE COAT</option>
+            <option value="BLUE PROTECT GREEN COAT">BLUE PROTECT GREEN COAT</option>
+            <option value="BLUE PROTECT BLUE COAT">BLUE PROTECT BLUE COAT</option>
           </select>
         </div>
       </td>
@@ -498,7 +503,7 @@
  
    //$(function () {
      //   $("#myerrorModel").click(function () {         
-      
+
        // });
    // });
    
@@ -520,15 +525,15 @@ function removeRow( thisObj )
   function getAndUpdatePrise()
   {
 
-	if($('[name="orgName"]')[0].value==="")
-	{
-		alert("Please select the Organization to proceed.");
-		return;
-	}
+   if($('[name="orgName"]')[0].value==="")
+   {
+    alert("Please select the Organization to proceed.");
+    return;
+  }
 
-   $('#confirmButton').show();
+  $('#confirmButton').show();
 
-   jQuery.ajax({
+  jQuery.ajax({
     url: 'getItemWisePrice',
     method: 'POST',
     data: $('#confirmOrder').clone(true,true).serialize()
@@ -551,8 +556,8 @@ function removeRow( thisObj )
     }		
 
   });
-	
-	$('#myModal').modal('show');	
+
+   $('#myModal').modal('show');	
    console.log('total is : ' + total);
    $('#totalPrice').html(total);
 
@@ -561,13 +566,26 @@ function removeRow( thisObj )
    console.log('Arrrrrrr');
  });
 
-	
+
 
 }
 </script>
 <script>
   $( document ).ready(function(){
     setTimeout(function(){$('#customMessage').hide();}, 5000);
+  });
+</script>
+
+<script>
+  $('#material').on('change', function(){
+    if($('#material').val()==='GLASS')
+    {
+      $('#index').html('<option value="1.50">1.50</option> <option value="1.67">1.67</option> <option value="1.70">1.70</option> <option value="1.74">1.74</option> <option value="1.80">1.80</option>');
+    }
+    else if($('#material').val()==='CR')
+    {
+      $('#index').html('<option value="1.50">1.50 </option> <option value="1.56">1.56</option> <option value="1.59 Polycarbonate">1.59 Polycarbonate</option> <option value="1.60">1.60</option> <option value="1.61 MR8">1.61 MR8</option> <option value="1.67">1.67</option> <option value="1.70">1.70</option> <option value="1.74">1.74</option>');
+    }
   });
 </script>
 </body>

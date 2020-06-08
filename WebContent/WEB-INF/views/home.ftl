@@ -139,6 +139,11 @@
 						${userListButton}
 					</div>
 				</div>
+				<div class="col-md-3">
+					<div class="form-group has-feedback">
+						${showPriceList}
+					</div>
+				</div>
 			</div>
 		</div>
 

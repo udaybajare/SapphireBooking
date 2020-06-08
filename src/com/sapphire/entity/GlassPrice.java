@@ -147,6 +147,11 @@ public class GlassPrice {
 		PG_DB_ARC = pG_DB_ARC;
 	}
 	
+	public GlassPrice()
+	{
+		super();
+	}
+	
 	public GlassPrice(String w_KT, String w_SV, String pG4_KT, String pG4_SV, String pG6_KT, String pG6_SV,
 			String sP2_KT, String sP2_SV, String pB_KT, String pB_SV, String w_PR, String w_DB, String pG_PR,
 			String pG_DB, String w_PR_ARC, String w_DB_ARC, String pG_PR_ARC, String pG_DB_ARC) {

@@ -26,6 +26,7 @@ import com.sapphire.dao.OrganizationDao;
 import com.sapphire.dao.RegistrationDao;
 import com.sapphire.entity.EntryDetails;
 import com.sapphire.entity.InvoiceDetails;
+import com.sapphire.entity.LensPrices;
 import com.sapphire.entity.OrderDetails;
 import com.sapphire.entity.OrganizationDetails;
 import com.sapphire.utils.BookingUtility;
@@ -374,57 +375,9 @@ public class OrderController {
 
 				// get right and left lens price
 
-				int rPrise = 0;
-				int lPrise = 0;
-
-				int totalPrice = 0;
-
-				if (material[i].equalsIgnoreCase("Glass")) {
-
-					rPrise = bookingUtility.getGlassLensePrice(
-							rSph.length > 0 && rSph[i] != null && !(rSph[i].trim().equals(""))
-									? Float.parseFloat(rSph[i]) : null,
-							rCyl.length > 0 && rCyl[i] != null && !(rCyl[i].trim().equals(""))
-									? Float.parseFloat(rCyl[i]) : null,
-							tint[i], type[i]);
-
-					lPrise = bookingUtility.getGlassLensePrice(
-							lSph.length > 0 && lSph[i] != null && !(lSph[i].trim().equals(""))
-									? Float.parseFloat(lSph[i]) : null,
-							lCyl.length > 0 && lCyl[i] != null && !(lCyl[i].trim().equals(""))
-									? Float.parseFloat(lCyl[i]) : null,
-							tint[i], type[i]);
-
-					System.out.println(rPrise);
-					System.out.println(lPrise);
-
-				} else if (material[i].equalsIgnoreCase("CR")) {
-					rPrise = bookingUtility.getCRLensePrice(type[i], tint[i], index[i],
-
-							rSph.length > 0 && rSph[i] != null && !(rSph[i].trim().equals("")) ? rSph[i] : null,
-							rCyl.length > 0 && rCyl[i] != null && !(rCyl[i].trim().equals("")) ? rCyl[i] : null,
-							coating[i]);
-
-					lPrise = bookingUtility.getCRLensePrice(type[i], tint[i], index[i],
-
-							lSph.length > 0 && lSph[i] != null && !(lSph[i].trim().equals("")) ? lSph[i] : null,
-							lCyl.length > 0 && lCyl[i] != null && !(lCyl[i].trim().equals("")) ? lCyl[i] : null,
-							coating[i]);
-
-					if (Math.ceil(Float.parseFloat(
-							lCyl.length > 0 && lCyl[i] != null && !(lCyl[i].trim().equals("")) ? lCyl[i] : "0")) > 4) {
-
-						rPrise = rPrise != 0 ? Math.addExact(rPrise, 25) : rPrise;
-						lPrise = lPrise != 0 ? Math.addExact(lPrise, 25) : lPrise;
-					}
-
-				}
-
-				int remainder = 10 - (lPrise + rPrise) % 10;
-				if (remainder == 10) {
-					remainder = 0;
-				}
-				totalPrice = ((((lPrise + rPrise) + remainder) / 10) * 10) * Integer.parseInt(qtyNos[i]);
+				LensPrices lensPrice = bookingUtility.getPrise(material[i], rSph[i], rCyl[i], rAxis[i], rDia[i],
+						rSourcing[i], tint[i], type[i], lSph[i], lCyl[i], lAxis[i], lDia[i], lSourcing[i], coating[i],
+						index[i], qtyNos[i]);
 
 				// Add fitting price as well
 				// totalPrice = totalPrice + FittingPrice
@@ -441,8 +394,8 @@ public class OrderController {
 								lAxis.length > 0 && !(lAxis[i] == null || lAxis[i].equals("")) ? lAxis[i] : null,
 								lAdd.length > 0 && !(lAdd[i] == null || lAdd[i].equals("")) ? lAdd[i] : null,
 								lDia.length > 0 && !(lDia[i] == null || lDia[i].equals("")) ? lDia[i] : null,
-								String.valueOf(lPrise * Integer.parseInt(qtyNos[i])),
-								String.valueOf(rPrise * Integer.parseInt(qtyNos[i])),
+								String.valueOf(lensPrice.getlPrice() * Integer.parseInt(qtyNos[i])),
+								String.valueOf(lensPrice.getrPrice() * Integer.parseInt(qtyNos[i])),
 								lSourcing.length > 0 && !(lSourcing[i] == null || lSourcing[i].equals(""))
 										? lSourcing[i] : null,
 								rSourcing.length > 0 && !(rSourcing[i] == null || rSourcing[i].equals(""))
@@ -450,7 +403,7 @@ public class OrderController {
 
 				orderDetails.add(orderDetail);
 
-				totalAmount = totalAmount + totalPrice;
+				totalAmount = totalAmount + lensPrice.getTotalPrice();
 
 				for (int j = 0; j < orderDetails.size(); j++) {
 
@@ -467,62 +420,29 @@ public class OrderController {
 
 	@RequestMapping(value = "/getItemWisePrice", method = RequestMethod.POST)
 	protected @ResponseBody String getItemWisePrice(String[] material, String[] type, String[] index, String[] coating,
-			String[] tint, String[] qtyNos, String[] frameType, String[] sourcing, String[] rSph, String[] rCyl,
+			String[] tint, String[] qtyNos, String[] frameType, String[] lSourcing, String[] rSourcing, String[] rSph, String[] rCyl,
 			String[] rAxis, String[] rAdd, String[] rDia, String[] lSph, String[] lCyl, String[] lAxis, String[] lAdd,
 			String[] lDia) {
 		StringBuilder priseList = new StringBuilder();
 
 		for (int i = 0; i < material.length; i++) {
-			int itemTotal = 0;
-			int totalPrice = 0;
-			int rPrise = 0;
-			int lPrise = 0;
 
-			if (material[i].equalsIgnoreCase("Glass")) {
+			LensPrices lensPrice = bookingUtility.getPrise(material[i], 
+					rSph.length>=i+1?rSph[i]:"", 
+					rCyl.length>=i+1?rCyl[i]:"", 
+					rAxis.length>=i+1?rAxis[i]:"", 
+					rDia.length>=i+1?rDia[i]:"",
+					rSourcing.length>=i+1?rSourcing[i]:"", 
+					tint[i], type[i], 
+					lSph.length>=i+1?lSph[i]:"", 
+					lCyl.length>=i+1?lCyl[i]:"", 
+					lAxis.length>=i+1?lAxis[i]:"", 
+					lDia.length>=i+1?lDia[i]:"", 
+					lSourcing.length>=i+1?lSourcing[i]:"", 
+					coating[i],
+					index[i], qtyNos[i]);
 
-				rPrise = bookingUtility.getGlassLensePrice(
-						rSph.length > 0 && rSph[i] != null && !(rSph[i].trim().equals("")) ? Float.parseFloat(rSph[i])
-								: null,
-						rCyl.length > 0 && rCyl[i] != null && !(rCyl[i].trim().equals("")) ? Float.parseFloat(rCyl[i])
-								: null,
-						tint[i], type[i]);
-
-				lPrise = bookingUtility.getGlassLensePrice(
-						lSph.length > 0 && lSph[i] != null && !(lSph[i].trim().equals("")) ? Float.parseFloat(lSph[i])
-								: null,
-						lCyl.length > 0 && lCyl[i] != null && !(lCyl[i].trim().equals("")) ? Float.parseFloat(lCyl[i])
-								: null,
-						tint[i], type[i]);
-
-				itemTotal = Math.addExact(rPrise, lPrise);
-
-			} else if (material[i].equalsIgnoreCase("CR")) {
-
-				rPrise = bookingUtility.getCRLensePrice(type[i], tint[i], index[i],
-						rSph.length > 0 && rSph[i] != null && !(rSph[i].trim().equals("")) ? rSph[i] : null,
-						rCyl.length > 0 && rCyl[i] != null && !(rCyl[i].trim().equals("")) ? rCyl[i] : null,
-						coating[i]);
-				lPrise = bookingUtility.getCRLensePrice(type[i], tint[i], index[i],
-						lSph.length > 0 && lSph[i] != null && !(lSph[i].trim().equals("")) ? lSph[i] : null,
-						lCyl.length > 0 && lCyl[i] != null && !(lCyl[i].trim().equals("")) ? lCyl[i] : null,
-						coating[i]);
-
-				if (Math.ceil((lCyl.length > 0 && !(lCyl[i].trim().equals(""))) ? Float.parseFloat(lCyl[i]) : 0) > 4) {
-
-					rPrise = rPrise != 0 ? Math.addExact(rPrise, 50) : rPrise;
-					lPrise = lPrise != 0 ? Math.addExact(lPrise, 50) : lPrise;
-				}
-
-			}
-
-			int remainder = 10 - (lPrise + rPrise) % 10;
-
-			if (remainder == 10) {
-				remainder = 0;
-			}
-			totalPrice = ((((lPrise + rPrise) + remainder) / 10) * 10) * Integer.parseInt(qtyNos[i]);
-
-			priseList.append(String.valueOf(totalPrice) + ",");
+			priseList.append(String.valueOf(lensPrice.getTotalPrice()) + ",");
 
 		}
 
