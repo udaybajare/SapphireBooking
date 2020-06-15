@@ -96,7 +96,7 @@ public class OrderDao {
 	@Transactional
 	public ArrayList<Integer> getAllOrdersIds(String orgName) {
 		Session session = sessionFactory.getCurrentSession();
-		String hqlString = "select DISTINCT orderId from OrderDetails WHERE status NOT IN ('delivered')";
+		String hqlString = "select DISTINCT orderId from OrderDetails WHERE status NOT IN ('delivered') ORDER BY orderId DESC";
 
 		if(orgName !=null && !orgName.equals(""))
 		{
@@ -104,6 +104,7 @@ public class OrderDao {
 		}
 		
 		Query query = session.createQuery(hqlString);
+		query.setMaxResults(7);
 		
 		if(orgName !=null && !orgName.equals(""))
 		{

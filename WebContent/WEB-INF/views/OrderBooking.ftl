@@ -21,7 +21,12 @@
   <link href="css/typography-default.css" rel="stylesheet" >
   <link href="css/skins/light_blue.css" rel="stylesheet">
   <link href="css/custom.css" rel="stylesheet">
-</head>
+  <style>  
+	input[type=number]::-webkit-inner-spin-button {
+    opacity: 1
+    }
+  </style>
+  </head>
 <body class=" ">
   <div id="myBtn" class="modal" >
     <div class="modal-dialog" role="document">
@@ -193,8 +198,8 @@
  </tr>
  <tr>
   <td>R</td>
-  <td><input class="form-control" type='text' id='rSph' name='rSph' value=' ' /></td>
-  <td><input class="form-control" type='text' id='rCyl' name='rCyl' value=' ' /></td>
+  <td><input class="form-control" type='number' id='rSph' name='rSph' value=' ' step='0.25' /></td>
+  <td><input class="form-control" type='number' id='rCyl' name='rCyl' value=' ' step='0.25'/></td>
   <td><input class="form-control" type='text' id='rAxis' name='rAxis' value=' ' /></td>
   <td><input class="form-control" type='text' id='rAdd' name='rAdd' value=' ' /></td>
   <td><input class="form-control" type='text' id='rDia' name='rDia' value=' ' /></td>
@@ -212,8 +217,8 @@
 </tr>
 <tr>
   <td>L</td>
-  <td><input class="form-control" type='text'  id='lSph' name='lSph' value=' ' /></td>
-  <td><input class="form-control"  type='text'  id='lCyl' name='lCyl' value=' ' /></td>
+  <td><input class="form-control" type='number'  id='lSph' name='lSph' value=' ' step='0.25' /></td>
+  <td><input class="form-control"  type='number'  id='lCyl' name='lCyl' value=' ' step='0.25'/></td>
   <td><input class="form-control" type='text'  id='lAxis' name='lAxis' value=' ' /></td>
   <td><input class="form-control" type='text'  id='lAdd' name='lAdd' value=' ' /></td>
   <td><input class="form-control" type='text'  id='lDia' name='lDia' value=' ' /></td>
@@ -442,8 +447,8 @@
       + "		  </tr>"
       + "<tr class="+rowId+">"
       + "		<td>R</td>"
-      + "	   <td> <input class='form-control' type='text' name='rSph'  value='"+rSph+"' /></td>"
-      + "	   <td> <input class='form-control' type='text' name='rCyl'  value='"+rCyl+"' /></td>"
+      + "	   <td> <input class='form-control' type='text' name='rSph'  value='"+rSph+"'/></td>"
+      + "	   <td> <input class='form-control' type='text' name='rCyl'  value='"+rCyl+"'/></td>"
       + "	   <td> <input class='form-control' type='text' name='rAxis' value='"+rAxis+"' /></td>"
       + "	   <td> <input class='form-control' type='text' name='rAdd'  value='"+rAdd+"' /></td>"
       + "	   <td> <input class='form-control' type='text' name='rDia'  value='"+rDia+"' /></td>"
@@ -461,7 +466,7 @@
       + "		  </tr>"
       + "<tr class="+rowId+">"
       + "		<td>L</td>"	
-      + "	   <td> <input class='form-control' type='text' name='lSph'  value='"+lSph+"' /></td>"
+      + "	   <td> <input class='form-control' type='text' name='lSph'  value='"+lSph+"'/></td>"
       + "	   <td> <input class='form-control' type='text' name='lCyl'  value='"+lCyl+"' /></td>"
       + "	   <td> <input class='form-control' type='text' name='lAxis' value='"+lAxis+"' /></td>"
       + "	   <td> <input class='form-control' type='text' name='lAdd'  value='"+lAdd+"' /></td>"

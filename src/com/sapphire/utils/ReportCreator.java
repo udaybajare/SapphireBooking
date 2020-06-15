@@ -101,13 +101,13 @@ public class ReportCreator {
 			 * entry.getlDia() != null || entry.getlSph() != null)) { lenseSide
 			 * = "B"; } else
 			 */
-			if ((entry.getrAdd() != null || entry.getrAxis() != null || entry.getrCyl() != null
-					|| entry.getrDia() != null || entry.getrSph() != null)) {
+			if ((entry.getrAdd() != null && entry.getrAxis() != null && entry.getrCyl() != null
+					&& entry.getrDia() != null && entry.getrSph() != null)) {
 				lenseSide = "R";
 				isRPresent = true;
 			}
-			if ((entry.getlAdd() != null || entry.getlAxis() != null || entry.getlCyl() != null
-					|| entry.getlDia() != null || entry.getlSph() != null)) {
+			if ((entry.getlAdd() != null && entry.getlAxis() != null && entry.getlCyl() != null
+					&& entry.getlDia() != null && entry.getlSph() != null)) {
 				lenseSide = "L";
 				isLPresent = true;
 			}
@@ -168,23 +168,28 @@ public class ReportCreator {
 				}
 
 				Cell cellToUpdate12 = sheet.getRow(row).getCell(12, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-				cellToUpdate12.setCellValue(orerDetail.getComment());
+			    cellToUpdate12.setCellValue(orerDetail.getComment());
 
-				Cell cellToUpdate14 = sheet.getRow(row).getCell(14, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-				cellToUpdate14.setCellValue(sph);
+				Cell cellToUpdate13 = sheet.getRow(row).getCell(13, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+				cellToUpdate13.setCellValue(orerDetail.getStatus());
+
+				
 				Cell cellToUpdate15 = sheet.getRow(row).getCell(15, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-				cellToUpdate15.setCellValue(cyl);
+				cellToUpdate15.setCellValue(sph);
 				Cell cellToUpdate16 = sheet.getRow(row).getCell(16, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-				cellToUpdate16.setCellValue(Integer.sum(sph, cyl));
+				cellToUpdate16.setCellValue(cyl);
 				Cell cellToUpdate17 = sheet.getRow(row).getCell(17, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-				cellToUpdate17.setCellValue(1);
+				cellToUpdate17.setCellValue(Integer.sum(sph, cyl));
+				Cell cellToUpdate18 = sheet.getRow(row).getCell(18, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+				cellToUpdate18.setCellValue(1);
 			}
 
 			if (isLPresent) {
 
 				// Go to next row
+				if(isRPresent){
 				row++;
-				nextRow++;
+				nextRow++;}
 
 				Cell cellToUpdate0 = sheet.getRow(row).getCell(0);
 				cellToUpdate0.setCellValue(get4DigitNumber(orerDetail.getOrderId()));
@@ -235,15 +240,17 @@ public class ReportCreator {
 
 				Cell cellToUpdate12 = sheet.getRow(row).getCell(12, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
 				cellToUpdate12.setCellValue(orerDetail.getComment());
+				Cell cellToUpdate13 = sheet.getRow(row).getCell(13, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+				cellToUpdate13.setCellValue(orerDetail.getStatus());
 
-				Cell cellToUpdate14 = sheet.getRow(row).getCell(14, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-				cellToUpdate14.setCellValue(sph);
 				Cell cellToUpdate15 = sheet.getRow(row).getCell(15, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-				cellToUpdate15.setCellValue(cyl);
+				cellToUpdate15.setCellValue(sph);
 				Cell cellToUpdate16 = sheet.getRow(row).getCell(16, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-				cellToUpdate16.setCellValue(Integer.sum(sph, cyl));
+				cellToUpdate16.setCellValue(cyl);
 				Cell cellToUpdate17 = sheet.getRow(row).getCell(17, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-				cellToUpdate17.setCellValue(1);
+				cellToUpdate17.setCellValue(Integer.sum(sph, cyl));
+				Cell cellToUpdate18 = sheet.getRow(row).getCell(18, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+				cellToUpdate18.setCellValue(1);
 			}
 
 			i++;

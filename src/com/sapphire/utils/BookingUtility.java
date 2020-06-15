@@ -649,7 +649,7 @@ public class BookingUtility {
 
 	public static final String statusUpdateSection = "<div class=\"modal-footer\"><h4>Mark As</h4>"
 			+ "<form id=\"reject\" action=\"updateStatus\" method=\"POST\"><input type=\"hidden\" name=\"orderId\" value=\"orderNo\">"
-			+ "<input type=\"hidden\" name=\"status\" value=\"rejected\"><button type=\"submit\" class=\"btn btn-sm btn-default\" >Reject</button></form>"
+			+ "<input type=\"hidden\" name=\"status\" value=\"CancleOrder\"><button type=\"submit\" class=\"btn btn-sm btn-default\" >Cancle Order</button></form>"
 			+ "<form id=\"accept\" action=\"updateStatus\" method=\"POST\"><input type=\"hidden\" name=\"orderId\" value=\"orderNo\">"
 			+ "<input type=\"hidden\" name=\"status\" value=\"accepted\">"
 			+ "<button type=\"submit\" class=\"btn btn-sm btn-default\" >Accept</button></form>"
