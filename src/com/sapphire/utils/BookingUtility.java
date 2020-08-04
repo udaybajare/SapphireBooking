@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.sapphire.dao.CRPriceDao;
 import com.sapphire.dao.CRPriceReadyStockDao;
 import com.sapphire.dao.GlassPriceDao;
+import com.sapphire.dao.GlassPriceReadyStockDao;
 import com.sapphire.dao.OrderDao;
 import com.sapphire.dao.RegistrationDao;
 import com.sapphire.entity.CRPrise;
@@ -34,6 +35,9 @@ public class BookingUtility {
 
 	@Autowired
 	CRPriceReadyStockDao crPriseReadyStockDao;
+	
+	@Autowired
+	GlassPriceReadyStockDao glassPriceReadyStockDao;
 
 	@Autowired
 	RegistrationDao registrationDao;
@@ -158,6 +162,103 @@ public class BookingUtility {
 
 		return unitPrice;
 	}
+	
+	public int getGlassLensePriceReadyStock(Float sph, Float cyl, String tint, String type) {
+
+		boolean onlyCylOrSph = false;
+
+		if (null == sph && cyl != null || cyl == null && sph != null) {
+			onlyCylOrSph = true;
+		}
+
+		String Sph = Float.toString(Math.abs(sph));
+		String Cyl = Float.toString(Math.abs(cyl));
+
+		String posNegToSelectSph ="P";
+		String posNegToSelectCyl ="P";
+		
+		if (sph <= 0) {
+			posNegToSelectSph ="N";
+		}
+		
+
+		if (cyl <= 0) {
+			posNegToSelectCyl = "N";
+		}
+
+		String columnFromNP = "_"+posNegToSelectSph + posNegToSelectCyl ;
+		
+		
+		String typeToSelect = "";
+		
+
+		if(type.equalsIgnoreCase("Single Vision") ) {
+					typeToSelect = "_SV";
+		}
+		else{
+			typeToSelect = "_KT";
+		}
+		String columnToSelect = "";
+
+		switch (tint) {
+		case "Clear":
+			columnToSelect = "W" + typeToSelect;
+			break;
+
+		case "PG":
+			columnToSelect = "PG" + typeToSelect ;
+			break;
+
+				}
+		
+
+		int unitPrice = 0;
+		try {
+			
+			if(typeToSelect.equals("_KT")){
+				
+				if(Sph != null && Cyl.equalsIgnoreCase("0.0")){
+					System.out.println("hello sph is present.");
+					 columnToSelect += "_"+posNegToSelectSph;
+					 Cyl = "0.0";
+					// unitPrice = glassPriceReadyStockDao.getUnitPrice(Sph, Cyl, columnToSelect);
+				}
+				if(Cyl != null && Sph.equalsIgnoreCase("0.0")){
+					System.out.println("hello cyl is present.");
+					  Sph = "0.0";
+					//unitPrice = glassPriceReadyStockDao.getUnitPrice(Sph, Cyl, columnToSelect);}
+			}
+			}
+			else{
+				columnToSelect += columnFromNP;
+				//unitPrice = glassPriceReadyStockDao.getUnitPrice(Sph, Cyl, columnToSelect);
+			}
+			unitPrice = glassPriceReadyStockDao.getUnitPrice(Sph, Cyl, columnToSelect);
+				
+				
+
+				
+			
+		} catch (Exception ex) {
+			if(unitPrice == 0){
+				
+				int sphInt = (int) Math.ceil(Math.abs(sph));
+				int cylInt = (int) Math.ceil(Math.abs(cyl));
+				String sphStr = String.valueOf(sphInt); 
+				String cylStr = String.valueOf(cylInt);
+				unitPrice = glassPriceReadyStockDao.getUnitPrice(sphStr, cylStr, columnToSelect);
+				
+			}else{
+			System.out.println("Glass Combination not found in DB. Price will be decided manually.");}
+		}
+
+		unitPrice = unitPrice / 2;
+
+		System.out.println("unitPrice is " + unitPrice);
+
+		return unitPrice;
+	}
+
 
 	public int getCRLensePrice(String type, String tint, String index, String sph, String cyl, String coating) {
 
@@ -290,8 +391,7 @@ public class BookingUtility {
 		}
 		Integer unitPrise = 0;
 		try {
-			ArrayList<CRPriseReadyStock> crPriceList = (ArrayList<CRPriseReadyStock>) crPriseReadyStockDao
-					.getUnitPrice(type, tint, index, coating, dia, axis);
+			ArrayList<CRPriseReadyStock> crPriceList = (ArrayList<CRPriseReadyStock>) crPriseReadyStockDao.getUnitPrice(type, tint, index, coating, dia, axis);
 
 			Comparator<CRPriseReadyStock> compareById = (CRPriseReadyStock o1, CRPriseReadyStock o2) -> Double.valueOf(o2.getSphUpto())
 					.compareTo(Double.valueOf(o1.getSphUpto()));
@@ -347,7 +447,6 @@ public class BookingUtility {
 
 		String orderContent = "";
 		double totalAmount = 0;
-
 		// A + x + x + B
 
 		// A if(Admin) +l if(Admin)+k + n(x+if(Admin)s+if(Admin)p)
@@ -564,19 +663,38 @@ public class BookingUtility {
 
 				if (material.equalsIgnoreCase("Glass")) {
 
+					if (rSourcing.equalsIgnoreCase("Factory Order")) 
+					{
 					rPrise = getGlassLensePrice(
 							rSph != null && !(rSph.trim().equals("")) ? Float.parseFloat(rSph) : null,
 							rCyl != null && !(rCyl.trim().equals("")) ? Float.parseFloat(rCyl) : null, tint, type);
+					}
+					else if (rSourcing.equalsIgnoreCase("Ready Stock"))
+					{
+						rPrise = getGlassLensePriceReadyStock(rSph != null && !(rSph.trim().equals("")) ? Float.parseFloat(rSph) : null,
+								rCyl != null && !(rCyl.trim().equals("")) ? Float.parseFloat(rCyl) : null, tint, type);
+						
+					}
+					if (lSourcing.equalsIgnoreCase("Factory Order"))
+					{
 
 					lPrise = getGlassLensePrice(
 							lSph != null && !(lSph.trim().equals("")) ? Float.parseFloat(lSph) : null,
 							lCyl != null && !(lCyl.trim().equals("")) ? Float.parseFloat(lCyl) : null, tint, type);
+					}
+					else if (lSourcing.equalsIgnoreCase("Ready Stock")) 
+					{
+						lPrise = getGlassLensePriceReadyStock(lSph != null && !(lSph.trim().equals("")) ? Float.parseFloat(lSph) : null,
+								lCyl != null && !(lCyl.trim().equals("")) ? Float.parseFloat(lCyl) : null, tint, type);
+						
+					}
 
 			} else if (material.equalsIgnoreCase("CR")) {
 
 				if (rSourcing.equalsIgnoreCase("Factory Order")) 
 				{
-					rPrise = getCRLensePrice(type, tint, index, rSph != null && !(rSph.trim().equals("")) ? rSph : null,
+					rPrise = getCRLensePrice(type, tint, index, 
+							rSph != null && !(rSph.trim().equals("")) ? rSph : null,
 							rCyl != null && !(rCyl.trim().equals("")) ? rCyl : null, coating);
 				} 
 				else if (rSourcing.equalsIgnoreCase("Ready Stock"))
@@ -598,7 +716,7 @@ public class BookingUtility {
 				} 
 				else if (lSourcing.equalsIgnoreCase("Ready Stock")) 
 				{
-					rPrise = getReadyStockCRPrice(type, tint, index, 
+					lPrise = getReadyStockCRPrice(type, tint, index, 
 							lSph != null && !(lSph.trim().equals("")) ? lSph : null,
 							lCyl != null && !(lCyl.trim().equals("")) ? lCyl : null, 
 							coating, 

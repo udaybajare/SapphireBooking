@@ -16,9 +16,11 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import com.sapphire.dao.CRPriceDao;
 import com.sapphire.dao.CRPriceReadyStockDao;
 import com.sapphire.dao.GlassPriceDao;
+import com.sapphire.dao.GlassPriceReadyStockDao;
 import com.sapphire.entity.CRPrise;
 import com.sapphire.entity.CRPriseReadyStock;
 import com.sapphire.entity.GlassPrice;
+import com.sapphire.entity.GlassPriceReadyStock;
 
 @Controller
 @EnableWebMvc
@@ -32,6 +34,12 @@ public class PirceController {
 
 	@Autowired
 	GlassPriceDao glassPriceDao;
+	
+	@Autowired
+	GlassPriceReadyStockDao glassPriceReadyStockDao;
+
+	
+	
 
 	@RequestMapping(value = "showPriceList", method = RequestMethod.GET)
 	public ModelAndView showPriceList() {
@@ -123,8 +131,7 @@ public class PirceController {
 
 		// CR Price for ready Stock Orders
 
-		ArrayList<CRPriseReadyStock> crPriseReadyStockList = (ArrayList<CRPriseReadyStock>) crPriceReadyStockDao
-				.getPriceList();
+		ArrayList<CRPriseReadyStock> crPriseReadyStockList = (ArrayList<CRPriseReadyStock>) crPriceReadyStockDao.getPriceList();
 
 		StringBuffer crPriceReadyStockDetails = new StringBuffer();
 
@@ -154,12 +161,42 @@ public class PirceController {
 			crPriceReadyStockDetails.append("</tr>");
 
 		}
+		
+		//Glass Price for ready stock 
+		//Take all data from db and insert into input
+		//creaate stringBuffer for glassReadyStock
+		ArrayList<GlassPriceReadyStock> glassPriceReadyStockList = (ArrayList<GlassPriceReadyStock>) glassPriceReadyStockDao.getPriceList();
+		StringBuffer glassPriceReadyStockDetails = new StringBuffer();
+		int index1 = 1;
+		for(GlassPriceReadyStock glassPriceReadyStock:glassPriceReadyStockList){
+			glassPriceReadyStockDetails.append("<tr>");
+			
+			glassPriceReadyStockDetails.append("<td><input type='text' name='Sph' value='"+ glassPriceReadyStock.getSph() +"' style='width: 76px;'></td>");
+			glassPriceReadyStockDetails.append("<td><input type='text' name='Cyl' value='" + glassPriceReadyStock.getCyl() +"' style='width: 76px;'></td>");
+			glassPriceReadyStockDetails.append("<td><input type='text' name='W_SV_NN' value='"+ glassPriceReadyStock.getW_SV_NN() +"' style='width: 76px;'></td>");
+			glassPriceReadyStockDetails.append("<td><input type='text' name='W_SV_PP' value='"+ glassPriceReadyStock.getW_SV_PP() +"' style='width: 76px;'></td>");
+			glassPriceReadyStockDetails.append("<td><input type='text' name='W_SV_PN' value='"+ glassPriceReadyStock.getW_SV_PN() +"' style='width: 76px;'></td>");
+			glassPriceReadyStockDetails.append("<td><input type='text' name='PG_SV_NN' value='"+ glassPriceReadyStock.getPG_SV_NN() +"' style='width: 76px;'></td>");
+			glassPriceReadyStockDetails.append("<td><input type='text' name='PG_SV_PP' value='"+ glassPriceReadyStock.getPG_SV_PP() +"' style='width: 76px;'></td>");
+			glassPriceReadyStockDetails.append("<td><input type='text' name='PG_SV_PN' value='"+ glassPriceReadyStock.getPG_SV_PN() +"' style='width: 76px;'></td>");
+			glassPriceReadyStockDetails.append("<td><input type='text' name='W_KT_P' value='"+ glassPriceReadyStock.getW_KT_P() +"' style='width: 76px;'></td>");
+			glassPriceReadyStockDetails.append("<td><input type='text' name='W_KT_N' value='"+ glassPriceReadyStock.getW_KT_N() +"' style='width: 76px;'></td>");
+			glassPriceReadyStockDetails.append("<td><input type='text' name='PG_KT_P' value='"+ glassPriceReadyStock.getPG_KT_P() +"' style='width: 76px;'></td>");
+			glassPriceReadyStockDetails.append("<td><input type='text' name='PG_KT_N' value='"+ glassPriceReadyStock.getPG_KT_N() +"' style='width: 76px;'></td>");
+			glassPriceReadyStockDetails.append("<td><input type='text' name='W_KT' value='"+ glassPriceReadyStock.getW_KT() +"' style='width: 76px;'></td>");
+			glassPriceReadyStockDetails.append("<td><input type='text' name='PG_KT' value='"+ glassPriceReadyStock.getPG_KT() +"' style='width: 76px;'></td>");
+
+			glassPriceReadyStockDetails.append("</tr>");
+			
+			index1++;
+		}
 
 		modelAndView.setViewName("showPriceList");
 
 		modelAndView.addObject("glassPriceDetails", glassPriceDetails.toString());
 		modelAndView.addObject("crPriceDetails", crPriceDetails.toString());
 		modelAndView.addObject("crPriceReadyStockDetails", crPriceReadyStockDetails.toString());
+		modelAndView.addObject("glassPriceReadyStockDetails", glassPriceReadyStockDetails.toString());
 		return modelAndView;
 	}
 
@@ -203,11 +240,33 @@ public class PirceController {
 			String[] coating, String[] dia, String[] sphUpto, String[] cylUpto, String[] axis, String[] uc, String[] hc,
 			String[] arc) {
 
+		System.out.println("I m here in array "+typeVal.length);
 		for (int i = 0; i < typeVal.length; i++) {
 
 			CRPriseReadyStock crPrice = new CRPriseReadyStock(i + 1, typeVal[i], tint[i], indexVal[i], coating[i],
 					dia[i], sphUpto[i], cylUpto[i], axis[i], uc[i], hc[i], arc[i]);
 			crPriceReadyStockDao.saveOrUpdate(crPrice);
+
+		}
+
+		return "true";
+	}
+	
+	
+
+	@RequestMapping(value = "updateGlasspriceReadyStockList", method = RequestMethod.POST)
+	public @ResponseBody String updateGlasspriceReadyStockList(String[] Sph, String[] Cyl, String[] W_SV_NN,
+			String[] W_SV_PP, String[] W_SV_PN, String[] PG_SV_NN, String[] PG_SV_PP,
+			String[] PG_SV_PN, String[] W_KT_P, String[] W_KT_N, String[] PG_KT_P,
+			String[] PG_KT_N, String[] W_KT, String[] PG_KT) {
+		
+		System.out.println("I m here in array "+Sph.length);
+
+		for (int i = 0; i < Sph.length ; i++) {
+
+			GlassPriceReadyStock glassPrice = new GlassPriceReadyStock(Sph[i], Cyl[i], W_SV_NN[i], W_SV_PP[i], W_SV_PN[i], PG_SV_NN[i], PG_SV_PP[i], PG_SV_PN[i], W_KT_P[i], W_KT_N[i], PG_KT_P[i], PG_KT_N[i], W_KT[i], PG_KT[i] );
+			glassPrice.setId(i+1);
+			glassPriceReadyStockDao.saveOrUpdate(glassPrice);
 
 		}
 

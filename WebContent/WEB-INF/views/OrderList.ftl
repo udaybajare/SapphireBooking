@@ -97,7 +97,7 @@
           <option value="processing" >Processing</option>
           <option value="readyToDeliver">Ready To Deliver</option>
           <option value="delivered" >Delivered</option>
-          <option value="Rejected" >Rejected</option>
+          <option value="CancleOrder" >Cancle Ordered</option>
         </select>
         <input type="text" id="datepicker" class="form-control fromDate" style="margin-left: 2%;" placeholder = "select from date">
         <input type="text" id="datepicker1" class="form-control toDate" style="margin-left: 2%;" placeholder = "select to date">

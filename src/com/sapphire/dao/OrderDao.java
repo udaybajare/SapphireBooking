@@ -96,13 +96,14 @@ public class OrderDao {
 	@Transactional
 	public ArrayList<Integer> getAllOrdersIds(String orgName) {
 		Session session = sessionFactory.getCurrentSession();
-		String hqlString = "select DISTINCT orderId from OrderDetails WHERE status NOT IN ('delivered') ORDER BY orderId DESC";
+		String hqlString = "select DISTINCT orderId from OrderDetails WHERE status NOT IN ('delivered') ";
 
 		if(orgName !=null && !orgName.equals(""))
 		{
 			hqlString = hqlString + " and organizationName=:orgName";
 		}
-		
+		 
+		hqlString = hqlString + " ORDER BY orderId DESC";		
 		Query query = session.createQuery(hqlString);
 		query.setMaxResults(7);
 		
@@ -144,7 +145,6 @@ public class OrderDao {
 	}
 
 	@Transactional
-
 	public ArrayList<Integer> getOrderDetailsFromCriteriaAndDate(String criteria, String criteriaVal, String fromDate,
 			String toDate, String organizationName) {
 		Session session = sessionFactory.getCurrentSession();

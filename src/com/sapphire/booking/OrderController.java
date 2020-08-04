@@ -251,9 +251,11 @@ public class OrderController {
 	}
 
 	@RequestMapping(value = "/listOrdersHTML", method = RequestMethod.POST)
-	protected @ResponseBody String listOrders(String criteria, String criteriaValue, String fromDate, String toDate,
+	protected  @ResponseBody  String listOrders(String criteria, String criteriaValue, String fromDate, String toDate,
 			HttpSession session) throws Exception {
 
+		ModelAndView modelAndView = new ModelAndView(ORDER_LIST);
+		
 		String userRole = "";
 		String orgName = null;
 
@@ -308,6 +310,8 @@ public class OrderController {
 		} else {
 			return "No matching orders found.";
 		}
+		
+	
 	}
 
 	@RequestMapping(value = "/generateReport", method = RequestMethod.POST)

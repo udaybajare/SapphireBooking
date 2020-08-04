@@ -148,7 +148,31 @@
       <div class="row">
         <div class="col-md-12">
           <table class="table table-striped table-colored">
+          	<thead>
+          		<tr>
+          		<th>Sph</th>
+          		<th>Cyl</th>
+          		<th>W_SV_NN</th>
+          		<th>W_SV_PP</th>
+          		<th>W_SV_PN</th>
+          		<th>PG_SV_NN</th>
+          		<th>PG_SV_PP</th>
+          		<th>PG_SV_PN</th>
+          		<th>W_KT_P</th>
+          		<th>W_KT_N</th>
+          		<th>PG_KT_P</th>
+          		<th>PG_KT_N</th>
+          		<th>W_KT</th>
+          		<th>PG_KT</th>
+          		</tr>
+          	</thead>
+          	<form id="updateGlasspriceReadyStockList" action="updateGlasspriceReadyStockList" method="POST">
+          	<tbody>
+          	${glassPriceReadyStockDetails}
+          	</tbody>
           </table>
+           <input id="updateGlassPriceReadyStockBtn" type="submit" class="btn btn-primary mt-5" value="Update">
+           </form>
         </div>
       </div>
     </div>
@@ -249,6 +273,29 @@
      data : $('#updateCRPriceList').serialize(),
    // data : $('#updateGlassPriceList').clone(true,true).serialize(),
    success: function(data) 
+   {
+    alert("Price updated Successfully..!!");
+    console.log(" Received data from BE");
+    console.log(data);             
+  }
+});
+
+ });
+
+</script>
+
+<script type="text/javascript">
+
+  $('#updateGlassPriceReadyStockBtn').on('click', function(e){
+
+   e.preventDefault(); 
+
+   var ajaxReq = $.ajax({
+     url : 'updateGlasspriceReadyStockList',
+     type : 'POST',
+     data : $('#updateGlasspriceReadyStockList').serialize(),
+      
+     success: function(data) 
    {
     alert("Price updated Successfully..!!");
     console.log(" Received data from BE");
