@@ -214,7 +214,7 @@ public class OrderController {
 
 		}
 
-		orderIdList = orderDao.getAllOrdersIds(orgName);
+		orderIdList = orderDao.getAllOrdersIds(orgName, userRole.equalsIgnoreCase("Admin"));
 
 		StringBuilder orderListHTML = new StringBuilder();
 
@@ -306,6 +306,9 @@ public class OrderController {
 		}
 
 		if (!(orderListHTML.toString().trim().equals(""))) {
+			
+			System.out.println("orderListHTML is : "+orderListHTML.toString());
+			
 			return orderListHTML.toString();
 		} else {
 			return "No matching orders found.";
@@ -392,7 +395,7 @@ public class OrderController {
 								lDia.length>=i+1?lDia[i]:"", 
 								lSourcing.length>=i+1?lSourcing[i]:"", 
 								coating[i],
-								index[i], qtyNos[i]);
+								index[i], qtyNos[i], fitting[i]);
 
 				// Add fitting price as well
 				// totalPrice = totalPrice + FittingPrice
@@ -437,7 +440,7 @@ public class OrderController {
 	protected @ResponseBody String getItemWisePrice(String[] material, String[] type, String[] index, String[] coating,
 			String[] tint, String[] qtyNos, String[] frameType, String[] lSourcing, String[] rSourcing, String[] rSph, String[] rCyl,
 			String[] rAxis, String[] rAdd, String[] rDia, String[] lSph, String[] lCyl, String[] lAxis, String[] lAdd,
-			String[] lDia) {
+			String[] lDia, String[] fitting) {
 		StringBuilder priseList = new StringBuilder();
 
 		for (int i = 0; i < material.length; i++) {
@@ -455,7 +458,7 @@ public class OrderController {
 					lDia.length>=i+1?lDia[i]:"", 
 					lSourcing.length>=i+1?lSourcing[i]:"", 
 					coating[i],
-					index[i], qtyNos[i]);
+					index[i], qtyNos[i], fitting[i]);
 
 			priseList.append(String.valueOf(lensPrice.getTotalPrice()) + ",");
 

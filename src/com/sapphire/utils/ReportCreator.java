@@ -48,6 +48,11 @@ public class ReportCreator {
 	@Autowired
 	OrganizationDao organizationDao;
 
+	@Autowired
+	NumberWordConverter numberToWord;
+
+	@Autowired
+	BookingUtility bookingUtility;
 	public byte[] writeExcel(ArrayList<OrderDetails> orerDetailList) throws IOException {
 
 		Workbook workbook = null;
@@ -101,13 +106,22 @@ public class ReportCreator {
 			 * entry.getlDia() != null || entry.getlSph() != null)) { lenseSide
 			 * = "B"; } else
 			 */
-			if ((entry.getrAdd() != null && entry.getrAxis() != null && entry.getrCyl() != null
-					&& entry.getrDia() != null && entry.getrSph() != null)) {
+			if ((BookingUtility.notNullOrBlank(entry.getrAdd()) 
+					|| BookingUtility.notNullOrBlank(entry.getrAxis()) 
+					|| BookingUtility.notNullOrBlank(entry.getrCyl())
+					|| BookingUtility.notNullOrBlank(entry.getrDia()) 
+					|| BookingUtility.notNullOrBlank(entry.getrSph()))) 
+			{
 				lenseSide = "R";
 				isRPresent = true;
 			}
-			if ((entry.getlAdd() != null && entry.getlAxis() != null && entry.getlCyl() != null
-					&& entry.getlDia() != null && entry.getlSph() != null)) {
+			
+			if ((BookingUtility.notNullOrBlank(entry.getlAdd()) 
+					|| BookingUtility.notNullOrBlank(entry.getlAxis())
+					|| BookingUtility.notNullOrBlank(entry.getlCyl())
+					|| BookingUtility.notNullOrBlank(entry.getlDia())
+					|| BookingUtility.notNullOrBlank(entry.getlSph()))) 
+			{
 				lenseSide = "L";
 				isLPresent = true;
 			}
@@ -119,7 +133,8 @@ public class ReportCreator {
 
 			String customerNo = cuetomerDetailsMap.get(orerDetail.getOrganizationName());
 
-			if (isRPresent) {
+			if(isRPresent) 
+			{
 				Cell cellToUpdate0 = sheet.getRow(row).getCell(0);
 				cellToUpdate0.setCellValue(get4DigitNumber(orerDetail.getOrderId()));
 
@@ -531,8 +546,7 @@ public class ReportCreator {
 			Double totalInvoiceAmount = (double) Math.round(invoiceTotal);
 
 			sheet.getRow(24).getCell(7).setCellValue(totalInvoiceAmount);
-
-			NumberWordConverter numberToWord = new NumberWordConverter();
+			 
 			String totalInWord = numberToWord.convert(totalInvoiceAmount);
 			sheet.getRow(26).getCell(1).setCellValue(totalInWord);
 			// for loop

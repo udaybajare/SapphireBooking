@@ -468,7 +468,7 @@ public class BookingUtility {
 			}
 
 			if ((entryDetails.getlSph() != null && !(entryDetails.getlSph().trim().equals("")))
-					|| (entryDetails.getlCyl() != null && entryDetails.getlCyl().trim().equals(""))) {
+					|| (entryDetails.getlCyl() != null &&  !(entryDetails.getlCyl().trim().equals("")))) {
 				isLeftPresent = true;
 			}
 
@@ -593,7 +593,7 @@ public class BookingUtility {
 			orderContent = orderContent.replace("lPrice", String.valueOf(itemPrice));
 			orderContent = orderContent.replace("rPrice", String.valueOf(itemPrice));
 
-			orderContent = orderContent.replace("custOrdNo", orderDetails.getCustOrderNumber());
+			orderContent = orderContent.replace("custOrdNo", null==orderDetails.getCustOrderNumber()?"":orderDetails.getCustOrderNumber());
 			orderContent = orderContent.replace("itemPriceStr", String.valueOf(itemPrice));
 		}
 
@@ -653,7 +653,7 @@ public class BookingUtility {
 
 	public LensPrices getPrise(String material, String rSph, String rCyl, String rAxis, String rDia, String rSourcing, String tint,
 			String type, String lSph, String lCyl, String lAxis, String lDia, String lSourcing, String coating, String index,
-			String qtyNos) {
+			String qtyNos, String fitting) {
 
 		int totalPrice = 0;
 		int rPrise = 0;
@@ -730,18 +730,26 @@ public class BookingUtility {
 					lPrise = lPrise != 0 ? Math.addExact(lPrise, 25) : lPrise;
 				}
 
-			}
-			
+			}			
 
 			int remainder = 10 - (lPrise + rPrise) % 10;
 
 			if (remainder == 10) {
 				remainder = 0;
 			}
+			
 			totalPrice = ((((lPrise + rPrise) + remainder) / 10) * 10) * Integer.parseInt(qtyNos);
+			
+			if("With Fitting".equalsIgnoreCase(fitting))
+			{
+				//adding Rs 50 for fittings
+				totalPrice += 50; 
+			}			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		return new LensPrices(lPrise, rPrise, totalPrice);
 	}
 
@@ -751,13 +759,13 @@ public class BookingUtility {
 			+ "OrderId: orderNo Organization: organizationName Booked By: fullName on Date: orderDate</h4>"
 			+ "<div class=\"row\"><div class=\"col-md-4\"></div><div class=\"col-md-4\">"
 			+ "<button type=\"button\" class=\"btn btn-default\" data-toggle=\"modal\" data-target=\"#myModalStr\">Order Status Details</button></div>"
-			+ "<div class=\"col-md-4\"><br><h5>currentStatus</h5></div></div>"
+			+ "<div class=\"col-md-4\"><br><h5>currentStatus</h5></div></div></div></div></div>%%%"
 			+ "<div class=\"modal fade\" id=\"myModalStr\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">"
 			+ "<div class=\"modal-dialog\" role=\"document\"><div class=\"modal-content\">"
 			+ "<div class=\"modal-header\"><h4 class=\"modal-title\" id=\"myModalLabel\">OrderId is : orderNo</h4><button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">"
 			+ "<span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>"
 			+ "</div><div class=\"modal-body\">orderDetailsContent<p>Current Status : currentStatus</p>updateOrderSection</div>statusUpdateSection"
-			+ "</div></div></div></div></div></div>";
+			+ "</div></div></div>%%%";
 
 	public static final String updateOrderSection = "<form action=\"updateTotal\" method=\"POST\"><p>	Total Amount : <input type =\"text\" name =\"totalAmount\" readonly=\"true\" value=\"totalAmountStr\">"
 			+ "</p><p>Comments : <input type=\"text\" name=\"comment\" value=\"\"></p>"
@@ -777,14 +785,19 @@ public class BookingUtility {
 			+ "<form id=\"ready\" action=\"updateStatus\" method=\"POST\"><input type=\"hidden\" name=\"orderId\" value=\"orderNo\"><input type=\"hidden\" name=\"status\" value=\"readyToDeliver\">"
 			+ "<button type=\"submit\" class=\"btn btn-sm btn-default\" >Ready to Deliver</button></form>"
 			+ "<form id=\"deliver\" action=\"updateStatus\" method=\"POST\"><input type=\"hidden\" name=\"orderId\" value=\"orderNo\">"
-			+ "<input type=\"hidden\" name=\"status\" value=\"delivered\"><button type=\"submit\" class=\"btn btn-sm btn-default\" >Delivered</button></form></div>";
+			+ "<input type=\"hidden\" name=\"status\" value=\"Complete\"><button type=\"submit\" class=\"btn btn-sm btn-default\" >Completed</button></form></div>";
 
 	public static final String orderDetailsContentHTMLStart = "<p><b>SubOrder NO</b>: subOrderId <b>Material</b>: material <b>Type</b> : typeStr <b>Quantity</b> : qtyNos <b>Index</b> : index1 <b>Coating</b> : coatingStr <b>Tint</b> : tintStr <b>Frame Type</b> : frameType</p>"
-			+ "		<table class='table table-striped'>" + "			<thead>" + "				<tr>"
+			+ "		<table class='table table-striped'>"  
+			+ "			<thead>" 
+			+ "				<tr>"
 			+ "					<th>LENS SIDE</th>" + "					<th>SPH</th> "
 			+ "					<th>CYL</th>" + "					<th>AXIS</th>    "
 			+ "					<th>ADD</th>    " + "					<th>DIA</th>"
-			+ "					<th>Sourcing</th>" + "			</thead>" + "			<tbody>  ";
+			+ "					<th>Sourcing</th>" 
+			+ "				</tr>"
+			+ "			</thead>" 
+			+ "			<tbody>  ";
 
 	public static final String orderDetailsContentHTMLRight = "					<tr>    "
 			+ "						<td>R</td>    " + "						<td>rSph</td>    "
@@ -805,7 +818,7 @@ public class BookingUtility {
 			+ "<option selectedFactory value=\"Factory Order\">Factory Order</option>"
 			+ "<option selectedReady value=\"Ready Stock\">Ready Stock</option>" + "</select>";
 
-	public static final String printButton = "<button type='button' class='btn btn-sm btn-default' style=\"margin-left:50%;\" onClick='printItem(\"orderIdStr\");'>Print</button>";
+	public static final String printButton = "<button type='button' class='btn btn-sm btn-default addToPrint' style=\"margin-left:30%;\" onClick='addItemToPrint(\"orderIdStr\");'>Select</button> <button type='button' class='btn btn-sm btn-default removeFromPrint' style=\"margin-left:5%;\" onClick='removeFromPrintList(\"orderIdStr\");'>Remove</button>";
 
 	public static final String orderDetailsContentPrintSTART = "			<div style='display:none;margin-left:35%;' id='orderIdStr' >";
 

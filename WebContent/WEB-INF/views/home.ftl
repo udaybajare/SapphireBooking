@@ -223,12 +223,6 @@
 	<!-- Custom Scripts -->
 	<script src="js/custom.js"></script>
 
-	<script src="template/plugins/rs-plugin-5/js/extensions/revolution.extension.slideanims.min.js"></script>
-	<script src="template/plugins/rs-plugin-5/js/extensions/revolution.extension.slideanims.min.js"></script>
-	<script src="template/plugins/rs-plugin-5/js/extensions/revolution.extension.actions.min.js"></script>
-	<script src="template/plugins/rs-plugin-5/js/extensions/revolution.extension.layeranimation.min.js"></script>
-	<script src="template/plugins/rs-plugin-5/js/extensions/revolution.extension.kenburn.min.js"></script>
-
 	<script>
 		$( document ).ready(function(){
 			if($('.firstRow').find('div.col-md-3').length===3)

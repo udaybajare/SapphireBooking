@@ -29,6 +29,7 @@
   <link href="css/skins/light_blue.css" rel="stylesheet">
 
   <link href="css/custom.css" rel="stylesheet">
+  <link href="css/jquery-ui.css" rel="stylesheet">
   
 </head>
 
@@ -69,8 +70,8 @@
    </div>
    
    <section class="main-container">
-
     <div class="container">
+      
 
       <h2 class="mt-5">Search Orders</h2>
 
@@ -82,6 +83,7 @@
           <option value="organizationName">Organization</option>
           <option value="userName">Booked By</option>
           <option value="status">Order Status</option>
+          <option value="orderDate">Date Range</option>
           
         </select>
         <label class="sr-only" for="inlineFormInputGroup">Value</label>
@@ -96,23 +98,33 @@
           <option value="accepted">Accepted</option>
           <option value="processing" >Processing</option>
           <option value="readyToDeliver">Ready To Deliver</option>
-          <option value="delivered" >Delivered</option>
-          <option value="CancleOrder" >Cancle Ordered</option>
+
+          <option value="Complete" >Completed</option>
+          <option value="Rejected" >Rejected</option>
         </select>
         <input type="text" id="datepicker" class="form-control fromDate" style="margin-left: 2%;" placeholder = "select from date">
         <input type="text" id="datepicker1" class="form-control toDate" style="margin-left: 2%;" placeholder = "select to date">
       </div>
 
-      <button type="button" class="btn btn-default" onClick="searchOrder()" style="margin-left: 3%;">Submit</button>
+      <button type="button" class="btn btn-default" onClick="searchOrder()" style="margin-left: 2%;">Submit</button>
       ${generateButton}
-
+      <input type="button" class="btn btn-default" onClick="addToPrintAreaAndPrint()" style="margin-left: 2%;" value="Print Selected"/>
     </form>
+    <div class="alert alert-success" id="success-alert" style="display: none;">
+      <button type="button" class="close" data-dismiss="alert">x</button>
+      <strong>Added</strong> to Print List.
+    </div>
+    <div class="alert alert-success" id="removed-alert" style="display: none;">
+      <button type="button" class="close" data-dismiss="alert">x</button>
+      <strong>Removed</strong> from Print List.
+    </div>    
+    <div id="cominePrint" style="display:none;">
+    </div>	
     <div id="orders">
       ${orderList}
     </div>
   </div>
-
-
+</script>
 </section>
 <div class="subfooter" style="margin-top: 17%;">
   <div class="container">
@@ -129,7 +141,8 @@
 </footer>
 </div>
 
-// <script src="plugins/jquery.min.js"></script>
+<script src="plugins/jquery-3.3.1.min.js"></script>
+<script src="plugins/jquery-ui.min.js"></script>
 <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="plugins/magnific-popup/jquery.magnific-popup.min.js"></script>
 <script src="plugins/waypoints/jquery.waypoints.min.js"></script>
@@ -140,12 +153,28 @@
 <script src="js/template.js"></script>
 <script src="js/custom.js"></script>
 
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
 <script src="plugins/printThis.js"></script>
 
+<script>
+  function showAdded()
+  {
+
+    $("#success-alert").fadeTo(2000, 500).slideUp(500, function() {
+      $("#success-alert").slideUp(500);
+    });
+
+
+  }
+  
+  function showRemoved()
+  {  
+
+    $("#removed-alert").fadeTo(2000, 500).slideUp(500, function() {
+      $("#removed-alert").slideUp(500);
+    });
+
+  } 
+</script>
 <script>
   function showValSec(actual)
   {
@@ -193,6 +222,9 @@
     if(selector=="orderDate")
     {
      selectorVal = $('.fromDate').val()+"-"+$('.toDate').val();
+     
+     selector ="";
+     selectorVal = "";
    }
    else
    {
@@ -209,8 +241,29 @@
      data : {'criteria' : selector, 'criteriaValue' : selectorVal, 'fromDate':fromDateVal , 'toDate':toDateVal},
      success: function(data) 
      {
+
       console.log(" Received data from BE");
-      $('#orders').html(data);							
+      
+      var dataArray = data.split("%%%");
+      
+      var modalContent = "";
+      var entryContent = "";
+      
+      for(var i=0;i < dataArray.length; i++)
+      {
+      	if(i%2===0)
+      	{
+      		entryContent = entryContent + dataArray[i]; 
+      	}
+      	else
+      	{
+      		modalContent = modalContent + dataArray[i]; 
+      	}
+      }
+      
+      $('#orders').html(entryContent);
+      $('body').append(modalContent);
+
     }
   });
  }
@@ -220,7 +273,7 @@
 <script>
   function generateReport(){
   	
-    
+
     var selector = $('#criteriaSection').val();
     
     var selectorVal = "";
@@ -376,6 +429,41 @@ var ajaxReq = $.ajax({
    
    console.log(totalAmountEle);
  }
+
+</script>
+<script>
+  var itemIdToPrint = [];
+  
+  function addItemToPrint(itemIdToSelect)
+  {
+    itemIdToPrint[itemIdToPrint.length] = itemIdToSelect;
+
+    alert("Added to Print List..!!");
+    console.log(itemIdToPrint);
+  }
+
+  function removeFromPrintList(itemIdToRemove)
+  {
+    itemIdToPrint = $.grep(itemIdToPrint, function(value) {
+      return value != itemIdToRemove;
+    });
+
+   
+    alert("Removed from Print List..!!");
+    console.log(itemIdToPrint);
+  }
+
+  function addToPrintAreaAndPrint()
+  {
+    for(var k=0;k<itemIdToPrint.length;k++)
+    {
+      $('#cominePrint').append($('#'+itemIdToPrint[k]).html());  
+    }
+    
+    printItem('cominePrint');
+
+    itemIdToPrint = [];
+  }
 
 </script>
 </body>

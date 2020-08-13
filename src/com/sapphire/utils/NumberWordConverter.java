@@ -1,8 +1,8 @@
 package com.sapphire.utils;
 
-import javax.annotation.ManagedBean;
+import java.util.Date;
 
-import org.springframework.core.Conventions;
+import javax.annotation.ManagedBean;
 
 @ManagedBean
 public class NumberWordConverter {
@@ -56,7 +56,7 @@ public class NumberWordConverter {
 	public static void main(String[] args) {
 
 		double d = 1591;
-		System.out.println(new NumberWordConverter().convert(d));
+		System.out.println(new Date(new Date().getTime() - (6 * 24 * 60 * 60 * 1000)));
 
 	}
 

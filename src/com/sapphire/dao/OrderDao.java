@@ -94,16 +94,23 @@ public class OrderDao {
 	// Accept orgName as parameter
 	// If orgName is null or "" then return allOrders
 	@Transactional
-	public ArrayList<Integer> getAllOrdersIds(String orgName) {
+	public ArrayList<Integer> getAllOrdersIds(String orgName, boolean isAdmin) {
 		Session session = sessionFactory.getCurrentSession();
-		String hqlString = "select DISTINCT orderId from OrderDetails WHERE status NOT IN ('delivered') ";
+		String hqlString = "select DISTINCT orderId from OrderDetails WHERE status NOT IN ('Complete') ";
 
 		if(orgName !=null && !orgName.equals(""))
 		{
 			hqlString = hqlString + " and organizationName=:orgName";
 		}
-		 
-		hqlString = hqlString + " ORDER BY orderId DESC";		
+
+		if(isAdmin)
+		{
+			hqlString = hqlString + " and orderDate > (CURRENT_DATE - 6) ";
+		}
+		
+		
+		hqlString += " ORDER BY orderDate DESC"; 
+		
 		Query query = session.createQuery(hqlString);
 		query.setMaxResults(7);
 		
